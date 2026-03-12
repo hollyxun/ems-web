@@ -1,4 +1,4 @@
-# Logs
+# === Logs ===
 logs
 *.log
 npm-debug.log*
@@ -7,29 +7,230 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# === Dependency directories ===
 node_modules
-.DS_Store
+/web/node_modules
+
+# === Build outputs ===
 dist
 dist-ssr
+/web/dist
 coverage
-*.local
 
+# === Local env files ===
+*.local
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# === Lock files（根据团队习惯选择保留或忽略）===
+package-lock.json
+yarn.lock
+/web/pnpm-lock.yaml
+
+# === Testing ===
 /cypress/videos/
 /cypress/screenshots/
 
-# Editor directories and files
+# === Editor directories and files ===
+# VS Code
 .vscode/*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/launch.json
-.idea
+*.code-workspace
+.history/
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+[._]*.un~
+Session.vim
+Sessionx.vim
+
+# Emacs
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Visual Studio
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
-*.sw?
 
-package-lock.json
-yarn.lock
+# Eclipse
+.project
+.classpath
+.settings/
+*.launch
 
+# Atom
+.atom/
+
+# Nova
+.nova/
+
+# Fleet
+.fleet/
+
+# Zed
+.zed/
+
+# VS Code Counter 插件
 .VSCodeCounter
+
+# === AI 工具规则 & 配置 ===
+# Cursor
+.cursorrules
+.cursor/
+.cursorignore
+
+# GitHub Copilot
+.github/copilot.yml
+.github/copilot.yaml
+
+# Codeium / Windsurf
+.codeium/
+.codeiumignore
+.windsurfrules
+
+# Amazon CodeWhisperer / Q Developer
+.codewhisperer/
+.aws-amazon-q/
+
+# Tabnine
+.tabnine/
+.tabnineignore
+.tabnine.json
+
+# Sourcegraph Cody
+.cody/
+.codyignore
+
+# Continue.dev
+.continue/
+.continueignore
+
+# Aider
+.aider*
+.aider.chat.history.md
+.aider.input.history
+.aider.tags.cache.v3/
+
+# Claude Code / Anthropic
+.claude/
+claude.md
+
+# OpenAI / ChatGPT
+.openai/
+.chatgpt/
+
+# Gemini / CodeAssist
+.gemini/
+.codeassist/
+
+# JetBrains AI Assistant
+.aiassistant/
+.ai-assistant/
+
+# CodeGeeX
+.codegeex/
+.codegeexignore
+
+# IntelliCode
+.vs/
+
+# CodiumAI
+.codium/
+.codiumrc.json
+
+# Sourcery AI
+.sourcery.yaml
+.sourcery/
+
+# CodeRabbit
+.coderabbit.yaml
+.coderabbit/
+
+# PR-Agent
+.pr_agent.toml
+.pr-agent/
+
+# CodeReview BOT
+.codereview/
+
+# OpenCommit
+.opencommit.json
+
+# Semantic Kernel
+.semantic-kernel/
+
+# LangChain / LangSmith
+.langchain/
+.langsmith/
+
+# LlamaIndex
+.llamaindex/
+
+# Vector DB configs
+.pinecone/
+.weaviate/
+.chroma/
+.qdrant/
+.milvus/
+.vectordb/
+
+# AI 生成的临时文件
+*.ai-generated
+*.ai-generated.md
+*_ai_*
+ai_output/
+ai-generated/
+
+# === 系统文件 ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === 临时文件 ===
+*.tmp
+*.temp
+*.cache
+.cache/
+*.bak
+*.backup
+*.old
+
+# === 项目特定（Go 后端相关）===
+rm_file/
+/server/log/
+/server/server
+/server/latest_log
+/server/__debug_bin*
+/server/*.local.yaml
+server/uploads/
+
+# === 数据库文件 ===
+*.db
+*.sqlite
+*.sqlite3
+
+# === 二进制文件 ===
+*.bin
+*.exe
+*.exe~

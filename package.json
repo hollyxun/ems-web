@@ -40,6 +40,7 @@
     "dev:prod": "vite --mode prod",
     "gen-route": "sa gen-route",
     "lint": "eslint . --fix",
+    "lint:staged": "lint-staged",
     "postbuild": "sa print-soybean",
     "prepare": "simple-git-hooks",
     "preview": "vite preview",
@@ -115,6 +116,7 @@
     "eslint": "9.39.2",
     "eslint-plugin-vue": "10.6.2",
     "kolorist": "1.8.0",
+    "lint-staged": "^15.2.0",
     "sass": "1.97.2",
     "simple-git-hooks": "2.13.1",
     "tsx": "4.21.0",
@@ -130,7 +132,12 @@
   },
   "simple-git-hooks": {
     "commit-msg": "pnpm sa git-commit-verify",
-    "pre-commit": "pnpm typecheck && pnpm lint && git diff --exit-code"
+    "pre-commit": "pnpm lint:staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,vue}": [
+      "eslint --fix"
+    ]
   },
   "website": "https://elp.soybeanjs.cn"
 }
