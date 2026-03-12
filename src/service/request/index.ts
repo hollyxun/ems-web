@@ -10,12 +10,23 @@ import type { RequestInstanceState } from './type';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
+/**
+ * 检查并更新Token（从响应头获取新token）
+ * @param response Axios响应对象
+ */
+function checkAndUpdateToken(response: AxiosResponse) {
+  const newToken = response.headers['new-token'];
+  if (newToken) {
+    localStg.set('token', newToken);
+    // 更新authStore中的token
+    const authStore = useAuthStore();
+    authStore.token = newToken;
+  }
+}
+
 export const request = createFlatRequest(
   {
-    baseURL,
-    headers: {
-      apifoxToken: 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2'
-    }
+    baseURL
   },
   {
     defaultState: {
@@ -23,6 +34,8 @@ export const request = createFlatRequest(
       refreshTokenPromise: null
     } as RequestInstanceState,
     transform(response: AxiosResponse<App.Service.Response<any>>) {
+      // 检查响应头是否有新token
+      checkAndUpdateToken(response);
       return response.data.data;
     },
     async onRequest(config) {
@@ -32,7 +45,7 @@ export const request = createFlatRequest(
       return config;
     },
     isBackendSuccess(response) {
-      // when the backend response code is "0000"(default), it means the request is success
+      // when the backend response code is "200", it means the request is success
       // to change this logic by yourself, you can modify the `VITE_SERVICE_SUCCESS_CODE` in `.env` file
       return String(response.data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
     },

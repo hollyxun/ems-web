@@ -14,16 +14,23 @@ export function getAuthorization() {
 export async function handleRefreshToken() {
   const { resetStore } = useAuthStore();
 
-  const rToken = localStg.get('refreshToken') || '';
+  const rToken = localStg.get('refreshToken');
+  if (!rToken) {
+    resetStore();
+    throw new Error('No refresh token');
+  }
+
   const refreshTokenMethod = fetchRefreshToken(rToken);
 
   // set the refreshToken role, so that the request will not be intercepted
-  refreshTokenMethod.meta.authRole = 'refreshToken';
+  refreshTokenMethod.meta = { authRole: 'refreshToken' };
 
   try {
     const data = await refreshTokenMethod;
     localStg.set('token', data.token);
-    localStg.set('refreshToken', data.refreshToken);
+    if (data.refreshToken) {
+      localStg.set('refreshToken', data.refreshToken);
+    }
   } catch (error) {
     resetStore();
     throw error;
