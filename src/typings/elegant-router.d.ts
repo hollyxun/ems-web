@@ -39,6 +39,15 @@ declare module "@elegant-router/types" {
     "alova_request": "/alova/request";
     "alova_scenes": "/alova/scenes";
     "alova_user": "/alova/user";
+    "devtools": "/devtools";
+    "devtools_ai-chat": "/devtools/ai-chat";
+    "devtools_server": "/devtools/server";
+    "energy": "/energy";
+    "energy_base-data": "/energy/base-data";
+    "energy_base-data_coefficient": "/energy/base-data/coefficient";
+    "energy_base-data_ledger": "/energy/base-data/ledger";
+    "energy_base-data_medium": "/energy/base-data/medium";
+    "energy_base-data_unit": "/energy/base-data/unit";
     "function": "/function";
     "function_hide-child": "/function/hide-child";
     "function_hide-child_one": "/function/hide-child/one";
@@ -53,7 +62,11 @@ declare module "@elegant-router/types" {
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "manage": "/manage";
+    "manage_api": "/manage/api";
+    "manage_department": "/manage/department";
+    "manage_dictionary": "/manage/dictionary";
     "manage_menu": "/manage/menu";
+    "manage_operation-record": "/manage/operation-record";
     "manage_role": "/manage/role";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
@@ -87,7 +100,15 @@ declare module "@elegant-router/types" {
     "plugin_tables_vtable": "/plugin/tables/vtable";
     "plugin_typeit": "/plugin/typeit";
     "plugin_video": "/plugin/video";
-    "user-center": "/user-center";
+    "profile": "/profile";
+    "profile_info": "/profile/info";
+    "profile_password": "/profile/password";
+    "scheduling": "/scheduling";
+    "scheduling_calendar": "/scheduling/calendar";
+    "scheduling_factory-calendar": "/scheduling/factory-calendar";
+    "scheduling_shift": "/scheduling/shift";
+    "scheduling_shift-pattern": "/scheduling/shift-pattern";
+    "scheduling_team": "/scheduling/team";
   };
 
   /**
@@ -138,6 +159,8 @@ declare module "@elegant-router/types" {
     | "500"
     | "about"
     | "alova"
+    | "devtools"
+    | "energy"
     | "function"
     | "home"
     | "iframe-page"
@@ -145,7 +168,8 @@ declare module "@elegant-router/types" {
     | "manage"
     | "multi-menu"
     | "plugin"
-    | "user-center"
+    | "profile"
+    | "scheduling"
   >;
 
   /**
@@ -173,6 +197,12 @@ declare module "@elegant-router/types" {
     | "alova_request"
     | "alova_scenes"
     | "alova_user"
+    | "devtools_ai-chat"
+    | "devtools_server"
+    | "energy_base-data_coefficient"
+    | "energy_base-data_ledger"
+    | "energy_base-data_medium"
+    | "energy_base-data_unit"
     | "function_hide-child_one"
     | "function_hide-child_three"
     | "function_hide-child_two"
@@ -182,7 +212,11 @@ declare module "@elegant-router/types" {
     | "function_tab"
     | "function_toggle-auth"
     | "home"
+    | "manage_api"
+    | "manage_department"
+    | "manage_dictionary"
     | "manage_menu"
+    | "manage_operation-record"
     | "manage_role"
     | "manage_user-detail"
     | "manage_user"
@@ -207,7 +241,13 @@ declare module "@elegant-router/types" {
     | "plugin_tables_vtable"
     | "plugin_typeit"
     | "plugin_video"
-    | "user-center"
+    | "profile_info"
+    | "profile_password"
+    | "scheduling_calendar"
+    | "scheduling_factory-calendar"
+    | "scheduling_shift-pattern"
+    | "scheduling_shift"
+    | "scheduling_team"
   >;
 
   /**

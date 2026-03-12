@@ -303,6 +303,7 @@ declare namespace App {
         action: string;
         add: string;
         addSuccess: string;
+        save: string;
         backToHome: string;
         batchDelete: string;
         cancel: string;
@@ -424,6 +425,7 @@ declare namespace App {
             codePlaceholder: string;
             passwordPlaceholder: string;
             confirmPasswordPlaceholder: string;
+            captchaPlaceholder: string;
             codeLogin: string;
             confirm: string;
             back: string;
@@ -667,11 +669,46 @@ declare namespace App {
             type: {
               directory: string;
               menu: string;
+              button: string;
             };
             iconType: {
               iconify: string;
               local: string;
             };
+          };
+        };
+        profile: {
+          info: {
+            title: string;
+            basicInfo: string;
+            changeAvatar: string;
+            userId: string;
+            username: string;
+            department: string;
+            noDepartment: string;
+            roles: string;
+            noRole: string;
+            editableInfo: string;
+            nickName: string;
+            nickNamePlaceholder: string;
+            phone: string;
+            phonePlaceholder: string;
+            email: string;
+            emailPlaceholder: string;
+          };
+          password: {
+            title: string;
+            change: string;
+            securityTip: string;
+            securityDesc: string;
+            oldPassword: string;
+            oldPasswordPlaceholder: string;
+            newPassword: string;
+            newPasswordPlaceholder: string;
+            confirmPassword: string;
+            confirmPasswordPlaceholder: string;
+            success: string;
+            error: string;
           };
         };
       };
@@ -699,6 +736,71 @@ declare namespace App {
       };
       datatable: {
         itemCount: string;
+      };
+      devtools: {
+        server: {
+          title: string;
+          cpu: string;
+          cpuCores: string;
+          cpuUser: string;
+          cpuSystem: string;
+          cpuIdle: string;
+          memory: string;
+          memoryTotal: string;
+          memoryUsed: string;
+          memoryAvailable: string;
+          memoryUsage: string;
+          os: string;
+          osType: string;
+          osPlatform: string;
+          osVersion: string;
+          osArch: string;
+          uptime: string;
+          uptimeBootTime: string;
+          ports: string;
+          portListening: string;
+          portClosed: string;
+          version: string;
+          systemVersion: string;
+          backendVersion: string;
+          frontendVersion: string;
+          autoRefresh: string;
+          refresh: string;
+        };
+        aiChat: {
+          title: string;
+          config: {
+            title: string;
+            baseUrl: string;
+            baseUrlPlaceholder: string;
+            apiKey: string;
+            apiKeyPlaceholder: string;
+            defaultModel: string;
+            defaultModelPlaceholder: string;
+            saveConfig: string;
+            clearConfig: string;
+            getModels: string;
+            configGuide: string;
+          };
+          session: {
+            newChat: string;
+            createSession: string;
+            sessionLimit: string;
+            clearAll: string;
+            deleteConfirm: string;
+            clearAllConfirm: string;
+            selectModel: string;
+          };
+          chat: {
+            inputPlaceholder: string;
+            send: string;
+            thinking: string;
+            startChat: string;
+            inputHint: string;
+            messageLimit: string;
+            messageCount: string;
+          };
+        };
       };
     };
 

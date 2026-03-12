@@ -20,6 +20,18 @@ declare namespace Api {
       records: T[];
     }
 
+    /** page result from backend */
+    interface PageResult<T = any> {
+      /** data list */
+      list: T[];
+      /** total count */
+      total: number;
+      /** current page */
+      page: number;
+      /** page size */
+      pageSize: number;
+    }
+
     /** common search params of table */
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'current' | 'size'>;
 
