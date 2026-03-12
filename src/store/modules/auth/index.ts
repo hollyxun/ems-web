@@ -2,7 +2,7 @@ import { computed, reactive, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { defineStore } from 'pinia';
 import { useLoading } from '@sa/hooks';
-import { fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { fetchGetUserButtons, fetchGetUserInfo, fetchLogin } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
 import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
@@ -22,17 +22,30 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const token = ref(getToken());
 
   const userInfo: Api.Auth.UserInfo = reactive({
-    userId: '',
-    userName: '',
+    id: 0,
+    uuid: '',
+    username: '',
+    nickName: '',
+    headerImg: '',
+    phone: '',
+    email: '',
+    enabled: 1,
     roles: [],
-    buttons: []
+    buttons: [],
+    userId: '',
+    userName: ''
   });
 
   /** is super role in static route */
   const isStaticSuper = computed(() => {
-    const { VITE_AUTH_ROUTE_MODE, VITE_STATIC_SUPER_ROLE } = import.meta.env;
+    const { VITE_AUTH_ROUTE_MODE } = import.meta.env;
 
-    return VITE_AUTH_ROUTE_MODE === 'static' && userInfo.roles.includes(VITE_STATIC_SUPER_ROLE);
+    // Check if any role has authorityId === 1 (super admin)
+    const hasSuperRole = (userInfo.roles || []).some(
+      role => typeof role === 'object' && 'authorityId' in role && role.authorityId === 1
+    );
+
+    return VITE_AUTH_ROUTE_MODE === 'static' && hasSuperRole;
   });
 
   /** Is login */
@@ -92,12 +105,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
    *
    * @param userName User name
    * @param password Password
+   * @param captcha Captcha code
+   * @param captchaId Captcha ID
    * @param [redirect=true] Whether to redirect after login. Default is `true`
    */
-  async function login(userName: string, password: string, redirect = true) {
+  async function login(userName: string, password: string, captcha?: string, captchaId?: string, redirect = true) {
     startLoading();
 
-    const { data: loginToken, error } = await fetchLogin(userName, password);
+    const { data: loginToken, error } = await fetchLogin(userName, password, captcha, captchaId);
 
     if (!error) {
       const pass = await loginByToken(loginToken);
@@ -129,12 +144,33 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   async function loginByToken(loginToken: Api.Auth.LoginToken) {
     // 1. stored in the localStorage, the later requests need it in headers
     localStg.set('token', loginToken.token);
-    localStg.set('refreshToken', loginToken.refreshToken);
 
-    // 2. get user info
+    // 2. if user info is returned from login, use it directly
+    if (loginToken.user) {
+      // Convert backend user format to frontend format
+      // Check if user has super admin role (authorityId === 1)
+      const info: Api.Auth.UserInfo = {
+        ...loginToken.user,
+        userId: String(loginToken.user.id),
+        userName: loginToken.user.username,
+        buttons: []
+      };
+      Object.assign(userInfo, info);
+
+      // 3. fetch button permissions
+      await fetchButtonPermissions();
+
+      token.value = loginToken.token;
+      return true;
+    }
+
+    // 3. otherwise, get user info from API
     const pass = await getUserInfo();
 
     if (pass) {
+      // 4. fetch button permissions
+      await fetchButtonPermissions();
+
       token.value = loginToken.token;
 
       return true;
@@ -143,12 +179,30 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     return false;
   }
 
+  /**
+   * Fetch user button permissions
+   */
+  async function fetchButtonPermissions() {
+    try {
+      const { data: buttons, error } = await fetchGetUserButtons();
+      if (!error && buttons) {
+        userInfo.buttons = buttons;
+      }
+    } catch {
+      // Silently ignore button permission fetch errors
+    }
+  }
+
   async function getUserInfo() {
     const { data: info, error } = await fetchGetUserInfo();
 
     if (!error) {
-      // update store
-      Object.assign(userInfo, info);
+      // update store - keep the roles from backend
+      Object.assign(userInfo, {
+        ...info,
+        userId: String(info.id),
+        userName: info.username
+      });
 
       return true;
     }
@@ -162,7 +216,10 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (hasToken) {
       const pass = await getUserInfo();
 
-      if (!pass) {
+      if (pass) {
+        // Fetch button permissions on page refresh
+        await fetchButtonPermissions();
+      } else {
         resetStore();
       }
     }
@@ -176,6 +233,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     loginLoading,
     resetStore,
     login,
-    initUserInfo
+    initUserInfo,
+    fetchButtonPermissions
   };
 });

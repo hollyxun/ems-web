@@ -23,6 +23,38 @@ import {
   updateLocaleOfGlobalMenus
 } from './shared';
 
+/**
+ * 将后端路由格式转换为前端路由格式
+ * @param backendRoutes 后端返回的路由数据
+ * @param isConstant 是否为常量路由（无需登录即可访问）
+ * @returns 前端路由数据
+ */
+function transformBackendRoutesToElegantRoutes(
+  backendRoutes: Api.Route.BackendRoute[],
+  isConstant: boolean = false
+): ElegantConstRoute[] {
+  return backendRoutes.map(route => {
+    const elegantRoute: ElegantConstRoute = {
+      path: route.path,
+      name: route.name as never,
+      component: route.component,
+      redirect: route.redirect,
+      meta: route.meta
+        ? {
+            title: route.meta.title,
+            icon: route.meta.icon,
+            order: route.meta.order,
+            hideInMenu: route.meta.hideInMenu,
+            keepAlive: route.meta.keepAlive,
+            constant: isConstant
+          }
+        : { title: route.name || '', constant: isConstant },
+      children: route.children ? transformBackendRoutesToElegantRoutes(route.children, isConstant) : undefined
+    };
+    return elegantRoute;
+  });
+}
+
 export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   const authStore = useAuthStore();
   const tabStore = useTabStore();
@@ -160,7 +192,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       const { data, error } = await fetchGetConstantRoutes();
 
       if (!error) {
-        addConstantRoutes(data);
+        // 将后端路由格式转换为前端路由格式（常量路由）
+        const convertedRoutes = transformBackendRoutesToElegantRoutes(data, true);
+        addConstantRoutes(convertedRoutes);
       } else {
         // if fetch constant routes failed, use static constant routes
         addConstantRoutes(staticRoute.constantRoutes);
@@ -197,7 +231,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     if (authStore.isStaticSuper) {
       addAuthRoutes(staticAuthRoutes);
     } else {
-      const filteredAuthRoutes = filterAuthRoutesByRoles(staticAuthRoutes, authStore.userInfo.roles);
+      // Convert Authority[] to string[] for role-based filtering
+      const roleStrings = (authStore.userInfo.roles || []).map(role => String(role.authorityId));
+      const filteredAuthRoutes = filterAuthRoutesByRoles(staticAuthRoutes, roleStrings);
 
       addAuthRoutes(filteredAuthRoutes);
     }
@@ -214,7 +250,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     if (!error) {
       const { routes, home } = data;
 
-      addAuthRoutes(routes);
+      // 将后端路由格式转换为前端路由格式
+      const convertedRoutes = transformBackendRoutesToElegantRoutes(routes);
+      addAuthRoutes(convertedRoutes);
 
       handleConstantAndAuthRoutes();
 
