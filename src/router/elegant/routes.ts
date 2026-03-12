@@ -96,6 +96,92 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'devtools',
+    path: '/devtools',
+    component: 'layout.base',
+    meta: {
+      title: 'devtools',
+      i18nKey: 'route.devtools'
+    },
+    children: [
+      {
+        name: 'devtools_ai-chat',
+        path: '/devtools/ai-chat',
+        component: 'view.devtools_ai-chat',
+        meta: {
+          title: 'devtools_ai-chat',
+          i18nKey: 'route.devtools_ai-chat'
+        }
+      },
+      {
+        name: 'devtools_server',
+        path: '/devtools/server',
+        component: 'view.devtools_server',
+        meta: {
+          title: 'devtools_server',
+          i18nKey: 'route.devtools_server'
+        }
+      }
+    ]
+  },
+  {
+    name: 'energy',
+    path: '/energy',
+    component: 'layout.base',
+    meta: {
+      title: 'energy',
+      i18nKey: 'route.energy'
+    },
+    children: [
+      {
+        name: 'energy_base-data',
+        path: '/energy/base-data',
+        meta: {
+          title: 'energy_base-data',
+          i18nKey: 'route.energy_base-data'
+        },
+        children: [
+          {
+            name: 'energy_base-data_coefficient',
+            path: '/energy/base-data/coefficient',
+            component: 'view.energy_base-data_coefficient',
+            meta: {
+              title: 'energy_base-data_coefficient',
+              i18nKey: 'route.energy_base-data_coefficient'
+            }
+          },
+          {
+            name: 'energy_base-data_ledger',
+            path: '/energy/base-data/ledger',
+            component: 'view.energy_base-data_ledger',
+            meta: {
+              title: 'energy_base-data_ledger',
+              i18nKey: 'route.energy_base-data_ledger'
+            }
+          },
+          {
+            name: 'energy_base-data_medium',
+            path: '/energy/base-data/medium',
+            component: 'view.energy_base-data_medium',
+            meta: {
+              title: 'energy_base-data_medium',
+              i18nKey: 'route.energy_base-data_medium'
+            }
+          },
+          {
+            name: 'energy_base-data_unit',
+            path: '/energy/base-data/unit',
+            component: 'view.energy_base-data_unit',
+            meta: {
+              title: 'energy_base-data_unit',
+              i18nKey: 'route.energy_base-data_unit'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
     name: 'function',
     path: '/function',
     component: 'layout.base',
@@ -262,6 +348,33 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'manage_api',
+        path: '/manage/api',
+        component: 'view.manage_api',
+        meta: {
+          title: 'manage_api',
+          i18nKey: 'route.manage_api'
+        }
+      },
+      {
+        name: 'manage_department',
+        path: '/manage/department',
+        component: 'view.manage_department',
+        meta: {
+          title: 'manage_department',
+          i18nKey: 'route.manage_department'
+        }
+      },
+      {
+        name: 'manage_dictionary',
+        path: '/manage/dictionary',
+        component: 'view.manage_dictionary',
+        meta: {
+          title: 'manage_dictionary',
+          i18nKey: 'route.manage_dictionary'
+        }
+      },
+      {
         name: 'manage_menu',
         path: '/manage/menu',
         component: 'view.manage_menu',
@@ -272,6 +385,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           order: 3,
           roles: ['R_ADMIN'],
           keepAlive: true
+        }
+      },
+      {
+        name: 'manage_operation-record',
+        path: '/manage/operation-record',
+        component: 'view.manage_operation-record',
+        meta: {
+          title: 'manage_operation-record',
+          i18nKey: 'route.manage_operation-record'
         }
       },
       {
@@ -624,13 +746,88 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'user-center',
-    path: '/user-center',
-    component: 'layout.base$view.user-center',
+    name: 'profile',
+    path: '/profile',
+    component: 'layout.base',
     meta: {
-      title: 'user-center',
-      i18nKey: 'route.user-center',
-      hideInMenu: true
-    }
+      title: 'profile',
+      i18nKey: 'route.profile'
+    },
+    children: [
+      {
+        name: 'profile_info',
+        path: '/profile/info',
+        component: 'view.profile_info',
+        meta: {
+          title: 'profile_info',
+          i18nKey: 'route.profile_info'
+        }
+      },
+      {
+        name: 'profile_password',
+        path: '/profile/password',
+        component: 'view.profile_password',
+        meta: {
+          title: 'profile_password',
+          i18nKey: 'route.profile_password'
+        }
+      }
+    ]
+  },
+  {
+    name: 'scheduling',
+    path: '/scheduling',
+    component: 'layout.base',
+    meta: {
+      title: 'scheduling',
+      i18nKey: 'route.scheduling'
+    },
+    children: [
+      {
+        name: 'scheduling_calendar',
+        path: '/scheduling/calendar',
+        component: 'view.scheduling_calendar',
+        meta: {
+          title: 'scheduling_calendar',
+          i18nKey: 'route.scheduling_calendar'
+        }
+      },
+      {
+        name: 'scheduling_factory-calendar',
+        path: '/scheduling/factory-calendar',
+        component: 'view.scheduling_factory-calendar',
+        meta: {
+          title: 'scheduling_factory-calendar',
+          i18nKey: 'route.scheduling_factory-calendar'
+        }
+      },
+      {
+        name: 'scheduling_shift',
+        path: '/scheduling/shift',
+        component: 'view.scheduling_shift',
+        meta: {
+          title: 'scheduling_shift',
+          i18nKey: 'route.scheduling_shift'
+        }
+      },
+      {
+        name: 'scheduling_shift-pattern',
+        path: '/scheduling/shift-pattern',
+        component: 'view.scheduling_shift-pattern',
+        meta: {
+          title: 'scheduling_shift-pattern',
+          i18nKey: 'route.scheduling_shift-pattern'
+        }
+      },
+      {
+        name: 'scheduling_team',
+        path: '/scheduling/team',
+        component: 'view.scheduling_team',
+        meta: {
+          title: 'scheduling_team',
+          i18nKey: 'route.scheduling_team'
+        }
+      }
+    ]
   }
 ];
