@@ -10,6 +10,7 @@ const local: App.I18n.Schema = {
     action: '操作',
     add: '新增',
     addSuccess: '添加成功',
+    save: '保存',
     backToHome: '返回首页',
     batchDelete: '批量删除',
     cancel: '取消',
@@ -172,7 +173,6 @@ const local: App.I18n.Schema = {
     document_antd: 'Ant Design Vue文档',
     'document_element-plus': 'Element Plus文档',
     document_alova: 'Alova文档',
-    'user-center': '个人中心',
     about: '关于',
     function: '系统功能',
     alova: 'alova示例',
@@ -193,6 +193,10 @@ const local: App.I18n.Schema = {
     'manage_user-detail': '用户详情',
     manage_role: '角色管理',
     manage_menu: '菜单管理',
+    manage_api: 'API管理',
+    manage_department: '部门管理',
+    manage_dictionary: '字典管理',
+    'manage_operation-record': '操作记录',
     'multi-menu': '多级菜单',
     'multi-menu_first': '菜单一',
     'multi-menu_first_child': '菜单一子菜单',
@@ -226,7 +230,25 @@ const local: App.I18n.Schema = {
     plugin_gantt_vtable: 'VTableGantt',
     plugin_typeit: '打字机',
     plugin_tables: '表格',
-    plugin_tables_vtable: 'VTable'
+    plugin_tables_vtable: 'VTable',
+    devtools: '开发者工具',
+    devtools_server: '服务器状态',
+    'devtools_ai-chat': 'AI对话',
+    energy: '能源管理',
+    'energy_base-data': '基础数据',
+    'energy_base-data_coefficient': '系数管理',
+    'energy_base-data_ledger': '台账管理',
+    'energy_base-data_medium': '介质管理',
+    'energy_base-data_unit': '单位管理',
+    profile: '个人中心',
+    profile_info: '个人信息',
+    profile_password: '修改密码',
+    scheduling: '排班管理',
+    scheduling_team: '班组管理',
+    scheduling_shift: '班次管理',
+    'scheduling_shift-pattern': '排班模式',
+    scheduling_calendar: '排班日历',
+    'scheduling_factory-calendar': '工厂日历'
   },
   page: {
     login: {
@@ -237,6 +259,7 @@ const local: App.I18n.Schema = {
         codePlaceholder: '请输入验证码',
         passwordPlaceholder: '请输入密码',
         confirmPasswordPlaceholder: '请再次输入密码',
+        captchaPlaceholder: '请输入验证码',
         codeLogin: '验证码登录',
         confirm: '确定',
         back: '返回',
@@ -480,12 +503,47 @@ const local: App.I18n.Schema = {
         addChildMenu: '新增子菜单',
         type: {
           directory: '目录',
-          menu: '菜单'
+          menu: '菜单',
+          button: '按钮'
         },
         iconType: {
           iconify: 'iconify图标',
           local: '本地图标'
         }
+      }
+    },
+    profile: {
+      info: {
+        title: '个人信息',
+        basicInfo: '基本信息',
+        changeAvatar: '修改头像',
+        userId: '用户ID',
+        username: '用户名',
+        department: '所属部门',
+        noDepartment: '未分配',
+        roles: '角色',
+        noRole: '无',
+        editableInfo: '可编辑信息',
+        nickName: '昵称',
+        nickNamePlaceholder: '请输入昵称',
+        phone: '手机号',
+        phonePlaceholder: '请输入手机号',
+        email: '邮箱',
+        emailPlaceholder: '请输入邮箱'
+      },
+      password: {
+        title: '修改密码',
+        change: '修改密码',
+        securityTip: '安全提示',
+        securityDesc: '修改密码后需要重新登录',
+        oldPassword: '原密码',
+        oldPasswordPlaceholder: '请输入原密码',
+        newPassword: '新密码',
+        newPasswordPlaceholder: '请输入新密码（至少6位）',
+        confirmPassword: '确认密码',
+        confirmPasswordPlaceholder: '请再次输入新密码',
+        success: '密码修改成功，请重新登录',
+        error: '密码修改失败'
       }
     }
   },
@@ -537,6 +595,71 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: '共 {total} 条'
+  },
+  devtools: {
+    server: {
+      title: '服务器状态',
+      cpu: 'CPU',
+      cpuCores: '核心数',
+      cpuUser: '用户态',
+      cpuSystem: '系统态',
+      cpuIdle: '空闲',
+      memory: '内存',
+      memoryTotal: '总量',
+      memoryUsed: '已用',
+      memoryAvailable: '可用',
+      memoryUsage: '使用率',
+      os: '操作系统',
+      osType: '系统类型',
+      osPlatform: '平台',
+      osVersion: '版本',
+      osArch: '架构',
+      uptime: '运行时长',
+      uptimeBootTime: '启动时间',
+      ports: '服务端口',
+      portListening: '监听中',
+      portClosed: '未监听',
+      version: '版本信息',
+      systemVersion: '系统版本',
+      backendVersion: '后端依赖',
+      frontendVersion: '前端依赖',
+      autoRefresh: '自动刷新',
+      refresh: '刷新'
+    },
+    aiChat: {
+      title: 'AI对话',
+      config: {
+        title: 'AI服务配置',
+        baseUrl: '服务地址',
+        baseUrlPlaceholder: '请输入AI服务地址，如: https://api.openai.com',
+        apiKey: 'API密钥',
+        apiKeyPlaceholder: '请输入API密钥',
+        defaultModel: '默认模型',
+        defaultModelPlaceholder: '请选择默认模型',
+        saveConfig: '保存配置',
+        clearConfig: '清除配置',
+        getModels: '获取模型列表',
+        configGuide: '请先配置AI服务地址和API密钥，然后获取模型列表选择默认模型。配置仅保存在本地浏览器中。'
+      },
+      session: {
+        newChat: '新对话',
+        createSession: '新建对话',
+        sessionLimit: '已达到会话上限',
+        clearAll: '清空所有对话',
+        deleteConfirm: '确定要删除这个对话吗？',
+        clearAllConfirm: '确定要清空所有对话吗？此操作不可恢复。',
+        selectModel: '请先选择模型'
+      },
+      chat: {
+        inputPlaceholder: '输入消息... (Enter发送, Shift+Enter换行)',
+        send: '发送',
+        thinking: '思考中...',
+        startChat: '开始对话吧',
+        inputHint: '输入消息开始与AI对话',
+        messageLimit: '已达到消息上限',
+        messageCount: '{count}/{max} 条消息'
+      }
+    }
   }
 };
 

@@ -10,6 +10,7 @@ const local: App.I18n.Schema = {
     action: 'Action',
     add: 'Add',
     addSuccess: 'Add Success',
+    save: 'Save',
     backToHome: 'Back to home',
     batchDelete: 'Batch Delete',
     cancel: 'Cancel',
@@ -172,7 +173,6 @@ const local: App.I18n.Schema = {
     document_antd: 'Ant Design Vue Document',
     'document_element-plus': 'Element Plus Document',
     document_alova: 'Alova Document',
-    'user-center': 'User Center',
     about: 'About',
     function: 'System Function',
     alova: 'Alova Example',
@@ -193,6 +193,10 @@ const local: App.I18n.Schema = {
     'manage_user-detail': 'User Detail',
     manage_role: 'Role Manage',
     manage_menu: 'Menu Manage',
+    manage_api: 'API Manage',
+    manage_department: 'Department Manage',
+    manage_dictionary: 'Dictionary Manage',
+    'manage_operation-record': 'Operation Record',
     'multi-menu': 'Multi Menu',
     'multi-menu_first': 'Menu One',
     'multi-menu_first_child': 'Menu One Child',
@@ -226,7 +230,25 @@ const local: App.I18n.Schema = {
     plugin_gantt_vtable: 'VTableGantt',
     plugin_typeit: 'Typeit',
     plugin_tables: 'Tables',
-    plugin_tables_vtable: 'VTable'
+    plugin_tables_vtable: 'VTable',
+    devtools: 'Developer Tools',
+    devtools_server: 'Server Status',
+    'devtools_ai-chat': 'AI Chat',
+    energy: 'Energy Management',
+    'energy_base-data': 'Base Data',
+    'energy_base-data_coefficient': 'Coefficient',
+    'energy_base-data_ledger': 'Ledger',
+    'energy_base-data_medium': 'Medium',
+    'energy_base-data_unit': 'Unit',
+    profile: 'Profile',
+    profile_info: 'Profile Info',
+    profile_password: 'Change Password',
+    scheduling: 'Scheduling',
+    scheduling_team: 'Team Manage',
+    scheduling_shift: 'Shift Manage',
+    'scheduling_shift-pattern': 'Shift Pattern',
+    scheduling_calendar: 'Schedule Calendar',
+    'scheduling_factory-calendar': 'Factory Calendar'
   },
   page: {
     login: {
@@ -237,6 +259,7 @@ const local: App.I18n.Schema = {
         codePlaceholder: 'Please enter verification code',
         passwordPlaceholder: 'Please enter password',
         confirmPasswordPlaceholder: 'Please enter password again',
+        captchaPlaceholder: 'Please enter captcha',
         codeLogin: 'Verification code login',
         confirm: 'Confirm',
         back: 'Back',
@@ -480,12 +503,47 @@ const local: App.I18n.Schema = {
         addChildMenu: 'Add Child Menu',
         type: {
           directory: 'Directory',
-          menu: 'Menu'
+          menu: 'Menu',
+          button: 'Button'
         },
         iconType: {
           iconify: 'Iconify Icon',
           local: 'Local Icon'
         }
+      }
+    },
+    profile: {
+      info: {
+        title: 'Profile Info',
+        basicInfo: 'Basic Info',
+        changeAvatar: 'Change Avatar',
+        userId: 'User ID',
+        username: 'Username',
+        department: 'Department',
+        noDepartment: 'Not Assigned',
+        roles: 'Roles',
+        noRole: 'None',
+        editableInfo: 'Editable Info',
+        nickName: 'Nick Name',
+        nickNamePlaceholder: 'Please enter nick name',
+        phone: 'Phone',
+        phonePlaceholder: 'Please enter phone number',
+        email: 'Email',
+        emailPlaceholder: 'Please enter email'
+      },
+      password: {
+        title: 'Change Password',
+        change: 'Change Password',
+        securityTip: 'Security Tip',
+        securityDesc: 'You will need to log in again after changing your password',
+        oldPassword: 'Old Password',
+        oldPasswordPlaceholder: 'Please enter old password',
+        newPassword: 'New Password',
+        newPasswordPlaceholder: 'Please enter new password (at least 6 characters)',
+        confirmPassword: 'Confirm Password',
+        confirmPasswordPlaceholder: 'Please enter new password again',
+        success: 'Password changed successfully, please log in again',
+        error: 'Failed to change password'
       }
     }
   },
@@ -537,6 +595,72 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: 'Total {total} items'
+  },
+  devtools: {
+    server: {
+      title: 'Server Status',
+      cpu: 'CPU',
+      cpuCores: 'Cores',
+      cpuUser: 'User',
+      cpuSystem: 'System',
+      cpuIdle: 'Idle',
+      memory: 'Memory',
+      memoryTotal: 'Total',
+      memoryUsed: 'Used',
+      memoryAvailable: 'Available',
+      memoryUsage: 'Usage',
+      os: 'Operating System',
+      osType: 'Type',
+      osPlatform: 'Platform',
+      osVersion: 'Version',
+      osArch: 'Architecture',
+      uptime: 'Uptime',
+      uptimeBootTime: 'Boot Time',
+      ports: 'Service Ports',
+      portListening: 'Listening',
+      portClosed: 'Closed',
+      version: 'Version Info',
+      systemVersion: 'System Version',
+      backendVersion: 'Backend Dependencies',
+      frontendVersion: 'Frontend Dependencies',
+      autoRefresh: 'Auto Refresh',
+      refresh: 'Refresh'
+    },
+    aiChat: {
+      title: 'AI Chat',
+      config: {
+        title: 'AI Service Configuration',
+        baseUrl: 'Service URL',
+        baseUrlPlaceholder: 'Enter AI service URL, e.g.: https://api.openai.com',
+        apiKey: 'API Key',
+        apiKeyPlaceholder: 'Enter API key',
+        defaultModel: 'Default Model',
+        defaultModelPlaceholder: 'Select default model',
+        saveConfig: 'Save Config',
+        clearConfig: 'Clear Config',
+        getModels: 'Get Model List',
+        configGuide:
+          'Please configure the AI service URL and API key first, then get the model list to select the default model. Configuration is only saved in the local browser.'
+      },
+      session: {
+        newChat: 'New Chat',
+        createSession: 'New Session',
+        sessionLimit: 'Session limit reached',
+        clearAll: 'Clear All Sessions',
+        deleteConfirm: 'Are you sure you want to delete this session?',
+        clearAllConfirm: 'Are you sure you want to clear all sessions? This action cannot be undone.',
+        selectModel: 'Please select a model first'
+      },
+      chat: {
+        inputPlaceholder: 'Type a message... (Enter to send, Shift+Enter for new line)',
+        send: 'Send',
+        thinking: 'Thinking...',
+        startChat: 'Start Chatting',
+        inputHint: 'Type a message to start chatting with AI',
+        messageLimit: 'Message limit reached',
+        messageCount: '{count}/{max} messages'
+      }
+    }
   }
 };
 
