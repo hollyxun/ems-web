@@ -16,7 +16,7 @@ function loginOrRegister() {
   toLogin();
 }
 
-type DropdownKey = 'user-center' | 'logout';
+type DropdownKey = 'profile_info' | 'profile_password' | 'logout';
 
 type DropdownOption = {
   key: DropdownKey;
@@ -28,8 +28,13 @@ const options = computed(() => {
   const opts: DropdownOption[] = [
     {
       label: $t('common.userCenter'),
-      key: 'user-center',
+      key: 'profile_info',
       icon: SvgIconVNode({ icon: 'ph:user-circle', fontSize: 18 })
+    },
+    {
+      label: $t('page.profile.password.title'),
+      key: 'profile_password',
+      icon: SvgIconVNode({ icon: 'ph:lock-key', fontSize: 18 })
     },
     {
       label: $t('common.logout'),

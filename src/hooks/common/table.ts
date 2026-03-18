@@ -93,7 +93,7 @@ export function useUIPaginatedTable<ResponseData, ApiData>(options: UseUIPaginat
     currentPage: 1,
     pageSize: 10,
     total: 0,
-    pageSizes: [10, 15, 20, 25, 30],
+    pageSizes: [10, 30, 50, 100, 200],
     'current-change': (page: number) => {
       pagination.currentPage = page;
 
@@ -233,12 +233,23 @@ export function useTableOperate<TableData>(
 }
 
 export function defaultTransform<ApiData>(
-  response: FlatResponseData<any, Api.Common.PaginatingQueryRecord<ApiData>>
+  response: FlatResponseData<any, Api.Common.PaginatingQueryRecord<ApiData> | Api.Common.PageResult<ApiData>>
 ): PaginationData<ApiData> {
   const { data, error } = response;
 
   if (!error) {
-    const { records, current, size, total } = data;
+    // Handle backend response format: { list, total, page, pageSize }
+    const result = data as any;
+    if (result.list !== undefined) {
+      return {
+        data: result.list,
+        pageNum: result.page,
+        pageSize: result.pageSize,
+        total: result.total
+      };
+    }
+    // Handle original format: { records, current, size, total }
+    const { records, current, size, total } = result;
 
     return {
       data: records,

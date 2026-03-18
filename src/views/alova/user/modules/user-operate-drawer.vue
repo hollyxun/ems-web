@@ -72,17 +72,17 @@ const { data: roleOptionsRaw, loading } = useWatcher(fetchGetAllRoles, [visible]
     return visible.value ? next() : undefined;
   }
 });
-const roleOptions = computed<CommonType.Option<string>[]>(() => {
-  const options = roleOptionsRaw.value.map(item => ({
+const roleOptions = computed(() => {
+  const options = (roleOptionsRaw.value || []).map((item: any) => ({
     label: item.roleName,
     value: item.roleCode
   }));
 
   // the mock data does not have the roleCode, so fill it
   // if the real request, remove the following code
-  const userRoleOptions = form.value.userRoles.map(item => ({
-    label: item,
-    value: item
+  const userRoleOptions = (form.value.userRoles || []).map((item: any) => ({
+    label: typeof item === 'string' ? item : item.roleName,
+    value: typeof item === 'string' ? item : item.roleCode
   }));
   // end
 

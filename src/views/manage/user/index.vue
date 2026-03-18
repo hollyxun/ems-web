@@ -1,8 +1,16 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
-import { enableStatusRecord, userGenderRecord } from '@/constants/business';
-import { fetchGetUserList } from '@/service/api';
+import { enableStatusRecord } from '@/constants/business';
+import {
+  fetchBatchDeleteUsers,
+  fetchCreateUser,
+  fetchDeleteUser,
+  fetchGetAllRoles,
+  fetchGetDepartmentTree,
+  fetchGetUserList,
+  fetchUpdateUser
+} from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
@@ -14,73 +22,74 @@ const searchParams = ref(getInitSearchParams());
 
 function getInitSearchParams(): Api.SystemManage.UserSearchParams {
   return {
-    current: 1,
-    size: 30,
-    status: undefined,
-    userName: undefined,
-    userGender: undefined,
+    page: 1,
+    pageSize: 30,
+    username: undefined,
     nickName: undefined,
-    userPhone: undefined,
-    userEmail: undefined
+    phone: undefined,
+    enabled: undefined
   };
 }
 
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
   paginationProps: {
-    currentPage: searchParams.value.current,
-    pageSize: searchParams.value.size
+    currentPage: searchParams.value.page,
+    pageSize: searchParams.value.pageSize
   },
   api: () => fetchGetUserList(searchParams.value),
   transform: response => {
     return defaultTransform(response);
   },
   onPaginationParamsChange: params => {
-    searchParams.value.current = params.currentPage;
-    searchParams.value.size = params.pageSize;
+    searchParams.value.page = params.currentPage;
+    searchParams.value.pageSize = params.pageSize;
   },
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
-    { prop: 'userName', label: $t('page.manage.user.userName'), minWidth: 100 },
+    { prop: 'username', label: $t('page.manage.user.userName'), minWidth: 100 },
+    { prop: 'nickName', label: $t('page.manage.user.nickName'), minWidth: 100 },
+    { prop: 'phone', label: $t('page.manage.user.userPhone'), width: 120 },
+    { prop: 'email', label: $t('page.manage.user.userEmail'), minWidth: 200 },
     {
-      prop: 'userGender',
-      label: $t('page.manage.user.userGender'),
+      prop: 'department',
+      label: '所属部门',
+      minWidth: 120,
+      formatter: row => <span>{row.department?.name || '-'}</span>
+    },
+    {
+      prop: 'roles',
+      label: '角色',
+      minWidth: 150,
+      formatter: row => {
+        if (!row.roles || row.roles.length === 0) {
+          return <span class="text-gray-400">未分配</span>;
+        }
+        return (
+          <div class="flex flex-wrap gap-4px">
+            {row.roles.map((role: Api.SystemManage.Role) => (
+              <ElTag key={role.authorityId} type="primary" size="small">
+                {role.authorityName || role.roleName}
+              </ElTag>
+            ))}
+          </div>
+        );
+      }
+    },
+    {
+      prop: 'enabled',
+      label: $t('page.manage.user.userStatus'),
+      align: 'center',
       width: 100,
       formatter: row => {
-        if (row.userGender === undefined) {
-          return '';
-        }
-
-        const tagMap: Record<Api.SystemManage.UserGender, UI.ThemeColor> = {
-          1: 'primary',
+        const tagMap: Record<number, UI.ThemeColor> = {
+          1: 'success',
           2: 'danger'
         };
 
-        const label = $t(userGenderRecord[row.userGender]);
+        const label = row.enabled === 1 ? '启用' : '禁用';
 
-        return <ElTag type={tagMap[row.userGender]}>{label}</ElTag>;
-      }
-    },
-    { prop: 'nickName', label: $t('page.manage.user.nickName'), minWidth: 100 },
-    { prop: 'userPhone', label: $t('page.manage.user.userPhone'), width: 120 },
-    { prop: 'userEmail', label: $t('page.manage.user.userEmail'), minWidth: 200 },
-    {
-      prop: 'status',
-      label: $t('page.manage.user.userStatus'),
-      align: 'center',
-      formatter: row => {
-        if (row.status === undefined) {
-          return '';
-        }
-
-        const tagMap: Record<Api.Common.EnableStatus, UI.ThemeColor> = {
-          1: 'success',
-          2: 'warning'
-        };
-
-        const label = $t(enableStatusRecord[row.status]);
-
-        return <ElTag type={tagMap[row.status]}>{label}</ElTag>;
+        return <ElTag type={tagMap[row.enabled as 1 | 2] || 'info'}>{label}</ElTag>;
       }
     },
     {
@@ -108,32 +117,40 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-  // closeDrawer
-} = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, 'id', getData);
 
-async function handleBatchDelete() {
-  // eslint-disable-next-line no-console
-  console.log(checkedRowKeys.value);
-  // request
+/** all roles for selection */
+const allRoles = ref<Api.SystemManage.Role[]>([]);
 
-  onBatchDeleted();
+/** all departments for selection */
+const allDepartments = ref<Api.SystemManage.Department[]>([]);
+
+async function getAllRoles() {
+  const { data: roles } = await fetchGetAllRoles();
+  allRoles.value = roles || [];
 }
 
-function handleDelete(id: number) {
-  // eslint-disable-next-line no-console
-  console.log(id);
-  // request
+async function getAllDepartments() {
+  const { data: departments } = await fetchGetDepartmentTree();
+  allDepartments.value = departments || [];
+}
 
-  onDeleted();
+async function handleBatchDelete() {
+  const ids = checkedRowKeys.value.map(key => Number(key));
+  if (ids.length === 0) return;
+
+  const { error } = await fetchBatchDeleteUsers(ids);
+  if (!error) {
+    onBatchDeleted();
+  }
+}
+
+async function handleDelete(id: number) {
+  const { error } = await fetchDeleteUser(id);
+  if (!error) {
+    onDeleted();
+  }
 }
 
 function resetSearchParams() {
@@ -143,6 +160,10 @@ function resetSearchParams() {
 function edit(id: number) {
   handleEdit(id);
 }
+
+// init
+getAllRoles();
+getAllDepartments();
 </script>
 
 <template>
@@ -188,6 +209,7 @@ function edit(id: number) {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
+        :all-roles="allRoles"
         @submitted="getDataByPage"
       />
     </ElCard>

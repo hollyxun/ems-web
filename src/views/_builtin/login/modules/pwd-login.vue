@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { loginModuleRecord } from '@/constants/app';
+import { fetchGetCaptcha } from '@/service/api';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useForm, useFormRules } from '@/hooks/common/form';
@@ -15,11 +16,13 @@ const { formRef, validate } = useForm();
 interface FormModel {
   userName: string;
   password: string;
+  captcha: string;
 }
 
 const model = ref<FormModel>({
-  userName: 'Soybean',
-  password: '123456'
+  userName: 'admin',
+  password: '123456',
+  captcha: ''
 });
 
 const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
@@ -28,48 +31,43 @@ const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
 
   return {
     userName: formRules.userName,
-    password: formRules.pwd
+    password: formRules.pwd,
+    captcha: [{ required: true, message: $t('page.login.common.captchaPlaceholder') }]
   };
 });
 
+// 验证码相关
+const captchaId = ref('');
+const captchaImage = ref('');
+const captchaLoading = ref(false);
+
+async function getCaptcha() {
+  captchaLoading.value = true;
+  try {
+    const { data, error } = await fetchGetCaptcha();
+    if (!error && data) {
+      captchaId.value = data.captchaId;
+      captchaImage.value = data.captchaImage;
+    }
+  } finally {
+    captchaLoading.value = false;
+  }
+}
+
 async function handleSubmit() {
   await validate();
-  await authStore.login(model.value.userName, model.value.password);
-}
-
-type AccountKey = 'super' | 'admin' | 'user';
-
-interface Account {
-  key: AccountKey;
-  label: string;
-  userName: string;
-  password: string;
-}
-
-const accounts = computed<Account[]>(() => [
-  {
-    key: 'super',
-    label: $t('page.login.pwdLogin.superAdmin'),
-    userName: 'Super',
-    password: '123456'
-  },
-  {
-    key: 'admin',
-    label: $t('page.login.pwdLogin.admin'),
-    userName: 'Admin',
-    password: '123456'
-  },
-  {
-    key: 'user',
-    label: $t('page.login.pwdLogin.user'),
-    userName: 'User',
-    password: '123456'
+  await authStore.login(model.value.userName, model.value.password, model.value.captcha, captchaId.value);
+  // 登录失败时（token不存在）自动刷新验证码
+  if (!authStore.token) {
+    model.value.captcha = '';
+    await getCaptcha();
   }
-]);
-
-async function handleAccountLogin(account: Account) {
-  await authStore.login(account.userName, account.password);
 }
+
+// 页面加载时获取验证码
+onMounted(() => {
+  getCaptcha();
+});
 </script>
 
 <template>
@@ -84,6 +82,15 @@ async function handleAccountLogin(account: Account) {
         show-password-on="click"
         :placeholder="$t('page.login.common.passwordPlaceholder')"
       />
+    </ElFormItem>
+    <ElFormItem prop="captcha">
+      <div class="w-full flex-y-center gap-12px">
+        <ElInput v-model="model.captcha" :placeholder="$t('page.login.common.captchaPlaceholder')" class="flex-1" />
+        <div class="h-36px w-100px flex-center cursor-pointer overflow-hidden rd-4px bg-#f5f5f5" @click="getCaptcha">
+          <img v-if="captchaImage" :src="captchaImage" alt="captcha" class="h-full w-full object-contain" />
+          <span v-else-if="captchaLoading">Loading...</span>
+        </div>
+      </div>
     </ElFormItem>
     <ElSpace direction="vertical" :size="24" class="w-full" fill>
       <div class="flex-y-center justify-between">
@@ -101,19 +108,6 @@ async function handleAccountLogin(account: Account) {
         </ElButton>
         <ElButton class="flex-1" size="default" @click="toggleLoginModule('register')">
           {{ $t(loginModuleRecord.register) }}
-        </ElButton>
-      </div>
-      <ElDivider class="text-14px text-#666 !m-0">{{ $t('page.login.pwdLogin.otherAccountLogin') }}</ElDivider>
-      <div class="flex-center gap-12px">
-        <ElButton
-          v-for="item in accounts"
-          :key="item.key"
-          size="default"
-          type="primary"
-          :disabled="authStore.loginLoading"
-          @click="handleAccountLogin(item)"
-        >
-          {{ item.label }}
         </ElButton>
       </div>
     </ElSpace>

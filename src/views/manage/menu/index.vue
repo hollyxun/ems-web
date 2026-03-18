@@ -1,12 +1,11 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { Ref } from 'vue';
-import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
+import { ElButton, ElMessage, ElPopconfirm, ElTableColumn, ElTag } from 'element-plus';
 import { useBoolean } from '@sa/hooks';
 import { yesOrNoRecord } from '@/constants/common';
 import { enableStatusRecord, menuTypeRecord } from '@/constants/business';
-import { fetchGetAllPages, fetchGetMenuList } from '@/service/api';
-import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
+import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
@@ -14,175 +13,91 @@ import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal
 const { bool: visible, setTrue: openModal } = useBoolean();
 
 const wrapperRef = ref<HTMLElement | null>(null);
-
-const { columns, columnChecks, data, loading, pagination, getData, getDataByPage } = useUIPaginatedTable({
-  api: () => fetchGetMenuList(),
-  transform: response => defaultTransform(response),
-  columns: () => [
-    { prop: 'selection', type: 'selection', width: 48 },
-    { prop: 'id', label: $t('page.manage.menu.id') },
-    {
-      prop: 'menuType',
-      label: $t('page.manage.menu.menuType'),
-      width: 90,
-      formatter: row => {
-        const tagMap: Record<Api.SystemManage.MenuType, UI.ThemeColor> = {
-          1: 'info',
-          2: 'primary'
-        };
-
-        const label = $t(menuTypeRecord[row.menuType]);
-
-        return <ElTag type={tagMap[row.menuType]}>{label}</ElTag>;
-      }
-    },
-    {
-      prop: 'menuName',
-      label: $t('page.manage.menu.menuName'),
-      minWidth: 120,
-      formatter: row => {
-        const { i18nKey, menuName } = row;
-
-        const label = i18nKey ? $t(i18nKey) : menuName;
-
-        return <span>{label}</span>;
-      }
-    },
-    {
-      prop: 'icon',
-      label: $t('page.manage.menu.icon'),
-      width: 100,
-      formatter: row => {
-        const icon = row.iconType === '1' ? row.icon : undefined;
-
-        const localIcon = row.iconType === '2' ? row.icon : undefined;
-
-        return (
-          <div class="flex-center">
-            <SvgIcon icon={icon} localIcon={localIcon} class="text-icon" />
-          </div>
-        );
-      }
-    },
-    { prop: 'routeName', label: $t('page.manage.menu.routeName'), minWidth: 120 },
-    { prop: 'routePath', label: $t('page.manage.menu.routePath'), minWidth: 120 },
-    {
-      prop: 'status',
-      label: $t('page.manage.menu.menuStatus'),
-      width: 80,
-      formatter: row => {
-        if (row.status === undefined) {
-          return '';
-        }
-
-        const tagMap: Record<Api.Common.EnableStatus, UI.ThemeColor> = {
-          1: 'success',
-          2: 'warning'
-        };
-
-        const label = $t(enableStatusRecord[row.status]);
-
-        return <ElTag type={tagMap[row.status]}>{label}</ElTag>;
-      }
-    },
-    {
-      prop: 'hideInMenu',
-      label: $t('page.manage.menu.hideInMenu'),
-      width: 80,
-      formatter: row => {
-        const hide: CommonType.YesOrNo = row.hideInMenu ? 'Y' : 'N';
-
-        const tagMap: Record<CommonType.YesOrNo, UI.ThemeColor> = {
-          Y: 'danger',
-          N: 'info'
-        };
-
-        const label = $t(yesOrNoRecord[hide]);
-
-        return <ElTag type={tagMap[hide]}>{label}</ElTag>;
-      }
-    },
-    { prop: 'parentId', label: $t('page.manage.menu.parentId'), width: 90 },
-    { prop: 'order', label: $t('page.manage.menu.order'), width: 60 },
-    {
-      prop: 'operate',
-      label: $t('common.operate'),
-      width: 270,
-      formatter: row => (
-        <div class="flex-center justify-end pr-10px">
-          {row.menuType === '1' && (
-            <ElButton type="primary" plain size="small" onClick={() => handleAddChildMenu(row)}>
-              {$t('page.manage.menu.addChildMenu')}
-            </ElButton>
-          )}
-          <ElButton type="primary" plain size="small" onClick={() => handleEdit(row)}>
-            {$t('common.edit')}
-          </ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{
-              reference: () => (
-                <ElButton type="danger" plain size="small">
-                  {$t('common.delete')}
-                </ElButton>
-              )
-            }}
-          </ElPopconfirm>
-        </div>
-      )
-    }
-  ]
-});
-
-const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, 'id', getData);
-
-const operateType = ref<OperateType>('add');
-
-function handleAdd() {
-  operateType.value = 'add';
-  openModal();
-}
-
-async function handleBatchDelete() {
-  // request
-
-  onBatchDeleted();
-}
-
-function handleDelete(id: number) {
-  // eslint-disable-next-line no-console
-  console.log(id);
-  // request
-
-  onDeleted();
-}
+const loading = ref(false);
+const data: Ref<Api.SystemManage.Menu[]> = ref([]);
 
 /** the edit menu data or the parent menu data when adding a child menu */
 const editingData: Ref<Api.SystemManage.Menu | null> = ref(null);
 
+const operateType = ref<OperateType>('add');
+
+// 获取菜单列表（树形结构）
+async function getData() {
+  loading.value = true;
+  try {
+    const response = await fetchGetMenuList();
+    // API返回 { data: { list: [...], total, page, pageSize } }
+    data.value = response.data?.list || [];
+  } catch {
+    ElMessage.error('获取菜单列表失败');
+  } finally {
+    loading.value = false;
+  }
+}
+
+// 计算总数（递归统计所有菜单）
+const totalCount = computed(() => {
+  function countMenus(menus: Api.SystemManage.Menu[]): number {
+    let count = 0;
+    for (const menu of menus) {
+      count += 1;
+      if (menu.children && menu.children.length > 0) {
+        count += countMenus(menu.children);
+      }
+    }
+    return count;
+  }
+  return countMenus(data.value);
+});
+
+// 菜单类型颜色映射
+const menuTypeTagMap: Record<string, UI.ThemeColor> = {
+  dir: 'info',
+  menu: 'primary',
+  button: 'warning'
+};
+
+// 状态颜色映射
+const statusTagMap: Record<string, UI.ThemeColor> = {
+  '1': 'success',
+  '2': 'warning'
+};
+
+function handleAdd() {
+  operateType.value = 'add';
+  editingData.value = null;
+  openModal();
+}
+
+// 删除菜单
+async function handleDelete(id: number) {
+  try {
+    const { data: success } = await fetchDeleteMenu(id);
+    if (success) {
+      ElMessage.success('删除成功');
+      getData();
+    } else {
+      ElMessage.error('删除失败');
+    }
+  } catch {
+    ElMessage.error('删除失败');
+  }
+}
+
 function handleEdit(item: Api.SystemManage.Menu) {
   operateType.value = 'edit';
   editingData.value = { ...item };
-
   openModal();
 }
 
 function handleAddChildMenu(item: Api.SystemManage.Menu) {
   operateType.value = 'addChild';
-
   editingData.value = { ...item };
-
   openModal();
 }
 
-const allPages = ref<string[]>([]);
-
-async function getAllPages() {
-  const { data: pages } = await fetchGetAllPages();
-  allPages.value = pages || [];
-}
-
 function init() {
-  getAllPages();
+  getData();
 }
 
 // init
@@ -194,15 +109,21 @@ init();
     <ElCard class="card-wrapper sm:flex-1-hidden">
       <template #header>
         <div class="flex items-center justify-between">
-          <p>{{ $t('page.manage.menu.title') }}</p>
-          <TableHeaderOperation
-            v-model:columns="columnChecks"
-            :disabled-delete="checkedRowKeys.length === 0"
-            :loading="loading"
-            @add="handleAdd"
-            @delete="handleBatchDelete"
-            @refresh="getData"
-          />
+          <p>{{ $t('page.manage.menu.title') }} ({{ totalCount }})</p>
+          <div class="flex items-center gap-12px">
+            <ElButton type="primary" @click="handleAdd">
+              <template #icon>
+                <icon-ic-round-plus class="text-icon" />
+              </template>
+              {{ $t('common.add') }}
+            </ElButton>
+            <ElButton @click="getData">
+              <template #icon>
+                <icon-ic-round-refresh class="text-icon" />
+              </template>
+              {{ $t('common.refresh') }}
+            </ElButton>
+          </div>
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">
@@ -213,26 +134,74 @@ init();
           class="sm:h-full"
           :data="data"
           row-key="id"
-          @selection-change="checkedRowKeys = $event"
+          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+          default-expand-all
         >
-          <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
+          <ElTableColumn prop="id" :label="$t('page.manage.menu.id')" width="80" />
+          <ElTableColumn prop="menuType" :label="$t('page.manage.menu.menuType')" width="100">
+            <template #default="{ row }">
+              <ElTag :type="menuTypeTagMap[row.menuType] || 'info'">
+                {{ $t(menuTypeRecord[row.menuType] || row.menuType) }}
+              </ElTag>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="title" :label="$t('page.manage.menu.menuName')" min-width="150">
+            <template #default="{ row }">
+              <div class="ml-20px flex items-center gap-8px">
+                <SvgIcon v-if="row.icon" :icon="row.icon" class="text-icon" />
+                <span>{{ row.title }}</span>
+              </div>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="name" :label="$t('page.manage.menu.routeName')" min-width="140" />
+          <ElTableColumn prop="path" :label="$t('page.manage.menu.routePath')" min-width="140" />
+          <ElTableColumn prop="status" :label="$t('page.manage.menu.menuStatus')" width="90">
+            <template #default="{ row }">
+              <ElTag v-if="row.status" :type="statusTagMap[String(row.status)]">
+                {{ $t(enableStatusRecord[String(row.status)] || row.status) }}
+              </ElTag>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="hidden" :label="$t('page.manage.menu.hideInMenu')" width="90">
+            <template #default="{ row }">
+              <ElTag :type="row.hidden === 1 ? 'danger' : 'info'">
+                {{ $t(yesOrNoRecord[row.hidden === 1 ? 'Y' : 'N']) }}
+              </ElTag>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="sort" :label="$t('page.manage.menu.order')" width="70" />
+          <ElTableColumn :label="$t('common.operate')" width="250" fixed="right">
+            <template #default="{ row }">
+              <div class="flex items-center gap-8px">
+                <ElButton
+                  v-if="row.menuType === 'dir'"
+                  type="primary"
+                  plain
+                  size="small"
+                  @click="handleAddChildMenu(row)"
+                >
+                  {{ $t('page.manage.menu.addChildMenu') }}
+                </ElButton>
+                <ElButton type="primary" plain size="small" @click="handleEdit(row)">
+                  {{ $t('common.edit') }}
+                </ElButton>
+                <ElPopconfirm :title="$t('common.confirmDelete')" @confirm="handleDelete(row.id)">
+                  <template #reference>
+                    <ElButton type="danger" plain size="small">
+                      {{ $t('common.delete') }}
+                    </ElButton>
+                  </template>
+                </ElPopconfirm>
+              </div>
+            </template>
+          </ElTableColumn>
         </ElTable>
-        <div class="mt-20px flex justify-end">
-          <ElPagination
-            v-if="pagination.total"
-            layout="total,prev,pager,next,sizes"
-            v-bind="pagination"
-            @current-change="pagination['current-change']"
-            @size-change="pagination['size-change']"
-          />
-        </div>
       </div>
       <MenuOperateModal
         v-model:visible="visible"
         :operate-type="operateType"
         :row-data="editingData"
-        :all-pages="allPages"
-        @submitted="getDataByPage"
+        @submitted="getData"
       />
     </ElCard>
   </div>

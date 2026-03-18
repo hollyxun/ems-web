@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { enableStatusOptions, userGenderOptions } from '@/constants/business';
 import { useForm, useFormRules } from '@/hooks/common/form';
-import { translateOptions } from '@/utils/common';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'UserSearch' });
@@ -18,14 +16,13 @@ const { formRef, validate, restoreValidation } = useForm();
 
 const model = defineModel<Api.SystemManage.UserSearchParams>('model', { required: true });
 
-type RuleKey = Extract<keyof Api.SystemManage.UserSearchParams, 'userEmail' | 'userPhone'>;
+type RuleKey = Extract<keyof Api.SystemManage.UserSearchParams, 'phone'>;
 
 const rules = computed<Record<RuleKey, App.Global.FormRule>>(() => {
   const { patternRules } = useFormRules(); // inside computed to make locale reactive
 
   return {
-    userEmail: patternRules.email,
-    userPhone: patternRules.phone
+    phone: patternRules.phone
   };
 });
 
@@ -47,20 +44,8 @@ async function search() {
         <ElForm ref="formRef" :model="model" :rules="rules" label-position="right" :label-width="80">
           <ElRow :gutter="24">
             <ElCol :lg="6" :md="8" :sm="12">
-              <ElFormItem :label="$t('page.manage.user.userName')" prop="userName">
-                <ElInput v-model="model.userName" :placeholder="$t('page.manage.user.form.userName')" />
-              </ElFormItem>
-            </ElCol>
-            <ElCol :lg="6" :md="8" :sm="12" :label="$t('page.manage.user.userGender')">
-              <ElFormItem :label="$t('page.manage.user.userGender')" prop="userGender">
-                <ElSelect v-model="model.userGender" clearable :placeholder="$t('page.manage.user.form.userGender')">
-                  <ElOption
-                    v-for="(item, idx) in translateOptions(userGenderOptions)"
-                    :key="idx"
-                    :label="item.label"
-                    :value="item.value"
-                  ></ElOption>
-                </ElSelect>
+              <ElFormItem :label="$t('page.manage.user.userName')" prop="username">
+                <ElInput v-model="model.username" :placeholder="$t('page.manage.user.form.userName')" />
               </ElFormItem>
             </ElCol>
             <ElCol :lg="6" :md="8" :sm="12">
@@ -69,24 +54,15 @@ async function search() {
               </ElFormItem>
             </ElCol>
             <ElCol :lg="6" :md="8" :sm="12">
-              <ElFormItem :label="$t('page.manage.user.userPhone')" prop="userPhone">
-                <ElInput v-model="model.userPhone" :placeholder="$t('page.manage.user.form.userPhone')" />
+              <ElFormItem :label="$t('page.manage.user.userPhone')" prop="phone">
+                <ElInput v-model="model.phone" :placeholder="$t('page.manage.user.form.userPhone')" />
               </ElFormItem>
             </ElCol>
             <ElCol :lg="6" :md="8" :sm="12">
-              <ElFormItem :label="$t('page.manage.user.userEmail')" prop="userEmail">
-                <ElInput v-model="model.userEmail" :placeholder="$t('page.manage.user.form.userEmail')" />
-              </ElFormItem>
-            </ElCol>
-            <ElCol :lg="6" :md="8" :sm="12">
-              <ElFormItem :label="$t('page.manage.user.userStatus')" prop="userStatus">
-                <ElSelect v-model="model.userGender" clearable :placeholder="$t('page.manage.user.form.userStatus')">
-                  <ElOption
-                    v-for="{ label, value } in translateOptions(enableStatusOptions)"
-                    :key="value"
-                    :label="label"
-                    :value="value"
-                  ></ElOption>
+              <ElFormItem :label="$t('page.manage.user.userStatus')" prop="enabled">
+                <ElSelect v-model="model.enabled" clearable :placeholder="$t('page.manage.user.form.userStatus')">
+                  <ElOption label="启用" :value="1" />
+                  <ElOption label="禁用" :value="2" />
                 </ElSelect>
               </ElFormItem>
             </ElCol>

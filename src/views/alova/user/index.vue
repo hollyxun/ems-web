@@ -26,7 +26,7 @@ const { loading, data, refresh, reload, page, pageSize, pageCount, send, remove,
       size
     }),
   {
-    data: ({ records }) => records,
+    data: response => response.list,
 
     // trigger reload when states in `searchParams` changed
     watchingStates: [searchParams.value],
@@ -56,14 +56,14 @@ const {
   checkedRowKeys
   // batchDeleting
   // closeDrawer
-} = useTableOperate(data, {
+} = useTableOperate(data as any, {
   async delete(row) {
-    await deleteUser(row.id);
-    remove(row);
+    await deleteUser((row as any).id);
+    remove(row as any);
   },
   async batchDelete(rows) {
-    await batchDeleteUser(rows.map(({ id }) => id));
-    remove(...rows);
+    await batchDeleteUser((rows as any[]).map(({ id }) => id));
+    remove(...(rows as any[]));
   }
 });
 
@@ -71,26 +71,27 @@ function edit(id: number) {
   handleEdit(id);
 }
 
-const { columnChecks, columns } = useCheckedColumns<typeof fetchGetUserList>(() => [
+const { columnChecks, columns } = useCheckedColumns(() => [
   { type: 'selection', width: 48 },
   { prop: 'userName', label: $t('page.manage.user.userName'), minWidth: 100 },
   {
     prop: 'userGender',
     label: $t('page.manage.user.userGender'),
     width: 100,
-    formatter: row => {
+    formatter: (row: any) => {
       if (row.userGender === undefined) {
         return '';
       }
 
       const tagMap: Record<Api.SystemManage.UserGender, UI.ThemeColor> = {
-        1: 'primary',
-        2: 'danger'
+        '1': 'primary',
+        '2': 'danger'
       };
 
-      const label = $t(userGenderRecord[row.userGender]);
+      const gender = row.userGender as Api.SystemManage.UserGender;
+      const label = $t(userGenderRecord[gender]);
 
-      return <ElTag type={tagMap[row.userGender]}>{label}</ElTag>;
+      return <ElTag type={tagMap[gender]}>{label}</ElTag>;
     }
   },
   { prop: 'nickName', label: $t('page.manage.user.nickName'), minWidth: 100 },
@@ -106,13 +107,13 @@ const { columnChecks, columns } = useCheckedColumns<typeof fetchGetUserList>(() 
       }
 
       const tagMap: Record<Api.Common.EnableStatus, UI.ThemeColor> = {
-        1: 'success',
-        2: 'warning'
+        '1': 'success',
+        '2': 'warning'
       };
 
-      const label = $t(enableStatusRecord[row.status]);
+      const label = $t(enableStatusRecord[row.status as Api.Common.EnableStatus]);
 
-      return <ElTag type={tagMap[row.status]}>{label}</ElTag>;
+      return <ElTag type={tagMap[row.status as Api.Common.EnableStatus]}>{label}</ElTag>;
     }
   },
   {
@@ -175,7 +176,7 @@ const { columnChecks, columns } = useCheckedColumns<typeof fetchGetUserList>(() 
             :current-page="page"
             :total="total"
             :page-size="pageSize"
-            :page-sizes="[10, 15, 20, 25, 30]"
+            :page-sizes="[10, 30, 50, 100, 200]"
             :page-count="pageCount"
             @current-change="getDataByPage"
             @size-change="handleSizeChange"
@@ -185,7 +186,7 @@ const { columnChecks, columns } = useCheckedColumns<typeof fetchGetUserList>(() 
       <UserOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
-        :row-data="editingData"
+        :row-data="editingData as any"
         @submitted="reload"
       />
     </ElCard>

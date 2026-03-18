@@ -53,7 +53,7 @@ async function handleToggleAccount(account: Account) {
   loginAccount.value = account.key;
 
   startLoading();
-  await authStore.login(account.userName, account.password, false);
+  await authStore.login(account.userName, account.password, undefined, undefined, false);
   tabStore.initTabStore(route);
   endLoading();
   appStore.reloadPage();
@@ -66,7 +66,7 @@ async function handleToggleAccount(account: Account) {
       <ElDescriptions direction="vertical" border :column="1">
         <ElDescriptionsItem :label="$t('page.manage.user.userRole')">
           <ElSpace>
-            <ElTag v-for="role in authStore.userInfo.roles" :key="role">{{ role }}</ElTag>
+            <ElTag v-for="role in authStore.userInfo.roles" :key="role.authorityId">{{ role.authorityName }}</ElTag>
           </ElSpace>
         </ElDescriptionsItem>
         <ElDescriptionsItem ions-item :label="$t('page.function.toggleAuth.toggleAccount')">

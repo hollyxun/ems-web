@@ -62,12 +62,13 @@ const { columns, data, loading } = useUIPaginatedTable({
           return '';
         }
 
-        const tagMap: Record<Api.Common.EnableStatus, UI.ThemeColor> = {
+        const tagMap: Record<number, UI.ThemeColor> = {
           1: 'success',
           2: 'warning'
         };
 
-        const label = $t(enableStatusRecord[row.status]);
+        const statusKey = String(row.status) as Api.Common.EnableStatus;
+        const label = $t(enableStatusRecord[statusKey]);
 
         return <ElTag type={tagMap[row.status]}>{label}</ElTag>;
       }
@@ -109,11 +110,12 @@ function getTableValue(col: UI.TableColumn<Api.SystemManage.User>, item: Api.Sys
   }
 
   if (prop === 'userRoles') {
-    return item.userRoles.map(role => role).join(',');
+    return (item.userRoles || []).map((role: any) => role).join(',');
   }
 
   if (prop === 'status') {
-    return (item.status && $t(enableStatusRecord[item.status])) || undefined;
+    const statusKey = String(item.status) as Api.Common.EnableStatus;
+    return (item.status && $t(enableStatusRecord[statusKey])) || undefined;
   }
 
   if (prop === 'userGender') {
