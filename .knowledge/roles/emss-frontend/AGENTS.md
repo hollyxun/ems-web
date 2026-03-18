@@ -193,6 +193,7 @@ const emit = defineEmits<{
 | `skills/page-development.md` | 页面开发完整流程 | 创建新页面时 |
 | `skills/component-development.md` | 组件开发规范 | 创建新组件时 |
 | `skills/plugin-integration.md` | 插件集成流程 | 集成新插件时 |
+| `skills/module-removal.md` | 功能模块删除完整流程 | 删除功能模块时 |
 
 ### Insights（规律性认知）
 
