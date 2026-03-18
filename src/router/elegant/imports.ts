@@ -24,7 +24,6 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   alova_request: () => import("@/views/alova/request/index.vue"),
   alova_scenes: () => import("@/views/alova/scenes/index.vue"),
   alova_user: () => import("@/views/alova/user/index.vue"),
-  "devtools_ai-chat": () => import("@/views/devtools/ai-chat/index.vue"),
   devtools_server: () => import("@/views/devtools/server/index.vue"),
   "energy_base-data_coefficient": () => import("@/views/energy/base-data/coefficient/index.vue"),
   "energy_base-data_ledger": () => import("@/views/energy/base-data/ledger/index.vue"),

@@ -233,7 +233,6 @@ const local: App.I18n.Schema = {
     plugin_tables_vtable: 'VTable',
     devtools: 'Developer Tools',
     devtools_server: 'Server Status',
-    'devtools_ai-chat': 'AI Chat',
     energy: 'Energy Management',
     'energy_base-data': 'Base Data',
     'energy_base-data_coefficient': 'Coefficient',
@@ -625,41 +624,6 @@ const local: App.I18n.Schema = {
       frontendVersion: 'Frontend Dependencies',
       autoRefresh: 'Auto Refresh',
       refresh: 'Refresh'
-    },
-    aiChat: {
-      title: 'AI Chat',
-      config: {
-        title: 'AI Service Configuration',
-        baseUrl: 'Service URL',
-        baseUrlPlaceholder: 'Enter AI service URL, e.g.: https://api.openai.com',
-        apiKey: 'API Key',
-        apiKeyPlaceholder: 'Enter API key',
-        defaultModel: 'Default Model',
-        defaultModelPlaceholder: 'Select default model',
-        saveConfig: 'Save Config',
-        clearConfig: 'Clear Config',
-        getModels: 'Get Model List',
-        configGuide:
-          'Please configure the AI service URL and API key first, then get the model list to select the default model. Configuration is only saved in the local browser.'
-      },
-      session: {
-        newChat: 'New Chat',
-        createSession: 'New Session',
-        sessionLimit: 'Session limit reached',
-        clearAll: 'Clear All Sessions',
-        deleteConfirm: 'Are you sure you want to delete this session?',
-        clearAllConfirm: 'Are you sure you want to clear all sessions? This action cannot be undone.',
-        selectModel: 'Please select a model first'
-      },
-      chat: {
-        inputPlaceholder: 'Type a message... (Enter to send, Shift+Enter for new line)',
-        send: 'Send',
-        thinking: 'Thinking...',
-        startChat: 'Start Chatting',
-        inputHint: 'Type a message to start chatting with AI',
-        messageLimit: 'Message limit reached',
-        messageCount: '{count}/{max} messages'
-      }
     }
   }
 };

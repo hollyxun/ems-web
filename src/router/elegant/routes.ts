@@ -105,15 +105,6 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
-        name: 'devtools_ai-chat',
-        path: '/devtools/ai-chat',
-        component: 'view.devtools_ai-chat',
-        meta: {
-          title: 'devtools_ai-chat',
-          i18nKey: 'route.devtools_ai-chat'
-        }
-      },
-      {
         name: 'devtools_server',
         path: '/devtools/server',
         component: 'view.devtools_server',

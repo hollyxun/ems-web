@@ -233,7 +233,6 @@ const local: App.I18n.Schema = {
     plugin_tables_vtable: 'VTable',
     devtools: '开发者工具',
     devtools_server: '服务器状态',
-    'devtools_ai-chat': 'AI对话',
     energy: '能源管理',
     'energy_base-data': '基础数据',
     'energy_base-data_coefficient': '系数管理',
@@ -625,40 +624,6 @@ const local: App.I18n.Schema = {
       frontendVersion: '前端依赖',
       autoRefresh: '自动刷新',
       refresh: '刷新'
-    },
-    aiChat: {
-      title: 'AI对话',
-      config: {
-        title: 'AI服务配置',
-        baseUrl: '服务地址',
-        baseUrlPlaceholder: '请输入AI服务地址，如: https://api.openai.com',
-        apiKey: 'API密钥',
-        apiKeyPlaceholder: '请输入API密钥',
-        defaultModel: '默认模型',
-        defaultModelPlaceholder: '请选择默认模型',
-        saveConfig: '保存配置',
-        clearConfig: '清除配置',
-        getModels: '获取模型列表',
-        configGuide: '请先配置AI服务地址和API密钥，然后获取模型列表选择默认模型。配置仅保存在本地浏览器中。'
-      },
-      session: {
-        newChat: '新对话',
-        createSession: '新建对话',
-        sessionLimit: '已达到会话上限',
-        clearAll: '清空所有对话',
-        deleteConfirm: '确定要删除这个对话吗？',
-        clearAllConfirm: '确定要清空所有对话吗？此操作不可恢复。',
-        selectModel: '请先选择模型'
-      },
-      chat: {
-        inputPlaceholder: '输入消息... (Enter发送, Shift+Enter换行)',
-        send: '发送',
-        thinking: '思考中...',
-        startChat: '开始对话吧',
-        inputHint: '输入消息开始与AI对话',
-        messageLimit: '已达到消息上限',
-        messageCount: '{count}/{max} 条消息'
-      }
     }
   }
 };
