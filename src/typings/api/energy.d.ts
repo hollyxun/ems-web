@@ -124,4 +124,67 @@ declare namespace Api.Energy {
     page: number;
     pageSize: number;
   }
+
+  /** SSE实时数据命名空间 */
+  namespace Realtime {
+    /** SSE事件类型 */
+    type SSEEventType = 'data_update' | 'meter_status' | 'alert' | 'heartbeat' | 'connection_ack';
+
+    /** SSE消息结构 */
+    interface SSEMessage<T = unknown> {
+      eventType: SSEEventType;
+      data: T;
+      timestamp: string;
+    }
+
+    /** 通道范围 */
+    interface ChannelScope {
+      factoryId: number;
+      workshopId?: number;
+      channelId: string;
+    }
+
+    /** 计量点数据点 */
+    interface MeterDataPoint {
+      meterId: number;
+      value: number;
+      timestamp: string;
+      energyMedium: string;
+    }
+
+    /** 计量点数据批次 */
+    interface MeterDataBatch {
+      channelId: string;
+      meters: MeterDataPoint[];
+      windowStart: string;
+      windowEnd: string;
+    }
+
+    /** SSE连接状态 */
+    type SSEConnectionStatus = 'connecting' | 'connected' | 'disconnected' | 'reconnecting';
+
+    /** 连接确认数据 */
+    interface ConnectionAckData {
+      connectionId: string;
+      connectedAt: string;
+      message: string;
+    }
+
+    /** 心跳数据 */
+    interface HeartbeatData {
+      timestamp: string;
+    }
+
+    /** 告警数据 */
+    interface AlertData {
+      alertId: number;
+      alertType: string;
+      meterId: number;
+      level: 'info' | 'warning' | 'error' | 'critical';
+      message: string;
+      value: number;
+      threshold: number;
+      timestamp: string;
+    }
+  }
 }

@@ -271,3 +271,39 @@ export function fetchGetLedgerDetail(mediumId: number, queryDate?: string) {
     params: { mediumId, queryDate }
   });
 }
+
+// ============ SSE实时数据 ============
+
+/**
+ * 获取SSE服务状态
+ */
+export function fetchSSEStatus() {
+  return request<{ connectionCount: number; channelCount: number; status: string }>({
+    url: '/api/v1/energy/sse/status',
+    method: 'get'
+  });
+}
+
+/**
+ * 注册计量点到SSE通道
+ * @param data 注册请求
+ */
+export function fetchRegisterMeter(data: { meterId: number; factoryId: number; workshopId?: number }) {
+  return request<{ message: string }>({
+    url: '/api/v1/energy/sse/register-meter',
+    method: 'post',
+    data
+  });
+}
+
+/**
+ * 取消SSE订阅
+ * @param data 通道范围
+ */
+export function fetchUnsubscribeSSE(data: Api.Energy.Realtime.ChannelScope) {
+  return request<{ message: string }>({
+    url: '/api/v1/energy/sse/unsubscribe',
+    method: 'post',
+    data
+  });
+}
