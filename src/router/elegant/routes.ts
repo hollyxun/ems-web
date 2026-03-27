@@ -169,6 +169,36 @@ export const generatedRoutes: GeneratedRoute[] = [
             }
           }
         ]
+      },
+      {
+        name: 'energy_flow',
+        path: '/energy/flow',
+        component: 'view.energy_flow',
+        meta: {
+          title: 'energy_flow',
+          i18nKey: 'route.energy_flow',
+          icon: 'mdi:chart-sankey'
+        }
+      },
+      {
+        name: 'energy_ranking',
+        path: '/energy/ranking',
+        component: 'view.energy_ranking',
+        meta: {
+          title: 'energy_ranking',
+          i18nKey: 'route.energy_ranking',
+          icon: 'carbon:chart-radar'
+        }
+      },
+      {
+        name: 'energy_comparison',
+        path: '/energy/comparison',
+        component: 'view.energy_comparison',
+        meta: {
+          title: 'energy_comparison',
+          i18nKey: 'route.energy_comparison',
+          icon: 'carbon:compare'
+        }
       }
     ]
   },
@@ -388,6 +418,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'manage_organization',
+        path: '/manage/organization',
+        component: 'view.manage_organization',
+        meta: {
+          title: 'manage_organization',
+          i18nKey: 'route.manage_organization'
+        }
+      },
+      {
         name: 'manage_role',
         path: '/manage/role',
         component: 'view.manage_role',
@@ -422,6 +461,28 @@ export const generatedRoutes: GeneratedRoute[] = [
           hideInMenu: true,
           roles: ['R_ADMIN'],
           activeMenu: 'manage_user'
+        }
+      },
+      {
+        name: 'manage_advanced-permission',
+        path: '/manage/advanced-permission',
+        component: 'view.manage_advanced-permission',
+        meta: {
+          title: 'manage_advanced-permission',
+          i18nKey: 'route.manage_advanced-permission',
+          icon: 'mdi:shield-lock',
+          roles: ['R_ADMIN']
+        }
+      },
+      {
+        name: 'manage_audit-log',
+        path: '/manage/audit-log',
+        component: 'view.manage_audit-log',
+        meta: {
+          title: 'manage_audit-log',
+          i18nKey: 'route.manage_audit-log',
+          icon: 'mdi:text-box-search',
+          roles: ['R_ADMIN']
         }
       }
     ]

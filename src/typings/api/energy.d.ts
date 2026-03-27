@@ -187,4 +187,398 @@ declare namespace Api.Energy {
       timestamp: string;
     }
   }
+
+  /** 能量流 - Sankey图数据 */
+  namespace EnergyFlow {
+    /** 节点类型 */
+    type NodeType = 'input' | 'workshop' | 'team' | 'loss';
+
+    /** Sankey图节点 */
+    interface SankeyNode {
+      /** 唯一标识 */
+      id: string;
+      /** 显示名称 */
+      name: string;
+      /** 层级深度: 0=输入源, 1=车间, 2=班组 */
+      depth: number;
+      /** 能耗值 */
+      value: number;
+      /** 节点类型 */
+      nodeType: NodeType;
+      /** 组织ID */
+      orgId: number;
+      /** 可选附加信息 */
+      metadata?: string;
+    }
+
+    /** Sankey图连线 */
+    interface SankeyLink {
+      /** 源节点ID */
+      source: string;
+      /** 目标节点ID */
+      target: string;
+      /** 能量流量 */
+      value: number;
+    }
+
+    /** 时间范围 */
+    interface TimeRange {
+      startTime: string;
+      endTime: string;
+    }
+
+    /** 能量流响应 */
+    interface EnergyFlowResponse {
+      /** 节点列表 */
+      nodes: SankeyNode[];
+      /** 连线列表 */
+      links: SankeyLink[];
+      /** 平衡率（百分比） */
+      balanceRate: number;
+      /** 是否平衡（balanceRate >= 95%） */
+      isBalanced: boolean;
+      /** 总损耗值 */
+      lossTotal: number;
+      /** 损耗占比（占总输入的百分比） */
+      lossPercent: number;
+      /** 统计时间段 */
+      period: TimeRange;
+    }
+
+    /** 能量流查询参数 */
+    interface EnergyFlowParams {
+      /** 工厂ID */
+      factoryId?: number;
+      /** 车间ID */
+      workshopId?: number;
+      /** 开始时间 (RFC3339格式) */
+      startTime: string;
+      /** 结束时间 (RFC3339格式) */
+      endTime: string;
+      /** 能源介质类型（可选） */
+      energyMedium?: string;
+    }
+  }
+
+  /** 排名模块 */
+  namespace Ranking {
+    /** 时间维度 */
+    type TimeDimension = 'daily' | 'weekly' | 'monthly';
+
+    /** 排名指标 */
+    type Metric = 'total_energy' | 'specific_consumption' | 'cost';
+
+    /** 班组排名项 */
+    interface TeamRankingItem {
+      teamId: number;
+      teamName: string;
+      teamCode: string;
+      factoryId: number;
+      factoryName: string;
+      workshopId: number;
+      workshopName: string;
+      energyMedium: string;
+      totalEnergy: number;
+      productionOutput: number;
+      specificConsumption: number;
+      cost: number;
+      rank: number;
+      rankChange: number;
+      dataPoints: number;
+      periodStart: string;
+      periodEnd: string;
+    }
+
+    /** 排名响应 */
+    interface TeamRankingResponse {
+      items: TeamRankingItem[];
+      total: number;
+      page: number;
+      pageSize: number;
+    }
+
+    /** 排名查询参数 */
+    interface TeamRankingQuery {
+      page?: number;
+      pageSize?: number;
+      timeDimension?: TimeDimension;
+      metric?: Metric;
+      factoryId?: number;
+      workshopId?: number;
+      teamId?: number;
+      energyMedium?: string;
+      periodStart?: string;
+      periodEnd?: string;
+      sortBy?: string;
+      sortOrder?: 'asc' | 'desc';
+    }
+
+    /** 排名趋势数据点 */
+    interface RankingTrendPoint {
+      date: string;
+      rank: number;
+      metricValue: number;
+    }
+
+    /** 趋势查询参数 */
+    interface RankingTrendQuery {
+      teamId: number;
+      days?: number;
+      metric?: Metric;
+    }
+  }
+
+  /** 对比模块 */
+  namespace Comparison {
+    /** 对比类型 */
+    type ComparisonType = 'team_vs_team' | 'shift_vs_shift' | 'time_vs_time';
+
+    /** 对比项 */
+    interface ComparisonItem {
+      id: string;
+      name: string;
+      totalEnergy: number;
+      productionOutput: number;
+      specificConsumption: number;
+      cost: number;
+      peakEnergy: number;
+      valleyEnergy: number;
+      flatEnergy: number;
+      peakRatio: number;
+      valleyRatio: number;
+      flatRatio: number;
+      periodStart?: string;
+      periodEnd?: string;
+    }
+
+    /** 对比差异 */
+    interface ComparisonDiff {
+      metric: string;
+      valueA: number;
+      valueB: number;
+      valueC?: number;
+      difference: number;
+      percentChange: number;
+      isPositive: boolean;
+    }
+
+    /** 对比结果 */
+    interface ComparisonResult {
+      comparisonType: ComparisonType;
+      itemA: ComparisonItem;
+      itemB: ComparisonItem;
+      itemC?: ComparisonItem;
+      differences: ComparisonDiff[];
+      summary: string;
+    }
+
+    /** 时间对比结果 */
+    interface TimeComparisonResult {
+      currentPeriod: ComparisonItem;
+      previousPeriod: ComparisonItem;
+      samePeriodLastYear: ComparisonItem;
+      differences: Record<string, ComparisonDiff>;
+      summary: string;
+    }
+
+    /** 班组对比查询 */
+    interface TeamComparisonQuery {
+      teamAId: number;
+      teamBId: number;
+      timeDimension?: 'daily' | 'weekly' | 'monthly';
+      periodStart?: string;
+      periodEnd?: string;
+      energyMedium?: string;
+    }
+
+    /** 班次对比查询 */
+    interface ShiftComparisonQuery {
+      teamId: number;
+      date?: string;
+      shiftTypes?: string[];
+      energyMedium?: string;
+    }
+
+    /** 时间对比查询 */
+    interface TimeComparisonQuery {
+      teamId: number;
+      periodType?: 'daily' | 'weekly' | 'monthly';
+      periodEnd?: string;
+      energyMedium?: string;
+    }
+  }
+
+  /** 报表模块 */
+  namespace Report {
+    /** 班次能耗数据 */
+    interface ShiftEnergyData {
+      shiftType: string;
+      shiftName: string;
+      startTime: string;
+      endTime: string;
+      teamId: number;
+      teamName: string;
+      energyValue: number;
+      energyType: string;
+      unit: string;
+      cost: number;
+      production: number;
+      specificUsage: number;
+      peakRatio: number;
+      valleyRatio: number;
+      flatRatio: number;
+    }
+
+    /** 日报数据 */
+    interface DailyReportData {
+      reportDate: string;
+      teamId: number;
+      teamName: string;
+      workshopId: number;
+      workshopName: string;
+      factoryId: number;
+      factoryName: string;
+      shiftData: ShiftEnergyData[];
+      totalEnergy: number;
+      totalCost: number;
+      totalProduction: number;
+      avgSpecificUsage: number;
+      prevDayEnergy: number;
+      dayOverDay: number;
+      peakTotal: number;
+      valleyTotal: number;
+      flatTotal: number;
+    }
+
+    /** 日报查询参数 */
+    interface DailyReportParams {
+      date: string;
+      teamId?: number;
+      factoryId?: number;
+      energyType?: string;
+    }
+
+    /** 日汇总数据 */
+    interface DailySummary {
+      date: string;
+      energyValue: number;
+      cost: number;
+      production: number;
+    }
+
+    /** 趋势数据点 */
+    interface TrendPoint {
+      date: string;
+      value: number;
+    }
+
+    /** 能源类型分布 */
+    interface EnergyTypeBreakdown {
+      energyType: string;
+      value: number;
+      cost: number;
+      percentage: number;
+    }
+
+    /** 月报数据 */
+    interface MonthlyReportData {
+      reportMonth: string;
+      teamId: number;
+      teamName: string;
+      dailyData: DailySummary[];
+      totalEnergy: number;
+      totalCost: number;
+      avgDailyEnergy: number;
+      prevMonthEnergy: number;
+      monthOverMonth: number;
+      yoYEnergy: number;
+      trendData: TrendPoint[];
+      energyByType: EnergyTypeBreakdown[];
+    }
+
+    /** 月报查询参数 */
+    interface MonthlyReportParams {
+      month: string;
+      teamId?: number;
+      factoryId?: number;
+      energyType?: string;
+    }
+
+    /** 排名报表行 */
+    interface RankingRow {
+      rank: number;
+      teamId: number;
+      teamName: string;
+      workshopName: string;
+      factoryName: string;
+      energyValue: number;
+      production: number;
+      specificUsage: number;
+      cost: number;
+      change: number;
+    }
+
+    /** 排名报表数据 */
+    interface RankingReportData {
+      reportDate: string;
+      dimension: string;
+      filterInfo: string;
+      rankings: RankingRow[];
+      generatedAt: string;
+    }
+
+    /** 排名报表查询参数 */
+    interface RankingReportParams {
+      dateStart: string;
+      dateEnd: string;
+      dimension: 'energy' | 'specific' | 'cost';
+      factoryId?: number;
+      workshopId?: number;
+      energyType?: string;
+      topN?: number;
+    }
+
+    /** 对比项 */
+    interface CompareItem {
+      id: number;
+      name: string;
+      type: string;
+    }
+
+    /** 对比维度 */
+    interface CompareDimension {
+      name: string;
+      valueA: number;
+      valueB: number;
+      diff: number;
+      diffRatio: number;
+    }
+
+    /** 对比报表数据 */
+    interface ComparisonReportData {
+      reportTitle: string;
+      compareType: string;
+      itemA: CompareItem;
+      itemB: CompareItem;
+      dimensions: CompareDimension[];
+      generatedAt: string;
+    }
+
+    /** 对比报表查询参数 */
+    interface ComparisonReportParams {
+      compareType: 'team' | 'shift' | 'time';
+      teamAId?: number;
+      teamBId?: number;
+      shiftTypeA?: string;
+      shiftTypeB?: string;
+      teamId?: number;
+      timeAStart?: string;
+      timeAEnd?: string;
+      timeBStart?: string;
+      timeBEnd?: string;
+      date?: string;
+      energyType?: string;
+      dimensions?: string[];
+    }
+  }
 }
