@@ -1,15 +1,12 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
-import { enableStatusRecord } from '@/constants/business';
 import {
   fetchBatchDeleteUsers,
-  fetchCreateUser,
   fetchDeleteUser,
   fetchGetAllRoles,
   fetchGetDepartmentTree,
-  fetchGetUserList,
-  fetchUpdateUser
+  fetchGetUserList
 } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -51,6 +48,12 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'nickName', label: $t('page.manage.user.nickName'), minWidth: 100 },
     { prop: 'phone', label: $t('page.manage.user.userPhone'), width: 120 },
     { prop: 'email', label: $t('page.manage.user.userEmail'), minWidth: 200 },
+    {
+      prop: 'organization',
+      label: '所属组织',
+      minWidth: 120,
+      formatter: row => <span>{row.organization?.name || '-'}</span>
+    },
     {
       prop: 'department',
       label: '所属部门',

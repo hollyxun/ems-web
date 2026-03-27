@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { enableStatusOptions } from '@/constants/business';
 import {
   fetchCreateUser,
-  fetchGetAllRoles,
   fetchGetDepartmentTree,
-  fetchGetUserById,
   fetchGetUserRoles,
+  fetchOrganizationTree,
   fetchSetUserRoles,
   fetchUpdateUser
 } from '@/service/api';
@@ -25,7 +23,8 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  allRoles: () => []
+  allRoles: () => [],
+  rowData: null
 });
 
 interface Emits {
@@ -39,7 +38,7 @@ const visible = defineModel<boolean>('visible', {
 });
 
 const { formRef, validate, restoreValidation } = useForm();
-const { defaultRequiredRule, formRules } = useFormRules();
+const { defaultRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<UI.TableOperateType, string> = {
@@ -58,6 +57,7 @@ interface Model {
   email: string;
   enabled: number;
   departmentId: number;
+  organizationId: number;
   roleIds: number[];
 }
 
@@ -72,6 +72,7 @@ function createDefaultModel(): Model {
     email: '',
     enabled: 1,
     departmentId: 0,
+    organizationId: 0,
     roleIds: []
   };
 }
@@ -88,9 +89,17 @@ const loading = ref(false);
 /** all departments for selection */
 const allDepartments = ref<Api.SystemManage.Department[]>([]);
 
+/** all organizations for selection */
+const allOrganizations = ref<Api.Organization.OrganizationItem[]>([]);
+
 async function getDepartmentTree() {
   const { data } = await fetchGetDepartmentTree();
   allDepartments.value = data || [];
+}
+
+async function getOrganizationTree() {
+  const { data } = await fetchOrganizationTree();
+  allOrganizations.value = data || [];
 }
 
 async function handleInitModel() {
@@ -106,6 +115,7 @@ async function handleInitModel() {
       email: rowData.email || '',
       enabled: rowData.enabled ?? 1,
       departmentId: rowData.departmentId || 0,
+      organizationId: rowData.organizationId || 0,
       roleIds: []
     };
 
@@ -113,8 +123,8 @@ async function handleInitModel() {
     try {
       const { data: userRoles } = await fetchGetUserRoles(rowData.id);
       model.value.roleIds = (userRoles || []).map((role: Api.SystemManage.Role) => role.authorityId);
-    } catch (error) {
-      console.error('获取用户角色失败:', error);
+    } catch {
+      // ignore error
     }
   }
 }
@@ -136,7 +146,8 @@ async function handleSubmit() {
         phone: model.value.phone,
         email: model.value.email,
         enabled: model.value.enabled,
-        departmentId: model.value.departmentId
+        departmentId: model.value.departmentId,
+        organizationId: model.value.organizationId
       });
       if (!error) {
         // 设置用户角色
@@ -155,7 +166,8 @@ async function handleSubmit() {
         phone: model.value.phone,
         email: model.value.email,
         enabled: model.value.enabled,
-        departmentId: model.value.departmentId
+        departmentId: model.value.departmentId,
+        organizationId: model.value.organizationId
       });
       if (!error) {
         // 更新用户角色
@@ -177,6 +189,7 @@ watch(visible, () => {
     handleInitModel();
     restoreValidation();
     getDepartmentTree();
+    getOrganizationTree();
   }
 });
 </script>
@@ -202,6 +215,17 @@ watch(visible, () => {
       </ElFormItem>
       <ElFormItem :label="$t('page.manage.user.userEmail')" prop="email">
         <ElInput v-model="model.email" :placeholder="$t('page.manage.user.form.userEmail')" />
+      </ElFormItem>
+      <ElFormItem label="所属组织" prop="organizationId">
+        <ElTreeSelect
+          v-model="model.organizationId"
+          :data="allOrganizations"
+          :props="{ label: 'name', value: 'id', children: 'children' } as any"
+          check-strictly
+          clearable
+          placeholder="请选择所属组织"
+          class="w-full"
+        />
       </ElFormItem>
       <ElFormItem label="所属部门" prop="departmentId">
         <ElTreeSelect
