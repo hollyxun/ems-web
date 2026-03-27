@@ -8,8 +8,6 @@ defineOptions({ name: 'TeamComparison' });
 
 interface Props {
   teamOptions: Array<{ value: number; label: string; factoryId: number }>;
-  factoryOptions: Array<{ value: number; label: string }>;
-  energyMediumOptions: Array<{ value: string; label: string }>;
 }
 
 const props = defineProps<Props>();

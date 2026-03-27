@@ -8,10 +8,9 @@ defineOptions({ name: 'ShiftComparison' });
 
 interface Props {
   teamOptions: Array<{ value: number; label: string }>;
-  energyMediumOptions: Array<{ value: string; label: string }>;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const loading = ref(false);
 const result = ref<Api.Energy.Comparison.ComparisonResult | null>(null);
@@ -55,16 +54,12 @@ async function handleCompare() {
   try {
     const res = await fetchCompareShifts(query);
     result.value = res.data || null;
-  } catch (error) {
+  } catch {
     ElMessage.error('对比查询失败');
     result.value = null;
   } finally {
     loading.value = false;
   }
-}
-
-function getDiffClass(diff: { isPositive: boolean }) {
-  return diff.isPositive ? 'text-green-500' : 'text-red-500';
 }
 </script>
 

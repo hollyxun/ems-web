@@ -8,10 +8,9 @@ defineOptions({ name: 'TimeComparison' });
 
 interface Props {
   teamOptions: Array<{ value: number; label: string }>;
-  energyMediumOptions: Array<{ value: string; label: string }>;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const loading = ref(false);
 const result = ref<Api.Energy.Comparison.TimeComparisonResult | null>(null);
@@ -48,7 +47,7 @@ async function handleCompare() {
   try {
     const res = await fetchCompareTime(query);
     result.value = res.data || null;
-  } catch (error) {
+  } catch {
     ElMessage.error('对比查询失败');
     result.value = null;
   } finally {

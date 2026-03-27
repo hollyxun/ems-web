@@ -20,7 +20,7 @@ interface Emits {
   (e: 'reset'): void;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 const emit = defineEmits<Emits>();
 
 const timeDimension = ref<Api.Energy.Ranking.TimeDimension>('daily');

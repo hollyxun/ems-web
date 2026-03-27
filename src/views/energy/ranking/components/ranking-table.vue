@@ -11,9 +11,9 @@ interface Props {
 }
 
 interface Emits {
-  (e: 'row-click', row: Api.Energy.Ranking.TeamRankingItem): void;
-  (e: 'trend-click', row: Api.Energy.Ranking.TeamRankingItem): void;
-  (e: 'sort-change', prop: string, order: 'ascending' | 'descending'): void;
+  (e: 'rowClick', row: Api.Energy.Ranking.TeamRankingItem): void;
+  (e: 'trendClick', row: Api.Energy.Ranking.TeamRankingItem): void;
+  (e: 'sortChange', prop: string, order: 'ascending' | 'descending'): void;
 }
 
 const props = defineProps<Props>();

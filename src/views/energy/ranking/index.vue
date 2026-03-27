@@ -63,8 +63,8 @@ async function loadRankingData() {
     const result = await fetchTeamRanking(queryParams);
     rankingData.value = result.data?.items || [];
     total.value = result.data?.total || 0;
-  } catch (error) {
-    console.error('Failed to load ranking data:', error);
+  } catch {
+    ElMessage.error('加载排名数据失败');
   } finally {
     loading.value = false;
   }
@@ -82,8 +82,8 @@ async function loadTrendData(team: Api.Energy.Ranking.TeamRankingItem) {
       metric: queryParams.metric
     });
     trendData.value = result.data || [];
-  } catch (error) {
-    console.error('Failed to load trend data:', error);
+  } catch {
+    ElMessage.error('加载趋势数据失败');
     trendData.value = [];
   } finally {
     trendLoading.value = false;

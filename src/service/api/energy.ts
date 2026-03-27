@@ -1,4 +1,6 @@
 import { request } from '../request';
+import axios from 'axios';
+import { localStg } from '@/utils/storage';
 
 // ============ 报表模块 ============
 
@@ -55,14 +57,15 @@ export function fetchComparisonReportData(data: Api.Energy.Report.ComparisonRepo
  * @param data 查询参数
  */
 export async function exportRankingExcel(data: Api.Energy.Report.RankingReportParams) {
-  const response = await request<Blob>({
-    url: '/api/v1/energy/export/ranking/excel',
-    method: 'post',
-    data,
-    responseType: 'blob'
+  const token = localStg.get('token');
+  const response = await axios.post('/api/v1/energy/export/ranking/excel', data, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   });
 
-  downloadFile(response, `排名报表_${Date.now()}.xlsx`);
+  downloadFile(response.data, `排名报表_${Date.now()}.xlsx`);
 }
 
 /**
@@ -70,14 +73,64 @@ export async function exportRankingExcel(data: Api.Energy.Report.RankingReportPa
  * @param data 查询参数
  */
 export async function exportComparisonExcel(data: Api.Energy.Report.ComparisonReportParams) {
-  const response = await request<Blob>({
-    url: '/api/v1/energy/export/comparison/excel',
-    method: 'post',
-    data,
-    responseType: 'blob'
+  const token = localStg.get('token');
+  const response = await axios.post('/api/v1/energy/export/comparison/excel', data, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   });
 
-  downloadFile(response, `对比报表_${Date.now()}.xlsx`);
+  downloadFile(response.data, `对比报表_${Date.now()}.xlsx`);
+}
+
+/**
+ * 导出日报PDF
+ * @param params 查询参数
+ */
+export async function exportDailyPdf(params: Api.Energy.Report.DailyReportParams) {
+  const token = localStg.get('token');
+  const response = await axios.post('/api/v1/energy/export/daily/pdf', params, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  downloadFile(response.data, `日报_${params.date}_${Date.now()}.pdf`);
+}
+
+/**
+ * 导出月报PDF
+ * @param params 查询参数
+ */
+export async function exportMonthlyPdf(params: Api.Energy.Report.MonthlyReportParams) {
+  const token = localStg.get('token');
+  const response = await axios.post('/api/v1/energy/export/monthly/pdf', params, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  downloadFile(response.data, `月报_${params.month}_${Date.now()}.pdf`);
+}
+
+/**
+ * 下载文件工具函数
+ */
+function downloadFile(blob: Blob, filename: string) {
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+// ============ 能源介质 ============
 }
 
 /**
