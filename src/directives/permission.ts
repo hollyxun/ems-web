@@ -42,6 +42,29 @@ function checkPermission(value: string | string[], type: 'some' | 'every' = 'som
 }
 
 /**
+ * 检查是否有权限（导出供代码使用）
+ * @param code 权限编码
+ * @returns 是否有权限
+ */
+export function hasPermission(code: string): boolean {
+  const authStore = useAuthStore();
+  const { buttons } = authStore.userInfo;
+
+  // 如果没有权限数据，返回 false
+  if (!buttons || buttons.length === 0) {
+    return false;
+  }
+
+  // 超级管理员拥有所有权限
+  if (authStore.isStaticSuper) {
+    return true;
+  }
+
+  // 检查是否包含通配符或指定权限
+  return buttons.includes('*') || buttons.includes(code);
+}
+
+/**
  * 处理指令绑定
  */
 function handleDirective(el: HTMLElement, binding: DirectiveBinding<string | string[]>) {
@@ -51,10 +74,10 @@ function handleDirective(el: HTMLElement, binding: DirectiveBinding<string | str
   const type = modifiers.all ? 'every' : 'some';
 
   // 检查是否有权限
-  const hasPermission = checkPermission(value, type);
+  const isPermitted = checkPermission(value, type);
 
   // 如果没有权限，移除元素
-  if (!hasPermission) {
+  if (!isPermitted) {
     el.parentNode?.removeChild(el);
   }
 }
