@@ -1,6 +1,6 @@
-import { request } from '../request';
 import axios from 'axios';
 import { localStg } from '@/utils/storage';
+import { request } from '../request';
 
 // ============ 报表模块 ============
 
@@ -114,53 +114,6 @@ export async function exportMonthlyPdf(params: Api.Energy.Report.MonthlyReportPa
   });
 
   downloadFile(response.data, `月报_${params.month}_${Date.now()}.pdf`);
-}
-
-/**
- * 下载文件工具函数
- */
-function downloadFile(blob: Blob, filename: string) {
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.setAttribute('download', filename);
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
-}
-
-// ============ 能源介质 ============
-}
-
-/**
- * 导出日报PDF
- * @param params 查询参数
- */
-export async function exportDailyPdf(params: Api.Energy.Report.DailyReportParams) {
-  const response = await request<Blob>({
-    url: '/api/v1/energy/export/daily/pdf',
-    method: 'post',
-    data: params,
-    responseType: 'blob'
-  });
-
-  downloadFile(response, `日报_${params.date}_${Date.now()}.pdf`);
-}
-
-/**
- * 导出月报PDF
- * @param params 查询参数
- */
-export async function exportMonthlyPdf(params: Api.Energy.Report.MonthlyReportParams) {
-  const response = await request<Blob>({
-    url: '/api/v1/energy/export/monthly/pdf',
-    method: 'post',
-    data: params,
-    responseType: 'blob'
-  });
-
-  downloadFile(response, `月报_${params.month}_${Date.now()}.pdf`);
 }
 
 /**
