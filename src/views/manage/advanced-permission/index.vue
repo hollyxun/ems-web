@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import {
-  fetchSetCrossFactoryPermission,
   fetchGetCrossFactoryPermission,
-  fetchSetShiftPermission,
+  fetchGetOperationPermissions,
   fetchGetShiftPermission,
+  fetchSetCrossFactoryPermission,
   fetchSetOperationPermission,
-  fetchGetOperationPermissions
+  fetchSetShiftPermission
 } from '@/service/api/advanced-permission';
 import type { OperationPermission } from '@/service/api/advanced-permission';
 
@@ -65,13 +65,11 @@ const moduleLabels: Record<string, string> = {
   comparison: '对比分析'
 };
 
-const selectedRole = computed(() =>
-  roles.value.find(r => r.id === selectedRoleId.value)
-);
-
 const isAllFactories = computed(() => {
-  return crossFactoryForm.value.factoryIds.length === 0 ||
-    crossFactoryForm.value.factoryIds.length === factories.value.length;
+  return (
+    crossFactoryForm.value.factoryIds.length === 0 ||
+    crossFactoryForm.value.factoryIds.length === factories.value.length
+  );
 });
 
 // Load permission data
@@ -96,8 +94,8 @@ async function loadPermissions() {
     // Load operation permissions
     const opRes = await fetchGetOperationPermissions(selectedRoleId.value);
     operationPermissions.value = opRes.data || [];
-  } catch (error) {
-    console.error('Load permissions failed:', error);
+  } catch {
+    ElMessage.error('加载权限失败');
   } finally {
     loading.value = false;
   }
@@ -128,9 +126,8 @@ async function saveCrossFactoryPermission() {
       factoryIds: crossFactoryForm.value.allowed ? crossFactoryForm.value.factoryIds : []
     });
     ElMessage.success('跨厂权限设置成功');
-  } catch (error) {
+  } catch {
     ElMessage.error('设置失败');
-    console.error('Save cross-factory permission failed:', error);
   } finally {
     loading.value = false;
   }
@@ -145,9 +142,8 @@ async function saveShiftPermission() {
       scope: shiftScope.value
     });
     ElMessage.success('班次权限设置成功');
-  } catch (error) {
+  } catch {
     ElMessage.error('设置失败');
-    console.error('Save shift permission failed:', error);
   } finally {
     loading.value = false;
   }
@@ -182,9 +178,8 @@ async function toggleOperationPermission(module: string, operation: string) {
     }
 
     ElMessage.success(`${moduleLabels[module]} ${operationLabels[operation]} 权限${newAllowed ? '开启' : '关闭'}`);
-  } catch (error) {
+  } catch {
     ElMessage.error('设置失败');
-    console.error('Toggle permission failed:', error);
   } finally {
     saving.value = false;
   }
@@ -209,12 +204,7 @@ watch(() => selectedRoleId.value, loadPermissions, { immediate: true });
         <div class="flex items-center justify-between">
           <h3 class="text-lg font-medium">高级权限配置</h3>
           <ElSelect v-model="selectedRoleId" placeholder="选择角色" class="w-48">
-            <ElOption
-              v-for="role in roles"
-              :key="role.id"
-              :label="role.name"
-              :value="role.id"
-            />
+            <ElOption v-for="role in roles" :key="role.id" :label="role.name" :value="role.id" />
           </ElSelect>
         </div>
       </template>
@@ -224,7 +214,7 @@ watch(() => selectedRoleId.value, loadPermissions, { immediate: true });
           <ElForm v-loading="loading" label-width="120px" class="p-4">
             <ElFormItem label="启用跨厂查看">
               <ElSwitch v-model="crossFactoryForm.allowed" />
-              <span class="ml-2 text-gray-500 text-sm">开启后可查看其他工厂数据</span>
+              <span class="ml-2 text-sm text-gray-500">开启后可查看其他工厂数据</span>
             </ElFormItem>
 
             <ElFormItem v-if="crossFactoryForm.allowed" label="授权工厂">
@@ -237,11 +227,7 @@ watch(() => selectedRoleId.value, loadPermissions, { immediate: true });
                   全部工厂
                 </ElCheckbox>
                 <ElCheckboxGroup v-model="crossFactoryForm.factoryIds">
-                  <ElCheckbox
-                    v-for="factory in factories"
-                    :key="factory.id"
-                    :label="factory.id"
-                  >
+                  <ElCheckbox v-for="factory in factories" :key="factory.id" :label="factory.id">
                     {{ factory.name }}
                   </ElCheckbox>
                 </ElCheckboxGroup>
@@ -249,9 +235,7 @@ watch(() => selectedRoleId.value, loadPermissions, { immediate: true });
             </ElFormItem>
 
             <ElFormItem>
-              <ElButton type="primary" :loading="loading" @click="saveCrossFactoryPermission">
-                保存设置
-              </ElButton>
+              <ElButton type="primary" :loading="loading" @click="saveCrossFactoryPermission">保存设置</ElButton>
             </ElFormItem>
           </ElForm>
         </ElTabPane>
@@ -259,24 +243,22 @@ watch(() => selectedRoleId.value, loadPermissions, { immediate: true });
         <ElTabPane label="班次权限" name="shift">
           <div v-loading="loading" class="p-4">
             <ElRadioGroup v-model="shiftScope" class="flex flex-col gap-3">
-              <ElRadio label="own" class="flex items-start p-3 border rounded-lg hover:bg-gray-50">
+              <ElRadio label="own" class="flex items-start border rounded-lg p-3 hover:bg-gray-50">
                 <div class="flex flex-col">
                   <span class="font-medium">仅本班次</span>
-                  <span class="text-gray-500 text-sm">只能查看本人所在班次的数据</span>
+                  <span class="text-sm text-gray-500">只能查看本人所在班次的数据</span>
                 </div>
               </ElRadio>
-              <ElRadio label="all" class="flex items-start p-3 border rounded-lg hover:bg-gray-50">
+              <ElRadio label="all" class="flex items-start border rounded-lg p-3 hover:bg-gray-50">
                 <div class="flex flex-col">
                   <span class="font-medium">全部班次</span>
-                  <span class="text-gray-500 text-sm">可查看所有班次的数据</span>
+                  <span class="text-sm text-gray-500">可查看所有班次的数据</span>
                 </div>
               </ElRadio>
             </ElRadioGroup>
 
             <div class="mt-4">
-              <ElButton type="primary" :loading="loading" @click="saveShiftPermission">
-                保存设置
-              </ElButton>
+              <ElButton type="primary" :loading="loading" @click="saveShiftPermission">保存设置</ElButton>
             </div>
           </div>
         </ElTabPane>
@@ -290,13 +272,7 @@ watch(() => selectedRoleId.value, loadPermissions, { immediate: true });
                 </template>
               </ElTableColumn>
 
-              <ElTableColumn
-                v-for="op in operations"
-                :key="op"
-                :label="operationLabels[op]"
-                width="80"
-                align="center"
-              >
+              <ElTableColumn v-for="op in operations" :key="op" :label="operationLabels[op]" width="80" align="center">
                 <template #default="{ row: module }">
                   <ElSwitch
                     :model-value="permissionMatrix[module][op]"

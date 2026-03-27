@@ -1,7 +1,7 @@
 <script setup lang="tsx">
-import { ref, reactive, onMounted } from 'vue';
-import { ElButton, ElTag, ElInput } from 'element-plus';
-import { fetchGetAuditLogs, fetchGetAuditLogDetail } from '@/service/api/audit-log';
+import { onMounted, reactive, ref } from 'vue';
+import { ElButton, ElInput, ElTag } from 'element-plus';
+import { fetchGetAuditLogDetail, fetchGetAuditLogs } from '@/service/api/audit-log';
 import type { AuditLog } from '@/service/api/audit-log';
 
 defineOptions({ name: 'AuditLogManage' });
@@ -40,8 +40,8 @@ async function getData() {
     const res = await fetchGetAuditLogs(searchParams);
     data.value = res.data?.list || [];
     total.value = res.data?.total || 0;
-  } catch (error) {
-    console.error('Load audit logs failed:', error);
+  } catch {
+    // Error already handled by request interceptor
   } finally {
     loading.value = false;
   }
@@ -53,8 +53,8 @@ async function viewDetail(id: number) {
     const res = await fetchGetAuditLogDetail(id);
     detailData.value = res.data;
     detailVisible.value = true;
-  } catch (error) {
-    console.error('Load log detail failed:', error);
+  } catch {
+    // Error already handled by request interceptor
   }
 }
 
@@ -102,7 +102,11 @@ const columns = [
     width: 100,
     formatter: (row: AuditLog) => {
       const color = actionColors[row.action] || '';
-      return <ElTag type={color} size="small">{row.action || row.method}</ElTag>;
+      return (
+        <ElTag type={color} size="small">
+          {row.action || row.method}
+        </ElTag>
+      );
     }
   },
   { prop: 'module', label: '模块', width: 100 },
@@ -114,7 +118,11 @@ const columns = [
     width: 80,
     formatter: (row: AuditLog) => {
       const isSuccess = row.status >= 200 && row.status < 300;
-      return <ElTag type={isSuccess ? 'success' : 'danger'} size="small">{row.status}</ElTag>;
+      return (
+        <ElTag type={isSuccess ? 'success' : 'danger'} size="small">
+          {row.status}
+        </ElTag>
+      );
     }
   },
   {
@@ -228,14 +236,7 @@ onMounted(getData);
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">
-        <ElTable
-          v-loading="loading"
-          height="100%"
-          border
-          class="sm:h-full"
-          :data="data"
-          row-key="id"
-        >
+        <ElTable v-loading="loading" height="100%" border class="sm:h-full" :data="data" row-key="id">
           <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
         </ElTable>
       </div>
@@ -276,5 +277,4 @@ onMounted(getData);
   </div>
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

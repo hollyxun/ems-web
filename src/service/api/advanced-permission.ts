@@ -31,7 +31,7 @@ export interface RolePermissionConfig {
 
 /** Set cross-factory permission for a role */
 export function fetchSetCrossFactoryPermission(data: CrossFactoryPermission) {
-  return request<void>({
+  return request<boolean>({
     url: '/advancedPermission/setCrossFactoryPermission',
     method: 'post',
     data
@@ -49,7 +49,7 @@ export function fetchGetCrossFactoryPermission(roleId: number) {
 
 /** Set shift permission for a role */
 export function fetchSetShiftPermission(data: ShiftPermission) {
-  return request<void>({
+  return request<boolean>({
     url: '/advancedPermission/setShiftPermission',
     method: 'post',
     data
@@ -67,7 +67,7 @@ export function fetchGetShiftPermission(roleId: number) {
 
 /** Set operation permission for a role */
 export function fetchSetOperationPermission(data: OperationPermission) {
-  return request<void>({
+  return request<boolean>({
     url: '/advancedPermission/setOperationPermission',
     method: 'post',
     data
