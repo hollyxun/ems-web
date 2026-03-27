@@ -10,6 +10,14 @@ declare namespace Api.Energy {
     remark?: string;
     createdAt?: string;
     updatedAt?: string;
+    /** 图标 */
+    icon?: string;
+    /** 颜色 */
+    color?: string;
+    /** 基准单位 */
+    baseUnit?: string;
+    /** 小数精度 */
+    precision?: number;
   }
 
   interface MediumSearchParams {
@@ -123,6 +131,176 @@ declare namespace Api.Energy {
     total: number;
     page: number;
     pageSize: number;
+  }
+
+  /** 计量点 */
+  interface MeteringPoint {
+    id: number;
+    code: string;
+    name: string;
+    /** 类型: 1=总表, 2=分表, 3=设备表 */
+    type: 1 | 2 | 3;
+    organizationId: number;
+    mediumId: number;
+    location: string;
+    deviceId?: number;
+    /** 采集频率(分钟): 1, 5, 15, 60 */
+    frequency: 1 | 5 | 15 | 60;
+    influxTag: string;
+    qrCode: string;
+    installDate: string;
+    /** 状态: 1=在线, 2=离线, 3=故障 */
+    status: 1 | 2 | 3;
+    lastHeartbeat?: string;
+    description: string;
+    organization?: Organization;
+    medium?: Medium;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  interface MeterSearchParams {
+    page?: number;
+    pageSize?: number;
+    code?: string;
+    name?: string;
+    type?: number;
+    organizationId?: number;
+    mediumId?: number;
+    status?: number;
+  }
+
+  interface MeterList {
+    list: MeteringPoint[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }
+
+  interface MeterTreeNode {
+    meter: MeteringPoint;
+    children: MeterTreeNode[];
+  }
+
+  interface BalanceResult {
+    inputValue: number;
+    outputValue: number;
+    lossValue: number;
+    balanceRate: number;
+    childDetails: ChildBalance[];
+  }
+
+  interface ChildBalance {
+    meterId: number;
+    meterName: string;
+    value: number;
+    percentage: number;
+  }
+
+  interface MeterStatusLog {
+    id: number;
+    meterId: number;
+    oldStatus: number;
+    newStatus: number;
+    reason?: string;
+    operatorId?: number;
+    operatorName?: string;
+    createdAt: string;
+  }
+
+  /** 单位换算 */
+  interface UnitConversion {
+    id: number;
+    mediumId: number;
+    fromUnitId: number;
+    toUnitId: number;
+    factor: number;
+    formula?: string;
+    effectiveDate: string;
+    expireDate?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  interface UnitConversionSearchParams {
+    mediumId?: number;
+    effectiveDate?: string;
+  }
+
+  /** 分时电价时段 */
+  interface TouPeriod {
+    id: number;
+    name: string;
+    /** 时段类型: 1=峰, 2=平, 3=谷 */
+    periodType: 1 | 2 | 3;
+    startTime: string;
+    endTime: string;
+    crossMidnight: boolean;
+    factoryId?: number;
+    description?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  interface TouPeriodSearchParams {
+    factoryId?: number;
+    periodType?: number;
+  }
+
+  /** 分时电价 */
+  interface TouPrice {
+    id: number;
+    mediumId: number;
+    periodType: 1 | 2 | 3;
+    price: number;
+    currency: string;
+    effectiveDate: string;
+    expireDate?: string;
+    description?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  interface TouPriceSearchParams {
+    mediumId?: number;
+    periodType?: number;
+    effectiveDate?: string;
+  }
+
+  /** 工厂分时电价 */
+  interface FactoryTouPrice {
+    id: number;
+    factoryId: number;
+    mediumId: number;
+    periodType: 1 | 2 | 3;
+    price: number;
+    currency: string;
+    effectiveDate: string;
+    expireDate?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  interface FactoryTouPriceSearchParams {
+    factoryId?: number;
+    mediumId?: number;
+    periodType?: number;
+  }
+
+  /** 电费计算结果 */
+  interface CostResult {
+    totalCost: number;
+    currency: string;
+    periodDetails: PeriodCost[];
+  }
+
+  interface PeriodCost {
+    periodType: number;
+    periodName: string;
+    consumption: number;
+    price: number;
+    cost: number;
+    percentage: number;
   }
 
   /** SSE实时数据命名空间 */
