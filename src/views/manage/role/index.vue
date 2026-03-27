@@ -6,6 +6,7 @@ import { $t } from '@/locales';
 import RoleOperateDrawer from './modules/role-operate-drawer.vue';
 import RoleSearch from './modules/role-search.vue';
 import BatchSetParentModal from './modules/batch-set-parent-modal.vue';
+import MenuAuthModal from './modules/menu-auth-modal.vue';
 
 defineOptions({ name: 'RoleManage' });
 
@@ -32,6 +33,10 @@ const editingData = ref<Api.SystemManage.Role | null>(null);
 // 批量设置父角色弹窗
 const batchModalVisible = ref(false);
 const selectedRoleIds = ref<number[]>([]);
+
+// 菜单权限配置弹窗
+const menuAuthVisible = ref(false);
+const selectedRole = ref<Api.SystemManage.Role | null>(null);
 
 // 获取角色树
 async function getRoleTree() {
@@ -74,6 +79,12 @@ function handleBatchSetParent() {
     return;
   }
   batchModalVisible.value = true;
+}
+
+// 处理配置权限
+function handleConfigPermission(role: Api.SystemManage.Role) {
+  selectedRole.value = role;
+  menuAuthVisible.value = true;
 }
 
 // 处理选择变化
@@ -179,6 +190,7 @@ getRoleTree();
                 <ElTag v-if="data.status === 2" size="small" type="danger">禁用</ElTag>
               </div>
               <div class="flex items-center gap-8px" @click.stop>
+                <ElButton type="success" link size="small" @click="handleConfigPermission(data)">配置权限</ElButton>
                 <ElButton type="primary" link size="small" @click="handleEdit(data)">
                   {{ $t('common.edit') }}
                 </ElButton>
@@ -209,6 +221,8 @@ getRoleTree();
         :role-ids="selectedRoleIds"
         @submitted="handleBatchSubmitted"
       />
+
+      <MenuAuthModal v-model:visible="menuAuthVisible" :role-id="selectedRole?.authorityId || 0" />
     </ElCard>
   </div>
 </template>
