@@ -24,6 +24,11 @@ declare namespace Api {
       roles?: Authority[]; // User's roles (multi-role support)
       departmentId?: number;
       department?: Department;
+      /** Organization ID for data scoping */
+      organizationId?: number;
+      /** Organization info */
+      organization?: Organization.OrganizationItem;
+      /** Button permission codes */
       buttons: string[];
       userId: string;
       userName: string;

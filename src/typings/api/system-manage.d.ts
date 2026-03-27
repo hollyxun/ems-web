@@ -100,6 +100,10 @@ declare namespace Api {
       departmentId: number;
       /** department info */
       department?: Department;
+      /** organization id for data scoping */
+      organizationId?: number;
+      /** organization info */
+      organization?: Organization.OrganizationItem;
       /** user roles (multi-role) */
       roles?: Role[];
       userRoles?: Role[];
@@ -121,6 +125,8 @@ declare namespace Api {
       enabled?: number;
       status?: number;
       userGender?: UserGender;
+      /** filter by organization id */
+      organizationId?: number;
     };
 
     /** user list response */
