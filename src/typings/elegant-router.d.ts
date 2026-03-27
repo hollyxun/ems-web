@@ -40,14 +40,20 @@ declare module "@elegant-router/types" {
     "alova_scenes": "/alova/scenes";
     "alova_user": "/alova/user";
     "devtools": "/devtools";
-    "devtools_ai-chat": "/devtools/ai-chat";
     "devtools_server": "/devtools/server";
     "energy": "/energy";
     "energy_base-data": "/energy/base-data";
     "energy_base-data_coefficient": "/energy/base-data/coefficient";
     "energy_base-data_ledger": "/energy/base-data/ledger";
     "energy_base-data_medium": "/energy/base-data/medium";
+    "energy_base-data_meter": "/energy/base-data/meter";
+    "energy_base-data_tou": "/energy/base-data/tou";
     "energy_base-data_unit": "/energy/base-data/unit";
+    "energy_comparison": "/energy/comparison";
+    "energy_dashboard": "/energy/dashboard";
+    "energy_flow": "/energy/flow";
+    "energy_ranking": "/energy/ranking";
+    "energy_report": "/energy/report";
     "function": "/function";
     "function_hide-child": "/function/hide-child";
     "function_hide-child_one": "/function/hide-child/one";
@@ -62,11 +68,14 @@ declare module "@elegant-router/types" {
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "manage": "/manage";
+    "manage_advanced-permission": "/manage/advanced-permission";
     "manage_api": "/manage/api";
+    "manage_audit-log": "/manage/audit-log";
     "manage_department": "/manage/department";
     "manage_dictionary": "/manage/dictionary";
     "manage_menu": "/manage/menu";
     "manage_operation-record": "/manage/operation-record";
+    "manage_organization": "/manage/organization";
     "manage_role": "/manage/role";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
@@ -109,6 +118,7 @@ declare module "@elegant-router/types" {
     "scheduling_shift": "/scheduling/shift";
     "scheduling_shift-pattern": "/scheduling/shift-pattern";
     "scheduling_team": "/scheduling/team";
+    "shift-schedule": "/shift-schedule";
   };
 
   /**
@@ -170,6 +180,7 @@ declare module "@elegant-router/types" {
     | "plugin"
     | "profile"
     | "scheduling"
+    | "shift-schedule"
   >;
 
   /**
@@ -197,12 +208,18 @@ declare module "@elegant-router/types" {
     | "alova_request"
     | "alova_scenes"
     | "alova_user"
-    | "devtools_ai-chat"
     | "devtools_server"
     | "energy_base-data_coefficient"
     | "energy_base-data_ledger"
     | "energy_base-data_medium"
+    | "energy_base-data_meter"
+    | "energy_base-data_tou"
     | "energy_base-data_unit"
+    | "energy_comparison"
+    | "energy_dashboard"
+    | "energy_flow"
+    | "energy_ranking"
+    | "energy_report"
     | "function_hide-child_one"
     | "function_hide-child_three"
     | "function_hide-child_two"
@@ -212,11 +229,14 @@ declare module "@elegant-router/types" {
     | "function_tab"
     | "function_toggle-auth"
     | "home"
+    | "manage_advanced-permission"
     | "manage_api"
+    | "manage_audit-log"
     | "manage_department"
     | "manage_dictionary"
     | "manage_menu"
     | "manage_operation-record"
+    | "manage_organization"
     | "manage_role"
     | "manage_user-detail"
     | "manage_user"
@@ -248,6 +268,7 @@ declare module "@elegant-router/types" {
     | "scheduling_shift-pattern"
     | "scheduling_shift"
     | "scheduling_team"
+    | "shift-schedule"
   >;
 
   /**

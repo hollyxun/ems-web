@@ -160,6 +160,24 @@ export const generatedRoutes: GeneratedRoute[] = [
             }
           },
           {
+            name: 'energy_base-data_meter',
+            path: '/energy/base-data/meter',
+            component: 'view.energy_base-data_meter',
+            meta: {
+              title: 'energy_base-data_meter',
+              i18nKey: 'route.energy_base-data_meter'
+            }
+          },
+          {
+            name: 'energy_base-data_tou',
+            path: '/energy/base-data/tou',
+            component: 'view.energy_base-data_tou',
+            meta: {
+              title: 'energy_base-data_tou',
+              i18nKey: 'route.energy_base-data_tou'
+            }
+          },
+          {
             name: 'energy_base-data_unit',
             path: '/energy/base-data/unit',
             component: 'view.energy_base-data_unit',
@@ -169,6 +187,25 @@ export const generatedRoutes: GeneratedRoute[] = [
             }
           }
         ]
+      },
+      {
+        name: 'energy_comparison',
+        path: '/energy/comparison',
+        component: 'view.energy_comparison',
+        meta: {
+          title: 'energy_comparison',
+          i18nKey: 'route.energy_comparison',
+          icon: 'carbon:compare'
+        }
+      },
+      {
+        name: 'energy_dashboard',
+        path: '/energy/dashboard',
+        component: 'view.energy_dashboard',
+        meta: {
+          title: 'energy_dashboard',
+          i18nKey: 'route.energy_dashboard'
+        }
       },
       {
         name: 'energy_flow',
@@ -191,13 +228,12 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'energy_comparison',
-        path: '/energy/comparison',
-        component: 'view.energy_comparison',
+        name: 'energy_report',
+        path: '/energy/report',
+        component: 'view.energy_report',
         meta: {
-          title: 'energy_comparison',
-          i18nKey: 'route.energy_comparison',
-          icon: 'carbon:compare'
+          title: 'energy_report',
+          i18nKey: 'route.energy_report'
         }
       }
     ]
@@ -369,12 +405,34 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'manage_advanced-permission',
+        path: '/manage/advanced-permission',
+        component: 'view.manage_advanced-permission',
+        meta: {
+          title: 'manage_advanced-permission',
+          i18nKey: 'route.manage_advanced-permission',
+          icon: 'mdi:shield-lock',
+          roles: ['R_ADMIN']
+        }
+      },
+      {
         name: 'manage_api',
         path: '/manage/api',
         component: 'view.manage_api',
         meta: {
           title: 'manage_api',
           i18nKey: 'route.manage_api'
+        }
+      },
+      {
+        name: 'manage_audit-log',
+        path: '/manage/audit-log',
+        component: 'view.manage_audit-log',
+        meta: {
+          title: 'manage_audit-log',
+          i18nKey: 'route.manage_audit-log',
+          icon: 'mdi:text-box-search',
+          roles: ['R_ADMIN']
         }
       },
       {
@@ -461,28 +519,6 @@ export const generatedRoutes: GeneratedRoute[] = [
           hideInMenu: true,
           roles: ['R_ADMIN'],
           activeMenu: 'manage_user'
-        }
-      },
-      {
-        name: 'manage_advanced-permission',
-        path: '/manage/advanced-permission',
-        component: 'view.manage_advanced-permission',
-        meta: {
-          title: 'manage_advanced-permission',
-          i18nKey: 'route.manage_advanced-permission',
-          icon: 'mdi:shield-lock',
-          roles: ['R_ADMIN']
-        }
-      },
-      {
-        name: 'manage_audit-log',
-        path: '/manage/audit-log',
-        component: 'view.manage_audit-log',
-        meta: {
-          title: 'manage_audit-log',
-          i18nKey: 'route.manage_audit-log',
-          icon: 'mdi:text-box-search',
-          roles: ['R_ADMIN']
         }
       }
     ]
@@ -881,5 +917,14 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       }
     ]
+  },
+  {
+    name: 'shift-schedule',
+    path: '/shift-schedule',
+    component: 'layout.base$view.shift-schedule',
+    meta: {
+      title: 'shift-schedule',
+      i18nKey: 'route.shift-schedule'
+    }
   }
 ];
