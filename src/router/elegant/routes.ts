@@ -497,6 +497,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'manage_route-menu-obsolete',
+        path: '/manage/route-menu-obsolete',
+        component: 'view.manage_route-menu-obsolete',
+        meta: {
+          title: 'manage_route-menu-obsolete',
+          i18nKey: 'route.manage_route-menu-obsolete'
+        }
+      },
+      {
         name: 'manage_user',
         path: '/manage/user',
         component: 'view.manage_user',

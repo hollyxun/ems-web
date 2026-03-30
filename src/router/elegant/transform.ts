@@ -223,6 +223,7 @@ const routeMap: RouteMap = {
   "manage_operation-record": "/manage/operation-record",
   "manage_organization": "/manage/organization",
   "manage_role": "/manage/role",
+  "manage_route-menu-obsolete": "/manage/route-menu-obsolete",
   "manage_user": "/manage/user",
   "manage_user-detail": "/manage/user-detail/:id",
   "multi-menu": "/multi-menu",

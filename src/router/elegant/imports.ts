@@ -54,6 +54,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "manage_operation-record": () => import("@/views/manage/operation-record/index.vue"),
   manage_organization: () => import("@/views/manage/organization/index.vue"),
   manage_role: () => import("@/views/manage/role/index.vue"),
+  "manage_route-menu-obsolete": () => import("@/views/manage/route-menu-obsolete/index.vue"),
   "manage_user-detail": () => import("@/views/manage/user-detail/[id].vue"),
   manage_user: () => import("@/views/manage/user/index.vue"),
   "multi-menu_first_child": () => import("@/views/multi-menu/first_child/index.vue"),

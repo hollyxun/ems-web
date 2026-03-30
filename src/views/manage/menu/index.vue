@@ -3,9 +3,7 @@ import { computed, ref } from 'vue';
 import type { Ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTableColumn, ElTag } from 'element-plus';
 import { useBoolean } from '@sa/hooks';
-import { yesOrNoRecord } from '@/constants/common';
-import { enableStatusRecord, menuTypeRecord } from '@/constants/business';
-import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api';
+import { fetchGetRouteTree, fetchUpdateRoute } from '@/service/api';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
@@ -14,86 +12,124 @@ const { bool: visible, setTrue: openModal } = useBoolean();
 
 const wrapperRef = ref<HTMLElement | null>(null);
 const loading = ref(false);
-const data: Ref<Api.SystemManage.Menu[]> = ref([]);
+const data: Ref<Api.RouteMenu.RouteMenu[]> = ref([]);
 
 /** the edit menu data or the parent menu data when adding a child menu */
-const editingData: Ref<Api.SystemManage.Menu | null> = ref(null);
+const editingData: Ref<Api.RouteMenu.RouteMenu | null> = ref(null);
 
-const operateType = ref<OperateType>('add');
+const operateType = ref<OperateType>('edit');
 
-// 获取菜单列表（树形结构）
+// 状态筛选
+const statusFilter = ref<Api.RouteMenu.RouteMenuStatus | undefined>(undefined);
+
+// 路由菜单状态选项
+const statusOptions: { label: string; value: Api.RouteMenu.RouteMenuStatus | undefined }[] = [
+  { label: '全部', value: undefined },
+  { label: '启用', value: 1 },
+  { label: '禁用', value: 2 },
+  { label: '废弃', value: 3 }
+];
+
+// 获取路由菜单树
 async function getData() {
   loading.value = true;
   try {
-    const response = await fetchGetMenuList();
-    // API返回 { data: { list: [...], total, page, pageSize } }
-    data.value = response.data?.list || [];
+    const response = await fetchGetRouteTree();
+    data.value = response.data || [];
   } catch {
-    ElMessage.error('获取菜单列表失败');
+    ElMessage.error('获取路由菜单列表失败');
   } finally {
     loading.value = false;
   }
 }
 
-// 计算总数（递归统计所有菜单）
+// 根据状态筛选后的数据
+const filteredData = computed(() => {
+  if (statusFilter.value === undefined) {
+    return data.value;
+  }
+  return filterByStatus(data.value, statusFilter.value);
+});
+
+// 递归筛选指定状态的路由
+function filterByStatus(
+  routes: Api.RouteMenu.RouteMenu[],
+  status: Api.RouteMenu.RouteMenuStatus
+): Api.RouteMenu.RouteMenu[] {
+  return routes
+    .map(route => {
+      if (route.children && route.children.length > 0) {
+        const filteredChildren = filterByStatus(route.children, status);
+        if (filteredChildren.length > 0 || route.status === status) {
+          return { ...route, children: filteredChildren };
+        }
+        return null;
+      }
+      return route.status === status ? route : null;
+    })
+    .filter((route): route is Api.RouteMenu.RouteMenu => route !== null);
+}
+
+// 计算总数（递归统计所有路由）
 const totalCount = computed(() => {
-  function countMenus(menus: Api.SystemManage.Menu[]): number {
+  function countRoutes(routes: Api.RouteMenu.RouteMenu[]): number {
     let count = 0;
-    for (const menu of menus) {
+    for (const route of routes) {
       count += 1;
-      if (menu.children && menu.children.length > 0) {
-        count += countMenus(menu.children);
+      if (route.children && route.children.length > 0) {
+        count += countRoutes(route.children);
       }
     }
     return count;
   }
-  return countMenus(data.value);
+  return countRoutes(filteredData.value);
 });
 
-// 菜单类型颜色映射
-const menuTypeTagMap: Record<string, UI.ThemeColor> = {
-  dir: 'info',
-  menu: 'primary',
-  button: 'warning'
-};
-
 // 状态颜色映射
-const statusTagMap: Record<string, UI.ThemeColor> = {
-  '1': 'success',
-  '2': 'warning'
+const statusTagMap: Record<number, UI.ThemeColor> = {
+  1: 'success',
+  2: 'warning',
+  3: 'danger'
 };
 
-function handleAdd() {
-  operateType.value = 'add';
-  editingData.value = null;
-  openModal();
-}
+// 状态文本映射
+const statusTextMap: Record<number, string> = {
+  1: '启用',
+  2: '禁用',
+  3: '废弃'
+};
 
-// 删除菜单
-async function handleDelete(id: number) {
-  try {
-    const { data: success } = await fetchDeleteMenu(id);
-    if (success) {
-      ElMessage.success('删除成功');
-      getData();
-    } else {
-      ElMessage.error('删除失败');
-    }
-  } catch {
-    ElMessage.error('删除失败');
-  }
-}
+// 是否常量路由
+const isConstantTagMap: Record<string, UI.ThemeColor> = {
+  true: 'primary',
+  false: 'info'
+};
 
-function handleEdit(item: Api.SystemManage.Menu) {
+function handleEdit(item: Api.RouteMenu.RouteMenu) {
   operateType.value = 'edit';
   editingData.value = { ...item };
   openModal();
 }
 
-function handleAddChildMenu(item: Api.SystemManage.Menu) {
-  operateType.value = 'addChild';
-  editingData.value = { ...item };
-  openModal();
+// 切换状态（启用/禁用）
+async function handleToggleStatus(item: Api.RouteMenu.RouteMenu) {
+  const newStatus = item.status === 1 ? 2 : 1;
+  const statusText = newStatus === 1 ? '启用' : '禁用';
+
+  try {
+    const { error } = await fetchUpdateRoute({
+      id: item.id,
+      status: newStatus as Api.RouteMenu.RouteMenuStatus
+    });
+    if (!error) {
+      ElMessage.success(`${statusText}成功`);
+      getData();
+    } else {
+      ElMessage.error(`${statusText}失败`);
+    }
+  } catch {
+    ElMessage.error(`${statusText}失败`);
+  }
 }
 
 function init() {
@@ -111,12 +147,14 @@ init();
         <div class="flex items-center justify-between">
           <p>{{ $t('page.manage.menu.title') }} ({{ totalCount }})</p>
           <div class="flex items-center gap-12px">
-            <ElButton type="primary" @click="handleAdd">
-              <template #icon>
-                <icon-ic-round-plus class="text-icon" />
-              </template>
-              {{ $t('common.add') }}
-            </ElButton>
+            <ElSelect v-model="statusFilter" placeholder="状态筛选" class="w-120px" clearable>
+              <ElOption
+                v-for="item in statusOptions"
+                :key="item.label"
+                :label="item.label"
+                :value="item.value as number"
+              />
+            </ElSelect>
             <ElButton @click="getData">
               <template #icon>
                 <icon-ic-round-refresh class="text-icon" />
@@ -132,63 +170,57 @@ init();
           height="100%"
           border
           class="sm:h-full"
-          :data="data"
+          :data="filteredData"
           row-key="id"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
           default-expand-all
         >
           <ElTableColumn prop="id" :label="$t('page.manage.menu.id')" width="80" />
-          <ElTableColumn prop="menuType" :label="$t('page.manage.menu.menuType')" width="100">
-            <template #default="{ row }">
-              <ElTag :type="menuTypeTagMap[row.menuType] || 'info'">
-                {{ $t(menuTypeRecord[row.menuType] || row.menuType) }}
-              </ElTag>
-            </template>
-          </ElTableColumn>
-          <ElTableColumn prop="title" :label="$t('page.manage.menu.menuName')" min-width="150">
+          <ElTableColumn prop="title" :label="$t('page.manage.menu.menuName')" min-width="180">
             <template #default="{ row }">
               <div class="ml-20px flex items-center gap-8px">
                 <SvgIcon v-if="row.icon" :icon="row.icon" class="text-icon" />
-                <span>{{ row.title }}</span>
+                <span>{{ row.title || row.name }}</span>
               </div>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="name" :label="$t('page.manage.menu.routeName')" min-width="140" />
-          <ElTableColumn prop="path" :label="$t('page.manage.menu.routePath')" min-width="140" />
-          <ElTableColumn prop="status" :label="$t('page.manage.menu.menuStatus')" width="90">
+          <ElTableColumn prop="name" :label="$t('page.manage.menu.routeName')" min-width="160" />
+          <ElTableColumn prop="path" :label="$t('page.manage.menu.routePath')" min-width="160" />
+          <ElTableColumn prop="component" label="组件路径" min-width="140">
             <template #default="{ row }">
-              <ElTag v-if="row.status" :type="statusTagMap[String(row.status)]">
-                {{ $t(enableStatusRecord[String(row.status)] || row.status) }}
+              <span v-if="row.component" class="text-gray-600">{{ row.component }}</span>
+              <span v-else class="text-gray-400">-</span>
+            </template>
+          </ElTableColumn>
+          <ElTableColumn prop="isConstant" label="常量路由" width="100">
+            <template #default="{ row }">
+              <ElTag :type="isConstantTagMap[String(row.isConstant)] || 'info'" size="small">
+                {{ row.isConstant ? '是' : '否' }}
               </ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="hidden" :label="$t('page.manage.menu.hideInMenu')" width="90">
+          <ElTableColumn prop="status" :label="$t('page.manage.menu.menuStatus')" width="90">
             <template #default="{ row }">
-              <ElTag :type="row.hidden === 1 ? 'danger' : 'info'">
-                {{ $t(yesOrNoRecord[row.hidden === 1 ? 'Y' : 'N']) }}
+              <ElTag :type="statusTagMap[row.status] || 'info'">
+                {{ statusTextMap[row.status] || row.status }}
               </ElTag>
             </template>
           </ElTableColumn>
           <ElTableColumn prop="sort" :label="$t('page.manage.menu.order')" width="70" />
-          <ElTableColumn :label="$t('common.operate')" width="250" fixed="right">
+          <ElTableColumn :label="$t('common.operate')" width="180" fixed="right">
             <template #default="{ row }">
               <div class="flex items-center gap-8px">
-                <ElButton
-                  v-if="row.menuType === 'dir'"
-                  type="primary"
-                  plain
-                  size="small"
-                  @click="handleAddChildMenu(row)"
-                >
-                  {{ $t('page.manage.menu.addChildMenu') }}
-                </ElButton>
                 <ElButton type="primary" plain size="small" @click="handleEdit(row)">
                   {{ $t('common.edit') }}
                 </ElButton>
-                <ElPopconfirm :title="$t('common.confirmDelete')" @confirm="handleDelete(row.id)">
+                <ElPopconfirm
+                  v-if="row.status !== 3"
+                  :title="row.status === 1 ? '确定要禁用该路由吗？' : '确定要启用该路由吗？'"
+                  @confirm="handleToggleStatus(row)"
+                >
                   <template #reference>
-                    <ElButton type="danger" plain size="small">
-                      {{ $t('common.delete') }}
+                    <ElButton :type="row.status === 1 ? 'warning' : 'success'" plain size="small">
+                      {{ row.status === 1 ? '禁用' : '启用' }}
                     </ElButton>
                   </template>
                 </ElPopconfirm>

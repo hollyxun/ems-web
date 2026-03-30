@@ -16,6 +16,9 @@ const local: App.I18n.Schema = {
     cancel: 'Cancel',
     close: 'Close',
     check: 'Check',
+    selectAll: 'Select All',
+    invertSelection: 'Invert Selection',
+    clearSelection: 'Clear',
     expandColumn: 'Expand Column',
     columnSetting: 'Column Setting',
     config: 'Config',
@@ -197,6 +200,7 @@ const local: App.I18n.Schema = {
     manage_department: 'Department Manage',
     manage_dictionary: 'Dictionary Manage',
     'manage_operation-record': 'Operation Record',
+    'manage_route-menu-obsolete': 'Obsolete Routes',
     'multi-menu': 'Multi Menu',
     'multi-menu_first': 'Menu One',
     'multi-menu_first_child': 'Menu One Child',
@@ -414,7 +418,15 @@ const local: App.I18n.Schema = {
           roleDesc: 'Please enter role description'
         },
         addRole: 'Add Role',
-        editRole: 'Edit Role'
+        editRole: 'Edit Role',
+        moduleQuickSelect: 'Module Quick Select',
+        routePermission: 'Route Permission',
+        selectHint: 'Select nodes to assign route access permission to role'
+      },
+      route: {
+        constant: 'Constant',
+        disabled: 'Disabled',
+        obsolete: 'Obsolete'
       },
       user: {
         title: 'User List',

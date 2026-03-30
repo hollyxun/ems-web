@@ -309,6 +309,9 @@ declare namespace App {
         cancel: string;
         close: string;
         check: string;
+        selectAll: string;
+        invertSelection: string;
+        clearSelection: string;
         expandColumn: string;
         columnSetting: string;
         config: string;
@@ -581,6 +584,14 @@ declare namespace App {
             editRole: string;
             menuAuth: string;
             buttonAuth: string;
+            moduleQuickSelect: string;
+            routePermission: string;
+            selectHint: string;
+          };
+          route: {
+            constant: string;
+            disabled: string;
+            obsolete: string;
           };
           user: {
             title: string;

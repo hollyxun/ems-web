@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, h, ref, watch } from 'vue';
-import { fetchCreateMenu, fetchGetMenuTree, fetchUpdateMenu } from '@/service/api';
+import { fetchUpdateRoute } from '@/service/api';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
@@ -8,13 +8,13 @@ import SvgIcon from '@/components/custom/svg-icon.vue';
 
 defineOptions({ name: 'MenuOperateModal' });
 
-export type OperateType = UI.TableOperateType | 'addChild';
+export type OperateType = UI.TableOperateType;
 
 interface Props {
   /** the type of operation */
   operateType: OperateType;
-  /** the edit menu data or the parent menu data when adding a child menu */
-  rowData?: Api.SystemManage.Menu | null;
+  /** the edit menu data */
+  rowData?: Api.RouteMenu.RouteMenu | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -37,86 +37,55 @@ const { defaultRequiredRule } = useFormRules();
 const title = computed(() => {
   const titles: Record<OperateType, string> = {
     add: $t('page.manage.menu.addMenu'),
-    addChild: $t('page.manage.menu.addChildMenu'),
     edit: $t('page.manage.menu.editMenu')
   };
-  return titles[props.operateType];
+  return titles[props.operateType] || '编辑路由菜单';
 });
 
 interface Model {
-  id?: number;
-  parentId: string;
-  path: string;
+  id: number;
   name: string;
-  hidden: number;
-  component: string;
+  path: string;
+  component?: string;
+  parentName?: string;
+  title?: string;
+  icon?: string;
   sort: number;
-  keepAlive: number;
-  title: string;
-  icon: string;
-  menuType: string;
-  isFrame: number;
-  parameters: string;
-  status: number;
-  singleLayout: string;
+  isConstant: boolean;
+  status: Api.RouteMenu.RouteMenuStatus;
 }
 
 const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    parentId: '0',
-    path: '',
+    id: 0,
     name: '',
-    hidden: 0,
+    path: '',
     component: '',
-    sort: 1,
-    keepAlive: 0,
+    parentName: '',
     title: '',
     icon: '',
-    menuType: 'dir',
-    isFrame: 0,
-    parameters: '',
-    status: 1,
-    singleLayout: ''
+    sort: 1,
+    isConstant: false,
+    status: 1
   };
 }
 
 const rules = {
-  title: defaultRequiredRule,
-  name: defaultRequiredRule,
-  path: defaultRequiredRule,
-  menuType: defaultRequiredRule
+  status: defaultRequiredRule
 };
 
-const menuTypeOptions = [
-  { label: '目录', value: 'dir' },
-  { label: '菜单', value: 'menu' },
-  { label: '按钮', value: 'button' }
+const statusOptions = [
+  { label: '启用', value: 1 },
+  { label: '禁用', value: 2 },
+  { label: '废弃', value: 3 }
 ];
-
-const disabledMenuType = computed(() => props.operateType === 'edit');
 
 const localIcons = getLocalIcons();
 const localIconOptions = localIcons.map(item => ({
   value: item
 }));
-
-// 菜单树数据（用于选择父菜单）
-const menuTreeData = ref<Api.SystemManage.MenuTree[]>([]);
-const menuTreeLoading = ref(false);
-
-async function loadMenuTree() {
-  menuTreeLoading.value = true;
-  try {
-    const response = await fetchGetMenuTree();
-    menuTreeData.value = response.data || [];
-  } catch {
-    // Silently ignore menu tree load errors
-  } finally {
-    menuTreeLoading.value = false;
-  }
-}
 
 function getIconLabelVNode(value: string) {
   return h('div', { class: 'flex-y-center gap-16px' }, [
@@ -132,29 +101,19 @@ function handleInitModel() {
 
   if (!props.rowData) return;
 
-  if (props.operateType === 'addChild') {
-    const { id } = props.rowData;
-    Object.assign(model.value, { parentId: String(id) });
-  }
-
   if (props.operateType === 'edit') {
     const row = props.rowData;
     model.value = {
       id: row.id,
-      parentId: row.parentId || '0',
-      path: row.path,
       name: row.name,
-      hidden: row.hidden,
+      path: row.path,
       component: row.component,
-      sort: row.sort,
-      keepAlive: row.keepAlive,
+      parentName: row.parentName,
       title: row.title,
       icon: row.icon,
-      menuType: row.menuType,
-      isFrame: row.isFrame,
-      parameters: row.parameters || '',
-      status: row.status,
-      singleLayout: row.singleLayout || ''
+      sort: row.sort,
+      isConstant: row.isConstant,
+      status: row.status
     };
   }
 }
@@ -168,39 +127,18 @@ async function handleSubmit() {
 
   loading.value = true;
   try {
-    const submitData = {
-      parentId: model.value.parentId,
-      path: model.value.path,
-      name: model.value.name,
-      hidden: model.value.hidden,
-      component: model.value.component,
-      sort: model.value.sort,
-      keepAlive: model.value.keepAlive,
+    const { error } = await fetchUpdateRoute({
+      id: model.value.id,
       title: model.value.title,
       icon: model.value.icon,
-      menuType: model.value.menuType,
-      isFrame: model.value.isFrame,
-      status: model.value.status,
-      singleLayout: model.value.singleLayout
-    };
+      sort: model.value.sort,
+      status: model.value.status
+    });
 
-    if (props.operateType === 'edit') {
-      const { error } = await fetchUpdateMenu({
-        id: model.value.id!,
-        ...submitData
-      });
-      if (!error) {
-        window.$message?.success($t('common.updateSuccess'));
-        closeModal();
-        emit('submitted');
-      }
-    } else {
-      const { error } = await fetchCreateMenu(submitData);
-      if (!error) {
-        window.$message?.success($t('common.addSuccess'));
-        closeModal();
-        emit('submitted');
-      }
+    if (!error) {
+      window.$message?.success($t('common.updateSuccess'));
+      closeModal();
+      emit('submitted');
     }
   } finally {
     loading.value = false;
@@ -211,55 +149,50 @@ watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
-    loadMenuTree();
   }
 });
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" preset="card" class="w-800px">
-    <ElScrollbar class="h-480px pr-20px">
+  <ElDialog v-model="visible" :title="title" preset="card" class="w-600px">
+    <ElScrollbar class="h-400px pr-20px">
       <ElForm ref="formRef" :model="model" :rules="rules" label-position="right" :label-width="100">
         <ElRow :gutter="20">
-          <ElCol :span="12">
-            <ElFormItem label="上级菜单" prop="parentId">
-              <ElTreeSelect
-                v-model="model.parentId"
-                :data="menuTreeData"
-                :props="{ label: 'label', value: 'id', children: 'children' } as any"
-                check-strictly
-                clearable
-                placeholder="请选择上级菜单（不选则为顶级菜单）"
-                class="w-full"
-                :loading="menuTreeLoading"
-              />
+          <!-- 基本信息（只读展示） -->
+          <ElCol :span="24">
+            <ElFormItem label="路由名称">
+              <ElInput v-model="model.name" disabled placeholder="路由名称（只读）" />
             </ElFormItem>
           </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="菜单类型" prop="menuType">
-              <ElRadioGroup v-model="model.menuType" :disabled="disabledMenuType">
-                <ElRadio v-for="item in menuTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
+          <ElCol :span="24">
+            <ElFormItem label="路由路径">
+              <ElInput v-model="model.path" disabled placeholder="路由路径（只读）" />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="24">
+            <ElFormItem label="组件路径">
+              <ElInput v-model="model.component" disabled placeholder="组件路径（只读）" />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="24">
+            <ElFormItem label="父级路由">
+              <ElInput v-model="model.parentName" disabled placeholder="父级路由名称（只读）" />
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="24">
+            <ElFormItem label="常量路由">
+              <ElRadioGroup v-model="model.isConstant" disabled>
+                <ElRadio :value="true">是</ElRadio>
+                <ElRadio :value="false">否</ElRadio>
               </ElRadioGroup>
             </ElFormItem>
           </ElCol>
+
+          <!-- 可编辑字段 -->
+          <ElDivider content-position="left">自定义配置（可编辑）</ElDivider>
           <ElCol :span="12">
-            <ElFormItem label="菜单名称" prop="title">
-              <ElInput v-model="model.title" placeholder="请输入菜单名称" />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="路由名称" prop="name">
-              <ElInput v-model="model.name" placeholder="请输入路由名称（如：manage_user）" />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="路由路径" prop="path">
-              <ElInput v-model="model.path" placeholder="请输入路由路径（如：/manage/user）" />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="组件路径" prop="component">
-              <ElInput v-model="model.component" placeholder="请输入组件路径（如：manage_user）" />
+            <ElFormItem label="菜单标题" prop="title">
+              <ElInput v-model="model.title" placeholder="请输入菜单标题" clearable />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
@@ -282,32 +215,7 @@ watch(visible, () => {
           <ElCol :span="12">
             <ElFormItem label="状态" prop="status">
               <ElRadioGroup v-model="model.status">
-                <ElRadio :value="1">启用</ElRadio>
-                <ElRadio :value="2">禁用</ElRadio>
-              </ElRadioGroup>
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="是否隐藏" prop="hidden">
-              <ElRadioGroup v-model="model.hidden">
-                <ElRadio :value="0">否</ElRadio>
-                <ElRadio :value="1">是</ElRadio>
-              </ElRadioGroup>
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="是否缓存" prop="keepAlive">
-              <ElRadioGroup v-model="model.keepAlive">
-                <ElRadio :value="0">否</ElRadio>
-                <ElRadio :value="1">是</ElRadio>
-              </ElRadioGroup>
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="是否外链" prop="isFrame">
-              <ElRadioGroup v-model="model.isFrame">
-                <ElRadio :value="0">否</ElRadio>
-                <ElRadio :value="1">是</ElRadio>
+                <ElRadio v-for="item in statusOptions" :key="item.value" :value="item.value" :label="item.label" />
               </ElRadioGroup>
             </ElFormItem>
           </ElCol>

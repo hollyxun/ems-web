@@ -16,6 +16,9 @@ const local: App.I18n.Schema = {
     cancel: '取消',
     close: '关闭',
     check: '勾选',
+    selectAll: '全选',
+    invertSelection: '反选',
+    clearSelection: '清空',
     expandColumn: '展开列',
     columnSetting: '列设置',
     config: '配置',
@@ -197,6 +200,7 @@ const local: App.I18n.Schema = {
     manage_department: '部门管理',
     manage_dictionary: '字典管理',
     'manage_operation-record': '操作记录',
+    'manage_route-menu-obsolete': '废弃路由',
     'multi-menu': '多级菜单',
     'multi-menu_first': '菜单一',
     'multi-menu_first_child': '菜单一子菜单',
@@ -414,7 +418,15 @@ const local: App.I18n.Schema = {
           roleDesc: '请输入角色描述'
         },
         addRole: '新增角色',
-        editRole: '编辑角色'
+        editRole: '编辑角色',
+        moduleQuickSelect: '模块快捷选择',
+        routePermission: '路由权限',
+        selectHint: '勾选节点为角色分配路由访问权限'
+      },
+      route: {
+        constant: '常量',
+        disabled: '禁用',
+        obsolete: '废弃'
       },
       user: {
         title: '用户列表',

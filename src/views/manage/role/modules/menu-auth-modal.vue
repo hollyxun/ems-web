@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, watch } from 'vue';
-import { ElTag } from 'element-plus';
-import {
-  fetchGetAllPages,
-  fetchGetMenuTree,
-  fetchGetRoleMenus,
-  fetchGetRolePermissionSources,
-  fetchSetRoleMenus
-} from '@/service/api';
+import type { ElTree } from 'element-plus';
+import { fetchBindRoleRoutes, fetchGetRoleRouteIds, fetchGetRouteTree } from '@/service/api';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'MenuAuthModal' });
@@ -29,88 +23,114 @@ function closeModal() {
 
 const title = computed(() => $t('common.edit') + $t('page.manage.role.menuAuth'));
 
-const home = shallowRef('');
-
-async function getHome() {
-  // 获取角色信息以获取默认首页
-  // 暂时使用默认值
-  home.value = 'home';
-}
-
-const pages = shallowRef<string[]>([]);
-
-async function getPages() {
-  const { data } = await fetchGetAllPages();
-  pages.value = data || [];
-}
-
-const pageSelectOptions = computed(() => {
-  const opts: CommonType.Option[] = pages.value.map(page => ({
-    label: page,
-    value: page
-  }));
-
-  return opts;
-});
-
-const tree = shallowRef<Api.SystemManage.MenuTree[]>([]);
+// 树形数据
+const tree = shallowRef<Api.RouteMenu.RouteMenu[]>([]);
 const loading = shallowRef(false);
 
+// 获取路由树
 async function getTree() {
   loading.value = true;
   try {
-    const { data } = await fetchGetMenuTree();
+    const { data } = await fetchGetRouteTree();
     tree.value = data || [];
   } finally {
     loading.value = false;
   }
 }
 
-// 权限项类型：包含ID、效果和来源信息
-interface PermissionItem {
-  id: number;
-  effect: 'allow' | 'deny';
-  sourceType: 'self' | 'inherited';
-  sourceRoleName?: string;
-}
-
-const permissionItems = ref<PermissionItem[]>([]);
+// 选中的路由ID
 const checks = shallowRef<number[]>([]);
-const denyItems = ref<Set<number>>(new Set());
 const checksLoading = shallowRef(false);
 
+// 树组件引用
+const treeRef = ref<InstanceType<typeof ElTree>>();
+
+// 获取角色已绑定的路由ID
 async function getChecks() {
   if (!props.roleId) return;
 
   checksLoading.value = true;
   try {
-    // 获取角色的菜单权限
-    const { data: menuIds } = await fetchGetRoleMenus(props.roleId);
-    // 获取权限来源信息
-    const { data: sources } = await fetchGetRolePermissionSources(props.roleId, 'menu');
-
-    // 初始化权限项
-    permissionItems.value = [];
-    checks.value = menuIds || [];
-    denyItems.value = new Set();
-
-    if (sources) {
-      permissionItems.value = sources;
-      // 找出deny的项
-      sources.forEach(source => {
-        if (source.effect === 'deny') {
-          denyItems.value.add(source.id);
-        }
-      });
-    }
+    const { data } = await fetchGetRoleRouteIds(props.roleId);
+    checks.value = data || [];
   } finally {
     checksLoading.value = false;
   }
 }
 
-// 获取菜单的权限信息
-function getMenuPermissionInfo(menuId: number): PermissionItem | undefined {
-  return permissionItems.value.find(item => item.id === menuId);
+// 获取所有路由ID（扁平化）
+function getAllRouteIds(routes: Api.RouteMenu.RouteMenu[]): number[] {
+  const ids: number[] = [];
+  function traverse(nodes: Api.RouteMenu.RouteMenu[]) {
+    for (const node of nodes) {
+      ids.push(node.id);
+      if (node.children?.length) {
+        traverse(node.children);
+      }
+    }
+  }
+  traverse(routes);
+  return ids;
+}
+
+// 全选
+function handleSelectAll() {
+  const allIds = getAllRouteIds(tree.value);
+  checks.value = allIds;
+  treeRef.value?.setCheckedKeys(allIds, false);
+}
+
+// 反选
+function handleInvertSelection() {
+  const allIds = getAllRouteIds(tree.value);
+  const currentChecks = (treeRef.value?.getCheckedKeys(false) as number[]) || [];
+  const invertedIds = allIds.filter(id => !currentChecks.includes(id));
+  checks.value = invertedIds;
+  treeRef.value?.setCheckedKeys(invertedIds, false);
+}
+
+// 清空选择
+function handleClearSelection() {
+  checks.value = [];
+  treeRef.value?.setCheckedKeys([], false);
+}
+
+// 按模块选择
+interface ModuleNode {
+  name: string;
+  title: string;
+  children: Api.RouteMenu.RouteMenu[];
+}
+
+// 获取模块列表（一级目录）
+const modules = computed<ModuleNode[]>(() => {
+  return tree.value
+    .filter(node => node.children && node.children.length > 0)
+    .map(node => ({
+      name: node.name,
+      title: node.title || node.name,
+      children: node.children || []
+    }));
+});
+
+// 选中指定模块的所有路由
+function handleSelectModule(module: ModuleNode) {
+  const moduleIds: number[] = [];
+  function traverse(nodes: Api.RouteMenu.RouteMenu[]) {
+    for (const node of nodes) {
+      moduleIds.push(node.id);
+      if (node.children?.length) {
+        traverse(node.children);
+      }
+    }
+  }
+  traverse(module.children);
+
+  // 合并当前选中和模块的所有ID
+  const currentChecks = (treeRef.value?.getCheckedKeys(false) as number[]) || [];
+  const mergedIds = [...new Set([...currentChecks, ...moduleIds])];
+  checks.value = mergedIds;
+  treeRef.value?.setCheckedKeys(mergedIds, false);
 }
 
 const submitting = shallowRef(false);
@@ -120,38 +140,15 @@ async function handleSubmit() {
 
   submitting.value = true;
   try {
-    // 分离allow和deny的菜单ID
-    const allowMenuIds: number[] = [];
-    const denyMenuIds: number[] = [];
+    // 获取选中的路由ID
+    const checkedKeys = (treeRef.value?.getCheckedKeys(false) as number[]) || [];
 
-    checks.value.forEach(id => {
-      if (denyItems.value.has(id)) {
-        denyMenuIds.push(id);
-      } else {
-        allowMenuIds.push(id);
-      }
+    const { error } = await fetchBindRoleRoutes({
+      roleId: props.roleId,
+      routeMenuIds: checkedKeys
     });
 
-    // 先设置允许的权限
-    if (allowMenuIds.length > 0) {
-      const { error } = await fetchSetRoleMenus({
-        roleId: props.roleId,
-        menuIds: allowMenuIds,
-        home: home.value,
-        effect: 'allow'
-      });
-      if (error) throw error;
-    }
-
-    // 再设置拒绝的权限
-    if (denyMenuIds.length > 0) {
-      const { error } = await fetchSetRoleMenus({
-        roleId: props.roleId,
-        menuIds: denyMenuIds,
-        effect: 'deny'
-      });
-      if (error) throw error;
-    }
+    if (error) throw error;
 
     window.$message?.success?.($t('common.modifySuccess'));
     closeModal();
@@ -161,8 +158,6 @@ async function handleSubmit() {
 }
 
 function init() {
-  getHome();
-  getPages();
   getTree();
   getChecks();
 }
@@ -175,43 +170,84 @@ watch(visible, val => {
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" preset="card" class="w-560px">
-    <div class="flex-y-center gap-16px pb-12px">
-      <div>{{ $t('page.manage.menu.home') }}</div>
-      <ElSelect v-model="home" size="small" class="w-160px">
-        <ElOption v-for="{ value, label } in pageSelectOptions" :key="value" :value="value" :label="label" />
-      </ElSelect>
+  <ElDialog v-model="visible" :title="title" preset="card" class="w-640px">
+    <!-- 操作按钮区域 -->
+    <div class="flex flex-wrap items-center justify-between gap-8px border-b border-gray-200 pb-12px">
+      <div class="flex flex-wrap gap-8px">
+        <ElButton size="small" type="primary" plain @click="handleSelectAll">
+          {{ $t('common.selectAll') || '全选' }}
+        </ElButton>
+        <ElButton size="small" @click="handleInvertSelection">
+          {{ $t('common.invertSelection') || '反选' }}
+        </ElButton>
+        <ElButton size="small" @click="handleClearSelection">
+          {{ $t('common.clearSelection') || '清空' }}
+        </ElButton>
+      </div>
+    </div>
+
+    <!-- 模块快捷选择 -->
+    <div v-if="modules.length > 0" class="border-b border-gray-200 py-12px">
+      <div class="mb-8px text-12px text-gray-500">
+        {{ $t('page.manage.role.moduleQuickSelect') || '模块快捷选择' }}
+      </div>
+      <div class="flex flex-wrap gap-8px">
+        <ElButton
+          v-for="module in modules"
+          :key="module.name"
+          size="small"
+          type="info"
+          plain
+          @click="handleSelectModule(module)"
+        >
+          {{ module.title }}
+        </ElButton>
+      </div>
     </div>
 
     <!-- 图例说明 -->
-    <div class="flex items-center gap-16px border-b border-gray-200 pb-12px text-12px text-gray-500">
+    <div class="flex items-center gap-16px border-b border-gray-200 py-12px text-12px text-gray-500">
       <div class="flex items-center gap-4px">
-        <span class="rounded bg-green-100 px-8px py-2px text-green-600">允许</span>
-        <span>正常访问</span>
+        <span class="rounded bg-blue-100 px-8px py-2px text-blue-600">
+          {{ $t('page.manage.role.routePermission') || '路由权限' }}
+        </span>
       </div>
       <div class="flex items-center gap-4px">
-        <span class="rounded bg-red-100 px-8px py-2px text-red-600">拒绝</span>
-        <span>显式拒绝(优先级最高)</span>
-      </div>
-      <div class="flex items-center gap-4px">
-        <ElTag size="small" type="info">继承</ElTag>
-        <span>从父角色继承</span>
+        <span class="text-gray-400">
+          {{ $t('page.manage.role.selectHint') || '勾选节点为角色分配路由访问权限' }}
+        </span>
       </div>
     </div>
 
+    <!-- 路由树 -->
     <ElTree
+      ref="treeRef"
       v-model:checked-keys="checks"
       v-loading="loading || checksLoading"
       :data="tree"
       node-key="id"
       show-checkbox
-      class="mt-12px h-280px overflow-y-auto"
+      :check-strictly="false"
+      :default-expand-all="true"
       :default-checked-keys="checks"
+      class="mt-12px h-320px overflow-y-auto"
     >
       <template #default="{ data }">
-        <span>{{ data.label }}</span>
+        <div class="flex items-center gap-8px">
+          <span>{{ data.title || data.name }}</span>
+          <ElTag v-if="data.isConstant" size="small" type="info">
+            {{ $t('page.manage.route.constant') || '常量' }}
+          </ElTag>
+          <ElTag v-if="data.status === 2" size="small" type="warning">
+            {{ $t('page.manage.route.disabled') || '禁用' }}
+          </ElTag>
+          <ElTag v-if="data.status === 3" size="small" type="danger">
+            {{ $t('page.manage.route.obsolete') || '废弃' }}
+          </ElTag>
+        </div>
       </template>
     </ElTree>
+
     <template #footer>
       <ElSpace class="w-full justify-end">
         <ElButton size="small" class="mt-16px" @click="closeModal">
