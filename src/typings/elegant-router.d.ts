@@ -39,8 +39,6 @@ declare module "@elegant-router/types" {
     "alova_request": "/alova/request";
     "alova_scenes": "/alova/scenes";
     "alova_user": "/alova/user";
-    "devtools": "/devtools";
-    "devtools_server": "/devtools/server";
     "energy": "/energy";
     "energy_base-data": "/energy/base-data";
     "energy_base-data_coefficient": "/energy/base-data/coefficient";
@@ -70,7 +68,6 @@ declare module "@elegant-router/types" {
     "manage": "/manage";
     "manage_advanced-permission": "/manage/advanced-permission";
     "manage_api": "/manage/api";
-    "manage_audit-log": "/manage/audit-log";
     "manage_department": "/manage/department";
     "manage_dictionary": "/manage/dictionary";
     "manage_menu": "/manage/menu";
@@ -80,12 +77,6 @@ declare module "@elegant-router/types" {
     "manage_route-menu-obsolete": "/manage/route-menu-obsolete";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
-    "multi-menu": "/multi-menu";
-    "multi-menu_first": "/multi-menu/first";
-    "multi-menu_first_child": "/multi-menu/first/child";
-    "multi-menu_second": "/multi-menu/second";
-    "multi-menu_second_child": "/multi-menu/second/child";
-    "multi-menu_second_child_home": "/multi-menu/second/child/home";
     "plugin": "/plugin";
     "plugin_barcode": "/plugin/barcode";
     "plugin_charts": "/plugin/charts";
@@ -170,14 +161,12 @@ declare module "@elegant-router/types" {
     | "500"
     | "about"
     | "alova"
-    | "devtools"
     | "energy"
     | "function"
     | "home"
     | "iframe-page"
     | "login"
     | "manage"
-    | "multi-menu"
     | "plugin"
     | "profile"
     | "scheduling"
@@ -209,7 +198,6 @@ declare module "@elegant-router/types" {
     | "alova_request"
     | "alova_scenes"
     | "alova_user"
-    | "devtools_server"
     | "energy_base-data_coefficient"
     | "energy_base-data_ledger"
     | "energy_base-data_medium"
@@ -232,7 +220,6 @@ declare module "@elegant-router/types" {
     | "home"
     | "manage_advanced-permission"
     | "manage_api"
-    | "manage_audit-log"
     | "manage_department"
     | "manage_dictionary"
     | "manage_menu"
@@ -242,8 +229,6 @@ declare module "@elegant-router/types" {
     | "manage_route-menu-obsolete"
     | "manage_user-detail"
     | "manage_user"
-    | "multi-menu_first_child"
-    | "multi-menu_second_child_home"
     | "plugin_barcode"
     | "plugin_charts_antv"
     | "plugin_charts_echarts"

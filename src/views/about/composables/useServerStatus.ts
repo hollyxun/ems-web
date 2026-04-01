@@ -1,7 +1,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { ServerStatusResponse, VersionInfoResponse } from '@/typings/api/devtools';
-import { fetchServerStatus, fetchVersionInfo } from '../../api';
+import { fetchServerStatus, fetchVersionInfo } from '../api';
 
 /** 历史数据点 */
 export interface HistoryDataPoint {
@@ -125,10 +125,12 @@ export function useServerStatus(options: UseServerStatusOptions = {}) {
       if (!silent) {
         ElMessage.error('获取服务器状态失败');
       }
+      return null;
     } catch {
       if (!silent) {
         ElMessage.error('获取服务器状态失败');
       }
+      return null;
     } finally {
       if (!silent) {
         loading.value = false;
@@ -149,8 +151,10 @@ export function useServerStatus(options: UseServerStatusOptions = {}) {
         return data;
       }
       ElMessage.error('获取版本信息失败');
+      return null;
     } catch {
       ElMessage.error('获取版本信息失败');
+      return null;
     } finally {
       versionLoading.value = false;
     }

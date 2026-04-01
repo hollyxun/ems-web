@@ -210,12 +210,6 @@ const local: App.I18n.Schema = {
     manage_dictionary: '字典管理',
     'manage_operation-record': '操作记录',
     'manage_route-menu-obsolete': '废弃路由',
-    'multi-menu': '多级菜单',
-    'multi-menu_first': '菜单一',
-    'multi-menu_first_child': '菜单一子菜单',
-    'multi-menu_second': '菜单二',
-    'multi-menu_second_child': '菜单二子菜单',
-    'multi-menu_second_child_home': '菜单二子菜单首页',
     exception: '异常页',
     exception_403: '403',
     exception_404: '404',
@@ -244,8 +238,6 @@ const local: App.I18n.Schema = {
     plugin_typeit: '打字机',
     plugin_tables: '表格',
     plugin_tables_vtable: 'VTable',
-    devtools: '开发者工具',
-    devtools_server: '服务器状态',
     energy: '能源管理',
     'energy_base-data': '基础数据',
     'energy_base-data_coefficient': '系数管理',
@@ -270,7 +262,6 @@ const local: App.I18n.Schema = {
     energy_ranking: '能效排名',
     energy_report: '能耗报表',
     'manage_advanced-permission': '高级权限',
-    'manage_audit-log': '审计日志',
     manage_organization: '组织架构'
   },
   page: {
@@ -332,7 +323,36 @@ const local: App.I18n.Schema = {
         previewLink: '预览地址'
       },
       prdDep: '生产依赖',
-      devDep: '开发依赖'
+      devDep: '开发依赖',
+      server: {
+        title: '服务器状态',
+        cpu: 'CPU',
+        cpuCores: '核心数',
+        cpuUser: '用户态',
+        cpuSystem: '系统态',
+        cpuIdle: '空闲',
+        memory: '内存',
+        memoryTotal: '总量',
+        memoryUsed: '已用',
+        memoryAvailable: '可用',
+        memoryUsage: '使用率',
+        os: '操作系统',
+        osType: '系统类型',
+        osPlatform: '平台',
+        osVersion: '版本',
+        osArch: '架构',
+        uptime: '运行时长',
+        uptimeBootTime: '启动时间',
+        ports: '服务端口',
+        portListening: '监听中',
+        portClosed: '未监听',
+        version: '版本信息',
+        systemVersion: '系统版本',
+        backendVersion: '后端依赖',
+        frontendVersion: '前端依赖',
+        autoRefresh: '自动刷新',
+        refresh: '刷新'
+      }
     },
     home: {
       branchDesc:
@@ -639,75 +659,6 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: '共 {total} 条'
-  },
-  devtools: {
-    server: {
-      title: '服务器状态',
-      cpu: 'CPU',
-      cpuCores: '核心数',
-      cpuUser: '用户态',
-      cpuSystem: '系统态',
-      cpuIdle: '空闲',
-      memory: '内存',
-      memoryTotal: '总量',
-      memoryUsed: '已用',
-      memoryAvailable: '可用',
-      memoryUsage: '使用率',
-      os: '操作系统',
-      osType: '系统类型',
-      osPlatform: '平台',
-      osVersion: '版本',
-      osArch: '架构',
-      uptime: '运行时长',
-      uptimeBootTime: '启动时间',
-      ports: '服务端口',
-      portListening: '监听中',
-      portClosed: '未监听',
-      version: '版本信息',
-      systemVersion: '系统版本',
-      backendVersion: '后端依赖',
-      frontendVersion: '前端依赖',
-      autoRefresh: '自动刷新',
-      refresh: '刷新'
-    },
-    aiChat: {
-      title: 'AI 对话',
-      config: {
-        title: '配置',
-        baseUrl: '基础URL',
-        baseUrlPlaceholder: '请输入基础URL',
-        apiKey: 'API密钥',
-        apiKeyPlaceholder: '请输入API密钥',
-        defaultModel: '默认模型',
-        defaultModelPlaceholder: '请选择默认模型',
-        saveConfig: '保存配置',
-        clearConfig: '清除配置',
-        getModels: '获取模型列表',
-        configGuide: '配置指南'
-      },
-      session: {
-        newChat: '新对话',
-        createSession: '创建会话',
-        sessionLimit: '会话数量限制',
-        clearAll: '清空全部',
-        deleteConfirm: '确定删除此会话？',
-        clearAllConfirm: '确定清空所有会话？',
-        selectModel: '选择模型'
-      },
-      chat: {
-        inputPlaceholder: '输入您的消息...',
-        send: '发送',
-        thinking: '思考中...',
-        startChat: '开始对话',
-        inputHint: '按 Enter 发送，Shift+Enter 换行',
-        messageLimit: '已达到消息上限',
-        messageCount: '{count} 条消息',
-        regenerate: '重新生成',
-        stop: '停止',
-        copy: '复制',
-        copied: '已复制！'
-      }
-    }
   }
 };
 

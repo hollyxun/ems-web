@@ -211,12 +211,6 @@ const local: App.I18n.Schema = {
     manage_dictionary: 'Dictionary Manage',
     'manage_operation-record': 'Operation Record',
     'manage_route-menu-obsolete': 'Obsolete Routes',
-    'multi-menu': 'Multi Menu',
-    'multi-menu_first': 'Menu One',
-    'multi-menu_first_child': 'Menu One Child',
-    'multi-menu_second': 'Menu Two',
-    'multi-menu_second_child': 'Menu Two Child',
-    'multi-menu_second_child_home': 'Menu Two Child Home',
     exception: 'Exception',
     exception_403: '403',
     exception_404: '404',
@@ -245,8 +239,6 @@ const local: App.I18n.Schema = {
     plugin_typeit: 'Typeit',
     plugin_tables: 'Tables',
     plugin_tables_vtable: 'VTable',
-    devtools: 'Developer Tools',
-    devtools_server: 'Server Status',
     energy: 'Energy Management',
     'energy_base-data': 'Base Data',
     'energy_base-data_coefficient': 'Coefficient',
@@ -271,7 +263,6 @@ const local: App.I18n.Schema = {
     'scheduling_factory-calendar': 'Factory Calendar',
     'shift-schedule': 'Shift Schedule',
     'manage_advanced-permission': 'Advanced Permission',
-    'manage_audit-log': 'Audit Log',
     manage_organization: 'Organization'
   },
   page: {
@@ -333,7 +324,36 @@ const local: App.I18n.Schema = {
         previewLink: 'Preview Link'
       },
       prdDep: 'Production Dependency',
-      devDep: 'Development Dependency'
+      devDep: 'Development Dependency',
+      server: {
+        title: 'Server Status',
+        cpu: 'CPU',
+        cpuCores: 'Cores',
+        cpuUser: 'User',
+        cpuSystem: 'System',
+        cpuIdle: 'Idle',
+        memory: 'Memory',
+        memoryTotal: 'Total',
+        memoryUsed: 'Used',
+        memoryAvailable: 'Available',
+        memoryUsage: 'Usage',
+        os: 'OS',
+        osType: 'Type',
+        osPlatform: 'Platform',
+        osVersion: 'Version',
+        osArch: 'Arch',
+        uptime: 'Uptime',
+        uptimeBootTime: 'Boot Time',
+        ports: 'Ports',
+        portListening: 'Listening',
+        portClosed: 'Closed',
+        version: 'Version Info',
+        systemVersion: 'System Version',
+        backendVersion: 'Backend Version',
+        frontendVersion: 'Frontend Version',
+        autoRefresh: 'Auto Refresh',
+        refresh: 'Refresh'
+      }
     },
     home: {
       branchDesc:
@@ -640,75 +660,6 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: 'Total {total} items'
-  },
-  devtools: {
-    server: {
-      title: 'Server Status',
-      cpu: 'CPU',
-      cpuCores: 'Cores',
-      cpuUser: 'User',
-      cpuSystem: 'System',
-      cpuIdle: 'Idle',
-      memory: 'Memory',
-      memoryTotal: 'Total',
-      memoryUsed: 'Used',
-      memoryAvailable: 'Available',
-      memoryUsage: 'Usage',
-      os: 'Operating System',
-      osType: 'Type',
-      osPlatform: 'Platform',
-      osVersion: 'Version',
-      osArch: 'Architecture',
-      uptime: 'Uptime',
-      uptimeBootTime: 'Boot Time',
-      ports: 'Service Ports',
-      portListening: 'Listening',
-      portClosed: 'Closed',
-      version: 'Version Info',
-      systemVersion: 'System Version',
-      backendVersion: 'Backend Dependencies',
-      frontendVersion: 'Frontend Dependencies',
-      autoRefresh: 'Auto Refresh',
-      refresh: 'Refresh'
-    },
-    aiChat: {
-      title: 'AI Chat',
-      config: {
-        title: 'Config',
-        baseUrl: 'Base URL',
-        baseUrlPlaceholder: 'Please enter base URL',
-        apiKey: 'API Key',
-        apiKeyPlaceholder: 'Please enter API key',
-        defaultModel: 'Default Model',
-        defaultModelPlaceholder: 'Please select default model',
-        saveConfig: 'Save Config',
-        clearConfig: 'Clear Config',
-        getModels: 'Get Models',
-        configGuide: 'Config Guide'
-      },
-      session: {
-        newChat: 'New Chat',
-        createSession: 'Create Session',
-        sessionLimit: 'Session Limit',
-        clearAll: 'Clear All',
-        deleteConfirm: 'Delete this session?',
-        clearAllConfirm: 'Clear all sessions?',
-        selectModel: 'Select Model'
-      },
-      chat: {
-        inputPlaceholder: 'Type your message...',
-        send: 'Send',
-        thinking: 'Thinking...',
-        startChat: 'Start Chat',
-        inputHint: 'Press Enter to send, Shift+Enter for new line',
-        messageLimit: 'Message limit reached',
-        messageCount: '{count} messages',
-        regenerate: 'Regenerate',
-        stop: 'Stop',
-        copy: 'Copy',
-        copied: 'Copied!'
-      }
-    }
   }
 };
 

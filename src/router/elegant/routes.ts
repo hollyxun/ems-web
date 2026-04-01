@@ -96,26 +96,6 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'devtools',
-    path: '/devtools',
-    component: 'layout.base',
-    meta: {
-      title: 'devtools',
-      i18nKey: 'route.devtools'
-    },
-    children: [
-      {
-        name: 'devtools_server',
-        path: '/devtools/server',
-        component: 'view.devtools_server',
-        meta: {
-          title: 'devtools_server',
-          i18nKey: 'route.devtools_server'
-        }
-      }
-    ]
-  },
-  {
     name: 'energy',
     path: '/energy',
     component: 'layout.base',
@@ -425,17 +405,6 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'manage_audit-log',
-        path: '/manage/audit-log',
-        component: 'view.manage_audit-log',
-        meta: {
-          title: 'manage_audit-log',
-          i18nKey: 'route.manage_audit-log',
-          icon: 'mdi:text-box-search',
-          roles: ['R_ADMIN']
-        }
-      },
-      {
         name: 'manage_department',
         path: '/manage/department',
         component: 'view.manage_department',
@@ -529,68 +498,6 @@ export const generatedRoutes: GeneratedRoute[] = [
           roles: ['R_ADMIN'],
           activeMenu: 'manage_user'
         }
-      }
-    ]
-  },
-  {
-    name: 'multi-menu',
-    path: '/multi-menu',
-    component: 'layout.base',
-    meta: {
-      title: 'multi-menu',
-      i18nKey: 'route.multi-menu',
-      order: 8
-    },
-    children: [
-      {
-        name: 'multi-menu_first',
-        path: '/multi-menu/first',
-        meta: {
-          title: 'multi-menu_first',
-          i18nKey: 'route.multi-menu_first',
-          order: 1
-        },
-        children: [
-          {
-            name: 'multi-menu_first_child',
-            path: '/multi-menu/first/child',
-            component: 'view.multi-menu_first_child',
-            meta: {
-              title: 'multi-menu_first_child',
-              i18nKey: 'route.multi-menu_first_child'
-            }
-          }
-        ]
-      },
-      {
-        name: 'multi-menu_second',
-        path: '/multi-menu/second',
-        meta: {
-          title: 'multi-menu_second',
-          i18nKey: 'route.multi-menu_second',
-          order: 2
-        },
-        children: [
-          {
-            name: 'multi-menu_second_child',
-            path: '/multi-menu/second/child',
-            meta: {
-              title: 'multi-menu_second_child',
-              i18nKey: 'route.multi-menu_second_child'
-            },
-            children: [
-              {
-                name: 'multi-menu_second_child_home',
-                path: '/multi-menu/second/child/home',
-                component: 'view.multi-menu_second_child_home',
-                meta: {
-                  title: 'multi-menu_second_child_home',
-                  i18nKey: 'route.multi-menu_second_child_home'
-                }
-              }
-            ]
-          }
-        ]
       }
     ]
   },

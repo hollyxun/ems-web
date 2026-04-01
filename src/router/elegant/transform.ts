@@ -59,9 +59,6 @@ function transformElegantRouteToVueRoute(
   }
 
   function getViewName(component: string) {
-    if (!component) {
-      return '404'; // 默认使用 404 页面
-    }
     const view = component.replace(VIEW_PREFIX, '');
 
     if(!views[view]) {
@@ -191,8 +188,6 @@ const routeMap: RouteMap = {
   "alova_request": "/alova/request",
   "alova_scenes": "/alova/scenes",
   "alova_user": "/alova/user",
-  "devtools": "/devtools",
-  "devtools_server": "/devtools/server",
   "energy": "/energy",
   "energy_base-data": "/energy/base-data",
   "energy_base-data_coefficient": "/energy/base-data/coefficient",
@@ -222,7 +217,6 @@ const routeMap: RouteMap = {
   "manage": "/manage",
   "manage_advanced-permission": "/manage/advanced-permission",
   "manage_api": "/manage/api",
-  "manage_audit-log": "/manage/audit-log",
   "manage_department": "/manage/department",
   "manage_dictionary": "/manage/dictionary",
   "manage_menu": "/manage/menu",
@@ -232,12 +226,6 @@ const routeMap: RouteMap = {
   "manage_route-menu-obsolete": "/manage/route-menu-obsolete",
   "manage_user": "/manage/user",
   "manage_user-detail": "/manage/user-detail/:id",
-  "multi-menu": "/multi-menu",
-  "multi-menu_first": "/multi-menu/first",
-  "multi-menu_first_child": "/multi-menu/first/child",
-  "multi-menu_second": "/multi-menu/second",
-  "multi-menu_second_child": "/multi-menu/second/child",
-  "multi-menu_second_child_home": "/multi-menu/second/child/home",
   "plugin": "/plugin",
   "plugin_barcode": "/plugin/barcode",
   "plugin_charts": "/plugin/charts",
