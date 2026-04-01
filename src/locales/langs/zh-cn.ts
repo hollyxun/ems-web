@@ -669,6 +669,44 @@ const local: App.I18n.Schema = {
       frontendVersion: '前端依赖',
       autoRefresh: '自动刷新',
       refresh: '刷新'
+    },
+    aiChat: {
+      title: 'AI 对话',
+      config: {
+        title: '配置',
+        baseUrl: '基础URL',
+        baseUrlPlaceholder: '请输入基础URL',
+        apiKey: 'API密钥',
+        apiKeyPlaceholder: '请输入API密钥',
+        defaultModel: '默认模型',
+        defaultModelPlaceholder: '请选择默认模型',
+        saveConfig: '保存配置',
+        clearConfig: '清除配置',
+        getModels: '获取模型列表',
+        configGuide: '配置指南'
+      },
+      session: {
+        newChat: '新对话',
+        createSession: '创建会话',
+        sessionLimit: '会话数量限制',
+        clearAll: '清空全部',
+        deleteConfirm: '确定删除此会话？',
+        clearAllConfirm: '确定清空所有会话？',
+        selectModel: '选择模型'
+      },
+      chat: {
+        inputPlaceholder: '输入您的消息...',
+        send: '发送',
+        thinking: '思考中...',
+        startChat: '开始对话',
+        inputHint: '按 Enter 发送，Shift+Enter 换行',
+        messageLimit: '已达到消息上限',
+        messageCount: '{count} 条消息',
+        regenerate: '重新生成',
+        stop: '停止',
+        copy: '复制',
+        copied: '已复制！'
+      }
     }
   }
 };

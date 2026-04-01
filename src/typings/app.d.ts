@@ -341,6 +341,15 @@ declare namespace App {
         update: string;
         updateSuccess: string;
         userCenter: string;
+        restore: string;
+        restoreSuccess: string;
+        batchRestoreConfirm: string;
+        batchRestoreSuccess: string;
+        batchRestoreFail: string;
+        selectFirst: string;
+        deleteConfirmWithDays: string;
+        obsoleteDaysInfo: string;
+        minObsoleteDaysWarning: string;
         yesOrNo: {
           yes: string;
           no: string;
@@ -650,6 +659,16 @@ declare namespace App {
             buttonCode: string;
             buttonDesc: string;
             menuStatus: string;
+            statusFilter: string;
+            componentPath: string;
+            confirmDisable: string;
+            confirmEnable: string;
+            readOnly: string;
+            editableConfig: string;
+            menuTitle: string;
+            menuIcon: string;
+            pleaseSelectIcon: string;
+            pleaseInputOrder: string;
             form: {
               home: string;
               menuType: string;
@@ -813,6 +832,10 @@ declare namespace App {
             inputHint: string;
             messageLimit: string;
             messageCount: string;
+            regenerate: string;
+            stop: string;
+            copy: string;
+            copied: string;
           };
         };
       };

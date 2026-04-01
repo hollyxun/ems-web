@@ -234,7 +234,98 @@ const result = useUIPaginatedTable({
 
 ---
 
-## 9. 类型检查命令
+## 9. I18n 翻译键完整流程
+
+### 问题
+
+新增路由或功能时，i18n 类型检查报错：
+
+```
+TS2740: Type '{ ... }' is missing the following properties from type 'Record<I18nRouteKey, string>': "energy_dashboard", ...
+TS2353: Object literal may only specify known properties, and 'restore' does not exist in type '{ ... }'
+```
+
+### 原因
+
+i18n 翻译系统有两层类型约束：
+1. **类型定义层**：`src/typings/app.d.ts` 中的 `App.I18n.Schema` 定义了所有允许的键
+2. **翻译实现层**：`src/locales/langs/zh-cn.ts` 和 `en-us.ts` 必须符合 Schema 类型
+
+### 解决方案
+
+#### 步骤 1：更新类型定义
+
+在 `src/typings/app.d.ts` 中添加缺失的字段：
+
+```typescript
+// 示例：添加 route 翻译键
+route: {
+  // ...existing keys...
+  energy_dashboard: string;
+  energy_comparison: string;
+}
+
+// 示例：添加 common 翻译键
+common: {
+  // ...existing keys...
+  restore: string;
+  restoreSuccess: string;
+}
+```
+
+#### 步骤 2：更新中文翻译
+
+在 `src/locales/langs/zh-cn.ts` 中添加对应翻译：
+
+```typescript
+route: {
+  energy_dashboard: '能耗看板',
+  energy_comparison: '能耗对比',
+}
+
+common: {
+  restore: '恢复',
+  restoreSuccess: '恢复成功',
+}
+```
+
+#### 步骤 3：更新英文翻译
+
+在 `src/locales/langs/en-us.ts` 中添加对应翻译：
+
+```typescript
+route: {
+  energy_dashboard: 'Dashboard',
+  energy_comparison: 'Comparison',
+}
+
+common: {
+  restore: 'Restore',
+  restoreSuccess: 'Restore Success',
+}
+```
+
+### 注意事项
+
+1. **类型定义必须在翻译实现之前**：TypeScript 会根据 `Schema` 类型检查翻译文件
+2. **三个文件必须同步更新**：
+   - `src/typings/app.d.ts` - 类型定义
+   - `src/locales/langs/zh-cn.ts` - 中文翻译
+   - `src/locales/langs/en-us.ts` - 英文翻译
+3. **嵌套结构要完整**：如 `page.manage.menu.statusFilter` 需要在 `page.manage.menu` 下添加 `statusFilter`
+
+### 常见 i18n 类型错误
+
+| 错误位置 | 错误类型 | 解决方案 |
+|---------|---------|---------|
+| `route: { ... }` | TS2740 缺少属性 | 在 `Schema.route` 中添加缺失的键 |
+| `common: { ... }` | TS2353 未知属性 | 检查键名是否在 `Schema.common` 中定义 |
+| `page.manage.menu: { ... }` | TS2353 未知属性 | 在 `Schema.page.manage.menu` 中添加缺失的键 |
+| `devtools.aiChat: { ... }` | TS2741 缺少属性 | 检查 `aiChat` 所有嵌套字段是否完整 |
+
+---
+
+## 10. 类型检查命令
 
 ```bash
 # 运行类型检查

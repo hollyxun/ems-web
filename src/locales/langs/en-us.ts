@@ -253,6 +253,13 @@ const local: App.I18n.Schema = {
     'energy_base-data_ledger': 'Ledger',
     'energy_base-data_medium': 'Medium',
     'energy_base-data_unit': 'Unit',
+    'energy_base-data_meter': 'Meter',
+    'energy_base-data_tou': 'Time of Use',
+    energy_dashboard: 'Dashboard',
+    energy_comparison: 'Comparison',
+    energy_flow: 'Energy Flow',
+    energy_ranking: 'Ranking',
+    energy_report: 'Report',
     profile: 'Profile',
     profile_info: 'Profile Info',
     profile_password: 'Change Password',
@@ -261,7 +268,11 @@ const local: App.I18n.Schema = {
     scheduling_shift: 'Shift Manage',
     'scheduling_shift-pattern': 'Shift Pattern',
     scheduling_calendar: 'Schedule Calendar',
-    'scheduling_factory-calendar': 'Factory Calendar'
+    'scheduling_factory-calendar': 'Factory Calendar',
+    'shift-schedule': 'Shift Schedule',
+    'manage_advanced-permission': 'Advanced Permission',
+    'manage_audit-log': 'Audit Log',
+    manage_organization: 'Organization'
   },
   page: {
     login: {
@@ -659,6 +670,44 @@ const local: App.I18n.Schema = {
       frontendVersion: 'Frontend Dependencies',
       autoRefresh: 'Auto Refresh',
       refresh: 'Refresh'
+    },
+    aiChat: {
+      title: 'AI Chat',
+      config: {
+        title: 'Config',
+        baseUrl: 'Base URL',
+        baseUrlPlaceholder: 'Please enter base URL',
+        apiKey: 'API Key',
+        apiKeyPlaceholder: 'Please enter API key',
+        defaultModel: 'Default Model',
+        defaultModelPlaceholder: 'Please select default model',
+        saveConfig: 'Save Config',
+        clearConfig: 'Clear Config',
+        getModels: 'Get Models',
+        configGuide: 'Config Guide'
+      },
+      session: {
+        newChat: 'New Chat',
+        createSession: 'Create Session',
+        sessionLimit: 'Session Limit',
+        clearAll: 'Clear All',
+        deleteConfirm: 'Delete this session?',
+        clearAllConfirm: 'Clear all sessions?',
+        selectModel: 'Select Model'
+      },
+      chat: {
+        inputPlaceholder: 'Type your message...',
+        send: 'Send',
+        thinking: 'Thinking...',
+        startChat: 'Start Chat',
+        inputHint: 'Press Enter to send, Shift+Enter for new line',
+        messageLimit: 'Message limit reached',
+        messageCount: '{count} messages',
+        regenerate: 'Regenerate',
+        stop: 'Stop',
+        copy: 'Copy',
+        copied: 'Copied!'
+      }
     }
   }
 };
