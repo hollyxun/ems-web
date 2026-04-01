@@ -47,6 +47,15 @@ const local: App.I18n.Schema = {
     trigger: '触发',
     update: '更新',
     updateSuccess: '更新成功',
+    restore: '恢复',
+    restoreSuccess: '恢复成功',
+    batchRestoreConfirm: '确定要批量恢复选中的 {count} 个路由吗？',
+    batchRestoreSuccess: '成功恢复 {count} 个路由',
+    batchRestoreFail: '{count} 个路由恢复失败',
+    selectFirst: '请先选择要操作的路由',
+    deleteConfirmWithDays: '确定要物理删除以下路由吗？此操作不可恢复！',
+    obsoleteDaysInfo: '废弃天数信息',
+    minObsoleteDaysWarning: '以下路由废弃天数不足 {days} 天，无法删除：{routes}',
     userCenter: '个人中心',
     yesOrNo: {
       yes: '是',
@@ -251,7 +260,18 @@ const local: App.I18n.Schema = {
     scheduling_shift: '班次管理',
     'scheduling_shift-pattern': '排班模式',
     scheduling_calendar: '排班日历',
-    'scheduling_factory-calendar': '工厂日历'
+    'scheduling_factory-calendar': '工厂日历',
+    'shift-schedule': '班组排班管理',
+    'energy_base-data_meter': '计量点管理',
+    'energy_base-data_tou': '分时电价',
+    energy_comparison: '能耗对比',
+    energy_dashboard: '能耗看板',
+    energy_flow: '能流图',
+    energy_ranking: '能效排名',
+    energy_report: '能耗报表',
+    'manage_advanced-permission': '高级权限',
+    'manage_audit-log': '审计日志',
+    manage_organization: '组织架构'
   },
   page: {
     login: {
@@ -426,7 +446,10 @@ const local: App.I18n.Schema = {
       route: {
         constant: '常量',
         disabled: '禁用',
-        obsolete: '废弃'
+        obsolete: '废弃',
+        obsoleteTime: '废弃时间',
+        obsoleteDays: '废弃天数',
+        batchRestore: '批量恢复'
       },
       user: {
         title: '用户列表',
@@ -482,6 +505,10 @@ const local: App.I18n.Schema = {
         buttonCode: '按钮编码',
         buttonDesc: '按钮描述',
         menuStatus: '菜单状态',
+        statusFilter: '状态筛选',
+        componentPath: '组件路径',
+        confirmEnable: '确定要启用该路由吗？',
+        confirmDisable: '确定要禁用该路由吗？',
         form: {
           home: '请选择首页',
           menuType: '请选择菜单类型',
@@ -512,6 +539,12 @@ const local: App.I18n.Schema = {
         addMenu: '新增菜单',
         editMenu: '编辑菜单',
         addChildMenu: '新增子菜单',
+        readOnly: '（只读）',
+        editableConfig: '自定义配置（可编辑）',
+        menuTitle: '菜单标题',
+        menuIcon: '菜单图标',
+        pleaseSelectIcon: '请选择图标',
+        pleaseInputOrder: '请输入排序',
         type: {
           directory: '目录',
           menu: '菜单',

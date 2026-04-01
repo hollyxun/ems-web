@@ -47,6 +47,16 @@ const local: App.I18n.Schema = {
     trigger: 'Trigger',
     update: 'Update',
     updateSuccess: 'Update Success',
+    restore: 'Restore',
+    restoreSuccess: 'Restore Success',
+    batchRestoreConfirm: 'Are you sure you want to batch restore {count} selected routes?',
+    batchRestoreSuccess: 'Successfully restored {count} routes',
+    batchRestoreFail: '{count} routes failed to restore',
+    selectFirst: 'Please select routes to operate first',
+    deleteConfirmWithDays:
+      'Are you sure you want to permanently delete the following routes? This action cannot be undone!',
+    obsoleteDaysInfo: 'Obsolete Days Info',
+    minObsoleteDaysWarning: 'The following routes have less than {days} obsolete days and cannot be deleted: {routes}',
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',
@@ -426,7 +436,10 @@ const local: App.I18n.Schema = {
       route: {
         constant: 'Constant',
         disabled: 'Disabled',
-        obsolete: 'Obsolete'
+        obsolete: 'Obsolete',
+        obsoleteTime: 'Obsolete Time',
+        obsoleteDays: 'Obsolete Days',
+        batchRestore: 'Batch Restore'
       },
       user: {
         title: 'User List',
@@ -482,6 +495,10 @@ const local: App.I18n.Schema = {
         buttonCode: 'Button Code',
         buttonDesc: 'Button Desc',
         menuStatus: 'Menu Status',
+        statusFilter: 'Status Filter',
+        componentPath: 'Component Path',
+        confirmEnable: 'Are you sure you want to enable this route?',
+        confirmDisable: 'Are you sure you want to disable this route?',
         form: {
           home: 'Please select home',
           menuType: 'Please select menu type',
@@ -512,6 +529,12 @@ const local: App.I18n.Schema = {
         addMenu: 'Add Menu',
         editMenu: 'Edit Menu',
         addChildMenu: 'Add Child Menu',
+        readOnly: '(Read Only)',
+        editableConfig: 'Custom Config (Editable)',
+        menuTitle: 'Menu Title',
+        menuIcon: 'Menu Icon',
+        pleaseSelectIcon: 'Please select icon',
+        pleaseInputOrder: 'Please enter order',
         type: {
           directory: 'Directory',
           menu: 'Menu',
