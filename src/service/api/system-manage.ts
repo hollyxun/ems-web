@@ -488,7 +488,7 @@ export function fetchSetRoleMenus(data: Api.SystemManage.SetRoleMenusParams) {
 /** get role button ids */
 export function fetchGetRoleButtons(roleId: number) {
   return request<number[]>({
-    url: '/api/v1/roleMenu/getRoleButtons',
+    url: '/api/v1/button/role-buttons',
     method: 'get',
     params: { roleId }
   });
@@ -497,7 +497,7 @@ export function fetchGetRoleButtons(roleId: number) {
 /** set role buttons (RBAC-1: support effect param) */
 export function fetchSetRoleButtons(data: Api.SystemManage.SetRoleButtonsParams) {
   return request<boolean>({
-    url: '/api/v1/roleMenu/setRoleButtons',
+    url: '/api/v1/button/set-role-buttons',
     method: 'post',
     data
   });
@@ -506,7 +506,7 @@ export function fetchSetRoleButtons(data: Api.SystemManage.SetRoleButtonsParams)
 /** get all menu buttons (for permission config) */
 export function fetchGetMenuButtons() {
   return request<Api.SystemManage.Menu[]>({
-    url: '/api/v1/roleMenu/getMenuButtons',
+    url: '/api/v1/button/menu-buttons',
     method: 'get'
   });
 }
@@ -514,7 +514,7 @@ export function fetchGetMenuButtons() {
 /** get current user buttons */
 export function fetchGetUserButtons() {
   return request<string[]>({
-    url: '/api/v1/roleMenu/getUserButtons',
+    url: '/api/v1/button/user-buttons',
     method: 'get'
   });
 }

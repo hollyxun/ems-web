@@ -3,6 +3,7 @@ import { computed, ref, shallowRef, watch } from 'vue';
 import type { ElTree } from 'element-plus';
 import { fetchBindRoleRoutes, fetchGetRoleRouteIds, fetchGetRouteTree } from '@/service/api';
 import { $t } from '@/locales';
+import ButtonAuthTab from './button-auth-tab.vue';
 
 defineOptions({ name: 'MenuAuthModal' });
 
@@ -22,6 +23,9 @@ function closeModal() {
 }
 
 const title = computed(() => $t('common.edit') + $t('page.manage.role.menuAuth'));
+
+// Tab 切换
+const activeTab = ref<'menu' | 'button'>('menu');
 
 // 树形数据
 const tree = shallowRef<Api.RouteMenu.RouteMenu[]>([]);
@@ -164,96 +168,113 @@ function init() {
 
 watch(visible, val => {
   if (val) {
+    activeTab.value = 'menu';
     init();
   }
 });
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" class="w-640px">
-    <!-- 操作按钮区域 -->
-    <div class="flex flex-wrap items-center justify-between gap-8px border-b border-gray-200 pb-12px">
-      <div class="flex flex-wrap gap-8px">
-        <ElButton size="small" type="primary" plain @click="handleSelectAll">
-          {{ $t('common.selectAll') || '全选' }}
-        </ElButton>
-        <ElButton size="small" @click="handleInvertSelection">
-          {{ $t('common.invertSelection') || '反选' }}
-        </ElButton>
-        <ElButton size="small" @click="handleClearSelection">
-          {{ $t('common.clearSelection') || '清空' }}
-        </ElButton>
-      </div>
-    </div>
-
-    <!-- 模块快捷选择 -->
-    <div v-if="modules.length > 0" class="border-b border-gray-200 py-12px">
-      <div class="mb-8px text-12px text-gray-500">
-        {{ $t('page.manage.role.moduleQuickSelect') || '模块快捷选择' }}
-      </div>
-      <div class="flex flex-wrap gap-8px">
-        <ElButton
-          v-for="module in modules"
-          :key="module.name"
-          size="small"
-          type="info"
-          plain
-          @click="handleSelectModule(module)"
-        >
-          {{ module.title }}
-        </ElButton>
-      </div>
-    </div>
-
-    <!-- 图例说明 -->
-    <div class="flex items-center gap-16px border-b border-gray-200 py-12px text-12px text-gray-500">
-      <div class="flex items-center gap-4px">
-        <span class="rounded bg-blue-100 px-8px py-2px text-blue-600">
-          {{ $t('page.manage.role.routePermission') || '路由权限' }}
-        </span>
-      </div>
-      <div class="flex items-center gap-4px">
-        <span class="text-gray-400">
-          {{ $t('page.manage.role.selectHint') || '勾选节点为角色分配路由访问权限' }}
-        </span>
-      </div>
-    </div>
-
-    <!-- 路由树 -->
-    <ElTree
-      ref="treeRef"
-      v-model:checked-keys="checks"
-      v-loading="loading || checksLoading"
-      :data="tree"
-      node-key="id"
-      show-checkbox
-      :check-strictly="false"
-      :default-expand-all="true"
-      :default-checked-keys="checks"
-      class="mt-12px h-320px overflow-y-auto"
-    >
-      <template #default="{ data }">
-        <div class="flex items-center gap-8px">
-          <span>{{ data.title || data.name }}</span>
-          <ElTag v-if="data.isConstant" size="small" type="info">
-            {{ $t('page.manage.route.constant') || '常量' }}
-          </ElTag>
-          <ElTag v-if="data.status === 2" size="small" type="warning">
-            {{ $t('page.manage.route.disabled') || '禁用' }}
-          </ElTag>
-          <ElTag v-if="data.status === 3" size="small" type="danger">
-            {{ $t('page.manage.route.obsolete') || '废弃' }}
-          </ElTag>
+  <ElDialog v-model="visible" :title="title" class="w-680px">
+    <!-- Tab 切换 -->
+    <ElTabs v-model="activeTab" class="mb-12px">
+      <ElTabPane label="菜单权限" name="menu">
+        <!-- 操作按钮区域 -->
+        <div class="flex flex-wrap items-center justify-between gap-8px border-b border-gray-200 pb-12px">
+          <div class="flex flex-wrap gap-8px">
+            <ElButton size="small" type="primary" plain @click="handleSelectAll">
+              {{ $t('common.selectAll') || '全选' }}
+            </ElButton>
+            <ElButton size="small" @click="handleInvertSelection">
+              {{ $t('common.invertSelection') || '反选' }}
+            </ElButton>
+            <ElButton size="small" @click="handleClearSelection">
+              {{ $t('common.clearSelection') || '清空' }}
+            </ElButton>
+          </div>
         </div>
-      </template>
-    </ElTree>
+
+        <!-- 模块快捷选择 -->
+        <div v-if="modules.length > 0" class="border-b border-gray-200 py-12px">
+          <div class="mb-8px text-12px text-gray-500">
+            {{ $t('page.manage.role.moduleQuickSelect') || '模块快捷选择' }}
+          </div>
+          <div class="flex flex-wrap gap-8px">
+            <ElButton
+              v-for="module in modules"
+              :key="module.name"
+              size="small"
+              type="info"
+              plain
+              @click="handleSelectModule(module)"
+            >
+              {{ module.title }}
+            </ElButton>
+          </div>
+        </div>
+
+        <!-- 图例说明 -->
+        <div class="flex items-center gap-16px border-b border-gray-200 py-12px text-12px text-gray-500">
+          <div class="flex items-center gap-4px">
+            <span class="rounded bg-blue-100 px-8px py-2px text-blue-600">
+              {{ $t('page.manage.role.routePermission') || '路由权限' }}
+            </span>
+          </div>
+          <div class="flex items-center gap-4px">
+            <span class="text-gray-400">
+              {{ $t('page.manage.role.selectHint') || '勾选节点为角色分配路由访问权限' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- 路由树 -->
+        <ElTree
+          ref="treeRef"
+          v-model:checked-keys="checks"
+          v-loading="loading || checksLoading"
+          :data="tree"
+          node-key="id"
+          show-checkbox
+          :check-strictly="false"
+          :default-expand-all="true"
+          :default-checked-keys="checks"
+          class="mt-12px h-320px overflow-y-auto"
+        >
+          <template #default="{ data }">
+            <div class="flex items-center gap-8px">
+              <span>{{ data.title || data.name }}</span>
+              <ElTag v-if="data.isConstant" size="small" type="info">
+                {{ $t('page.manage.route.constant') || '常量' }}
+              </ElTag>
+              <ElTag v-if="data.status === 2" size="small" type="warning">
+                {{ $t('page.manage.route.disabled') || '禁用' }}
+              </ElTag>
+              <ElTag v-if="data.status === 3" size="small" type="danger">
+                {{ $t('page.manage.route.obsolete') || '废弃' }}
+              </ElTag>
+            </div>
+          </template>
+        </ElTree>
+      </ElTabPane>
+
+      <ElTabPane label="按钮权限" name="button">
+        <ButtonAuthTab :role-id="props.roleId" />
+      </ElTabPane>
+    </ElTabs>
 
     <template #footer>
       <ElSpace class="w-full justify-end">
         <ElButton size="small" class="mt-16px" @click="closeModal">
           {{ $t('common.cancel') }}
         </ElButton>
-        <ElButton type="primary" size="small" class="mt-16px" :loading="submitting" @click="handleSubmit">
+        <ElButton
+          v-if="activeTab === 'menu'"
+          type="primary"
+          size="small"
+          class="mt-16px"
+          :loading="submitting"
+          @click="handleSubmit"
+        >
           {{ $t('common.confirm') }}
         </ElButton>
       </ElSpace>
@@ -264,5 +285,8 @@ watch(visible, val => {
 <style scoped>
 :deep(.el-tree-node__content) {
   height: 36px;
+}
+:deep(.el-tabs__content) {
+  padding: 0;
 }
 </style>

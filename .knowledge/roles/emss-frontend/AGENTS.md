@@ -196,6 +196,7 @@ const emit = defineEmits<{
 | `skills/plugin-integration.md` | 插件集成流程 | 集成新插件时 |
 | `skills/module-removal.md` | 功能模块删除完整流程 | 删除功能模块时 |
 | `skills/route-sync-development.md` | 路由同步开发流程 | 开发路由同步功能时 |
+| `skills/button-permission.md` | 按钮权限使用指南 | 使用按钮权限控制时 |
 
 ### Insights（规律性认知）
 
