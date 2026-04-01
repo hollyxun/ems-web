@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import { ElMessage } from 'element-plus';
 import { fetchCompareShifts } from '@/service/api/energy';
-import type { Api } from '@/typings/api';
 import ComparisonChart from './comparison-chart.vue';
 
 defineOptions({ name: 'ShiftComparison' });
@@ -21,7 +21,9 @@ const query = reactive<Api.Energy.Comparison.ShiftComparisonQuery>({
   shiftTypes: ['early', 'middle', 'late']
 });
 
-const selectedMetric = ref<'total_energy' | 'specific_consumption' | 'cost' | 'peak_valley_flat'>('specific_consumption');
+const selectedMetric = ref<'total_energy' | 'specific_consumption' | 'cost' | 'peak_valley_flat'>(
+  'specific_consumption'
+);
 
 const shiftTypeOptions = [
   { value: 'early', label: '早班' },
@@ -69,22 +71,12 @@ async function handleCompare() {
       <ElForm :inline="true" class="flex flex-wrap gap-4">
         <ElFormItem label="班组">
           <ElSelect v-model="query.teamId" placeholder="选择班组" class="w-48">
-            <ElOption
-              v-for="team in teamOptions"
-              :key="team.value"
-              :value="team.value"
-              :label="team.label"
-            />
+            <ElOption v-for="team in teamOptions" :key="team.value" :value="team.value" :label="team.label" />
           </ElSelect>
         </ElFormItem>
 
         <ElFormItem label="日期">
-          <ElDatePicker
-            v-model="query.date"
-            type="date"
-            placeholder="选择日期"
-            value-format="YYYY-MM-DD"
-          />
+          <ElDatePicker v-model="query.date" type="date" placeholder="选择日期" value-format="YYYY-MM-DD" />
         </ElFormItem>
 
         <ElFormItem label="班次">
@@ -96,9 +88,7 @@ async function handleCompare() {
         </ElFormItem>
 
         <ElFormItem>
-          <ElButton type="primary" :loading="loading" @click="handleCompare">
-            开始对比
-          </ElButton>
+          <ElButton type="primary" :loading="loading" @click="handleCompare">开始对比</ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -114,12 +104,7 @@ async function handleCompare() {
       </ElCard>
 
       <ElCard class="mb-4">
-        <ComparisonChart
-          :items="items"
-          :item-labels="itemLabels"
-          :metric="selectedMetric"
-          :loading="loading"
-        />
+        <ComparisonChart :items="items" :item-labels="itemLabels" :metric="selectedMetric" :loading="loading" />
       </ElCard>
 
       <ElRow :gutter="20" class="mb-4">

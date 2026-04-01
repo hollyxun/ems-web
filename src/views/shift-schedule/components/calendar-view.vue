@@ -3,7 +3,6 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { ElButton, ElCard, ElTag } from 'element-plus';
 import dayjs from 'dayjs';
 import { useShiftScheduleStore } from '@/store/modules/shift-schedule';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'CalendarView' });
 
@@ -105,9 +104,12 @@ async function loadData() {
   await store.loadMonthSchedules(currentYear.value, currentMonth.value, props.teamId);
 }
 
-watch(() => props.teamId, () => {
-  loadData();
-});
+watch(
+  () => props.teamId,
+  () => {
+    loadData();
+  }
+);
 
 watch(
   () => store.currentMonth,

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted, computed } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'ComparisonChart' });
 
@@ -126,7 +125,9 @@ function updateChart() {
       },
       yAxis: {
         type: 'value',
-        name: metricConfig.value.unit ? `${metricConfig.value.label} (${metricConfig.value.unit})` : metricConfig.value.label
+        name: metricConfig.value.unit
+          ? `${metricConfig.value.label} (${metricConfig.value.unit})`
+          : metricConfig.value.label
       },
       series: [
         {

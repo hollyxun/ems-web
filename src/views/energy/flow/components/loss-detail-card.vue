@@ -37,21 +37,17 @@ function formatNumber(num: number): string {
     </template>
 
     <div class="loss-summary mb-16px">
-      <div class="text-24px font-bold text-red-500">
+      <div class="text-24px text-red-500 font-bold">
         {{ formatNumber(lossTotal) }}
-        <span class="text-14px font-normal text-gray-500">kWh</span>
+        <span class="text-14px text-gray-500 font-normal">kWh</span>
       </div>
-      <div class="text-12px text-gray-500 mt-4px">
-        占总输入 {{ lossPercent.toFixed(2) }}%
-      </div>
+      <div class="mt-4px text-12px text-gray-500">占总输入 {{ lossPercent.toFixed(2) }}%</div>
     </div>
 
     <ElTable :data="lossNodes" size="small" max-height="200">
       <ElTableColumn prop="name" label="损耗点" min-width="120" />
       <ElTableColumn prop="value" label="损耗量" width="120">
-        <template #default="{ row }">
-          {{ formatNumber(row.value) }} kWh
-        </template>
+        <template #default="{ row }">{{ formatNumber(row.value) }} kWh</template>
       </ElTableColumn>
     </ElTable>
   </ElCard>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { Icon } from '@iconify/vue';
-import { fetchAlerts, confirmAlert, ignoreAlert } from '@/service/api/dashboard';
+import { confirmAlert, fetchAlerts, ignoreAlert } from '@/service/api/dashboard';
 import AlertItem from './alert-item.vue';
 
 interface Props {
@@ -33,8 +33,10 @@ const filteredAlerts = computed(() => {
 });
 
 const alertCounts = computed(() => ({
-  critical: alerts.value.filter((a: Api.Dashboard.AlertItem) => a.severity === 'critical' && a.status === 'active').length,
-  warning: alerts.value.filter((a: Api.Dashboard.AlertItem) => a.severity === 'warning' && a.status === 'active').length,
+  critical: alerts.value.filter((a: Api.Dashboard.AlertItem) => a.severity === 'critical' && a.status === 'active')
+    .length,
+  warning: alerts.value.filter((a: Api.Dashboard.AlertItem) => a.severity === 'warning' && a.status === 'active')
+    .length,
   info: alerts.value.filter((a: Api.Dashboard.AlertItem) => a.severity === 'info' && a.status === 'active').length
 }));
 
@@ -137,13 +139,19 @@ onMounted(loadAlerts);
       <div class="mt-2">No alerts</div>
     </div>
 
-    <div v-else class="max-h-400px space-y-3 overflow-y-auto">
-      <AlertItem v-for="alert in filteredAlerts" :key="alert.id" :alert="alert" @confirm="handleConfirm" @ignore="handleIgnore" />
+    <div v-else class="max-h-400px overflow-y-auto space-y-3">
+      <AlertItem
+        v-for="alert in filteredAlerts"
+        :key="alert.id"
+        :alert="alert"
+        @confirm="handleConfirm"
+        @ignore="handleIgnore"
+      />
     </div>
 
     <!-- View All Link -->
     <div v-if="alerts.length > props.maxItems" class="mt-4 text-center">
-      <ElButton text type="primary" @click="$router.push('/energy/alerts')"> View All ({{ alerts.length }}) </ElButton>
+      <ElButton text type="primary" @click="$router.push('/energy/alerts')">View All ({{ alerts.length }})</ElButton>
     </div>
   </ElCard>
 </template>

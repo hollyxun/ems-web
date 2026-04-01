@@ -66,7 +66,7 @@ const periodLabel = computed(() => {
           <div class="text-sm text-gray-500">{{ title }}</div>
           <div v-if="loading" class="h-8 w-24 animate-pulse rounded bg-gray-200" />
           <div v-else class="flex items-baseline gap-2">
-            <span class="text-2xl font-bold text-gray-900 dark:text-white">
+            <span class="text-2xl text-gray-900 font-bold dark:text-white">
               {{ metric.displayValue }}
             </span>
             <span class="text-sm text-gray-500">{{ metric.unit }}</span>

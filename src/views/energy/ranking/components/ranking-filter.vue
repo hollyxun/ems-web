@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'RankingFilter' });
 

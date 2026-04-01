@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ElProgress, ElTag, ElAlert } from 'element-plus';
+import { ElAlert, ElProgress, ElTag } from 'element-plus';
 
 defineOptions({ name: 'BalanceIndicator' });
 
@@ -31,17 +31,10 @@ const progressColor = computed(() => {
   <div class="balance-indicator">
     <div class="balance-header">
       <span class="label">能量平衡率</span>
-      <ElTag :type="statusType" size="small">
-        {{ balanceRate.toFixed(1) }}%
-      </ElTag>
+      <ElTag :type="statusType" size="small">{{ balanceRate.toFixed(1) }}%</ElTag>
     </div>
 
-    <ElProgress
-      :percentage="balanceRate"
-      :color="progressColor"
-      :stroke-width="12"
-      :show-text="false"
-    />
+    <ElProgress :percentage="balanceRate" :color="progressColor" :stroke-width="12" :show-text="false" />
 
     <ElAlert
       v-if="!isBalanced"

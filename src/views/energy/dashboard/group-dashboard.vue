@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useDashboardRefresh } from '@/hooks/business/use-dashboard-refresh';
 import { fetchGroupDashboard } from '@/service/api/dashboard';
+import { useDashboardRefresh } from '@/hooks/business/use-dashboard-refresh';
 import TotalConsumptionCard from './modules/total-consumption-card.vue';
 import FactoryComparisonChart from './modules/factory-comparison-chart.vue';
 import RealtimeIndicator from './modules/realtime-indicator.vue';
@@ -30,7 +30,7 @@ const trendDirection = computed(() => data.value?.trendDirection || 'stable');
 </script>
 
 <template>
-  <div class="group-dashboard flex h-full flex-col gap-4 p-4">
+  <div class="group-dashboard h-full flex flex-col gap-4 p-4">
     <!-- Header -->
     <div class="flex items-center justify-between">
       <h2 class="text-xl font-bold">Group Energy Dashboard</h2>

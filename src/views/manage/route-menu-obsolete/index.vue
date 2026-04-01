@@ -6,13 +6,14 @@ import {
   ElCard,
   ElInputNumber,
   ElMessage,
+  ElMessageBox,
   ElPagination,
-  ElPopconfirm,
   ElTable,
   ElTableColumn,
   ElTag
 } from 'element-plus';
 import { fetchDeleteObsoleteRoutes, fetchGetObsoleteRoutes, fetchRestoreRoute } from '@/service/api/route-menu';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'RouteMenuObsoleteManage' });
 
@@ -24,8 +25,11 @@ const page = ref(1);
 const pageSize = ref(20);
 const daysFilter = ref<number | undefined>(undefined);
 
+// 批量选择
+const selectedIds: Ref<number[]> = ref([]);
+
 // 计算分页信息
-const paginationInfo = computed(() => `共 ${total.value} 条`);
+const paginationInfo = computed(() => $t('datatable.itemCount', { total: total.value }));
 
 // 获取废弃路由列表
 async function getData() {
@@ -38,8 +42,10 @@ async function getData() {
     });
     data.value = response.data?.list || [];
     total.value = response.data?.total || 0;
+    // 清空选择
+    selectedIds.value = [];
   } catch {
-    ElMessage.error('获取废弃路由列表失败');
+    ElMessage.error($t('common.error') || '获取废弃路由列表失败');
   } finally {
     loading.value = false;
   }
@@ -50,29 +56,112 @@ async function handleRestore(id: number) {
   try {
     const { data: result } = await fetchRestoreRoute({ id });
     if (result?.success) {
-      ElMessage.success('恢复成功');
+      ElMessage.success($t('common.restoreSuccess') || '恢复成功');
       getData();
     } else {
-      ElMessage.error(result?.message || '恢复失败');
+      ElMessage.error(result?.message || $t('common.error') || '恢复失败');
     }
   } catch {
-    ElMessage.error('恢复失败');
+    ElMessage.error($t('common.error') || '恢复失败');
   }
 }
 
-// 物理删除
-async function handleDelete(ids: number[]) {
+// 批量恢复
+async function handleBatchRestore() {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning($t('common.selectFirst') || '请先选择要恢复的路由');
+    return;
+  }
+
   try {
-    const { data: success } = await fetchDeleteObsoleteRoutes({ ids, forceDays: 90 });
+    await ElMessageBox.confirm(
+      $t('common.batchRestoreConfirm', { count: selectedIds.value.length }) || `确定要批量恢复选中的 ${selectedIds.value.length} 个路由吗？`,
+      $t('common.tip') || '提示',
+      { type: 'warning' }
+    );
+
+    loading.value = true;
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const id of selectedIds.value) {
+      try {
+        const { data: result } = await fetchRestoreRoute({ id });
+        if (result?.success) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+      } catch {
+        failCount++;
+      }
+    }
+
+    if (successCount > 0) {
+      ElMessage.success($t('common.batchRestoreSuccess', { count: successCount }) || `成功恢复 ${successCount} 个路由`);
+    }
+    if (failCount > 0) {
+      ElMessage.warning($t('common.batchRestoreFail', { count: failCount }) || `${failCount} 个路由恢复失败`);
+    }
+    getData();
+  } catch {
+    // 用户取消
+  } finally {
+    loading.value = false;
+  }
+}
+
+// 物理删除（单个）
+async function handleDelete(ids: number[], daysObsolete?: number) {
+  // 检查废弃天数是否满足90天要求
+  const minDays = 90;
+  const itemsToDelete = data.value.filter(item => ids.includes(item.id));
+
+  // 检查是否有不满足90天要求的路由
+  const notReadyItems = itemsToDelete.filter(item => item.daysObsolete < minDays);
+  if (notReadyItems.length > 0) {
+    ElMessage.warning(
+      $t('common.minObsoleteDaysWarning', { days: minDays, routes: notReadyItems.map(i => i.name).join(', ') }) ||
+      `以下路由废弃天数不足 ${minDays} 天，无法删除：${notReadyItems.map(i => i.name).join(', ')}`
+    );
+    return;
+  }
+
+  try {
+    // 显示废弃天数信息的确认弹窗
+    const daysInfo = itemsToDelete.map(item => `${item.name}: ${item.daysObsolete}天`).join('\n');
+    await ElMessageBox.confirm(
+      `${$t('common.deleteConfirmWithDays') || '确定要物理删除以下路由吗？此操作不可恢复！'}\n\n${$t('common.obsoleteDaysInfo') || '废弃天数信息'}：\n${daysInfo}`,
+      $t('common.confirmDelete') || '确认删除',
+      {
+        type: 'warning',
+        confirmButtonText: $t('common.confirm') || '确认',
+        cancelButtonText: $t('common.cancel') || '取消'
+      }
+    );
+
+    const { data: success } = await fetchDeleteObsoleteRoutes({ ids, forceDays: minDays });
     if (success) {
-      ElMessage.success('删除成功');
+      ElMessage.success($t('common.deleteSuccess') || '删除成功');
       getData();
     } else {
-      ElMessage.error('删除失败');
+      ElMessage.error($t('common.error') || '删除失败');
     }
   } catch {
-    ElMessage.error('删除失败');
+    // 用户取消
+  } finally {
+    loading.value = false;
   }
+}
+
+// 批量删除
+async function handleBatchDelete() {
+  if (selectedIds.value.length === 0) {
+    ElMessage.warning($t('common.selectFirst') || '请先选择要删除的路由');
+    return;
+  }
+
+  await handleDelete(selectedIds.value);
 }
 
 // 格式化日期
@@ -87,6 +176,18 @@ function getDaysColor(days: number): 'danger' | 'warning' | 'info' {
   if (days >= 60) return 'warning';
   return 'info';
 }
+
+// 表格选择变化
+function handleSelectionChange(selection: Api.RouteMenu.RouteObsoleteItem[]) {
+  selectedIds.value = selection.map(item => item.id);
+}
+
+// 是否可以批量删除（所有选中项都满足90天要求）
+const canBatchDelete = computed(() => {
+  if (selectedIds.value.length === 0) return false;
+  const selectedItems = data.value.filter(item => selectedIds.value.includes(item.id));
+  return selectedItems.every(item => item.daysObsolete >= 90);
+});
 
 // 筛选变化
 function handleFilterChange() {
@@ -108,8 +209,25 @@ onMounted(() => {
     <ElCard class="card-wrapper sm:flex-1-hidden">
       <template #header>
         <div class="flex items-center justify-between">
-          <p>废弃路由管理 ({{ paginationInfo }})</p>
+          <p>{{ $t('page.manage.menu.title') }} - {{ $t('page.manage.route.obsolete') }} ({{ paginationInfo }})</p>
           <div class="flex items-center gap-12px">
+            <!-- 批量操作按钮 -->
+            <ElButton
+              type="success"
+              plain
+              :disabled="selectedIds.length === 0"
+              @click="handleBatchRestore"
+            >
+              {{ $t('page.manage.route.batchRestore') || '批量恢复' }}
+            </ElButton>
+            <ElButton
+              type="danger"
+              plain
+              :disabled="!canBatchDelete"
+              @click="handleBatchDelete"
+            >
+              {{ $t('common.batchDelete') || '批量删除' }}
+            </ElButton>
             <ElInputNumber
               v-model="daysFilter"
               placeholder="废弃天数筛选"
@@ -124,40 +242,54 @@ onMounted(() => {
               <template #icon>
                 <icon-ic-round-refresh class="text-icon" />
               </template>
-              刷新
+              {{ $t('common.refresh') || '刷新' }}
             </ElButton>
           </div>
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">
-        <ElTable v-loading="loading" height="100%" border class="sm:h-full" :data="data">
-          <ElTableColumn prop="id" label="ID" width="80" />
-          <ElTableColumn prop="name" label="路由名称" min-width="140" />
-          <ElTableColumn prop="path" label="路由路径" min-width="140" />
-          <ElTableColumn prop="title" label="标题" min-width="100">
+        <ElTable
+          v-loading="loading"
+          height="100%"
+          border
+          class="sm:h-full"
+          :data="data"
+          @selection-change="handleSelectionChange"
+        >
+          <ElTableColumn type="selection" width="50" />
+          <ElTableColumn prop="id" :label="$t('page.manage.menu.id')" width="80" />
+          <ElTableColumn prop="name" :label="$t('page.manage.menu.routeName')" min-width="140" />
+          <ElTableColumn prop="path" :label="$t('page.manage.menu.routePath')" min-width="140" />
+          <ElTableColumn prop="title" :label="$t('page.manage.menu.menuName')" min-width="100">
             <template #default="{ row }">
               {{ row.title || '-' }}
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="obsoleteAt" label="废弃时间" min-width="160">
+          <ElTableColumn prop="obsoleteAt" :label="$t('page.manage.route.obsoleteTime')" min-width="160">
             <template #default="{ row }">
               {{ formatDate(row.obsoleteAt) }}
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="daysObsolete" label="废弃天数" width="100">
+          <ElTableColumn prop="daysObsolete" :label="$t('page.manage.route.obsoleteDays')" width="100">
             <template #default="{ row }">
               <ElTag :type="getDaysColor(row.daysObsolete)">{{ row.daysObsolete }} 天</ElTag>
             </template>
           </ElTableColumn>
-          <ElTableColumn label="操作" width="180" fixed="right">
+          <ElTableColumn :label="$t('common.operate')" width="180" fixed="right">
             <template #default="{ row }">
               <div class="flex items-center gap-8px">
-                <ElButton type="primary" plain size="small" @click="handleRestore(row.id)">恢复</ElButton>
-                <ElPopconfirm title="确定要物理删除该路由吗？此操作不可恢复！" @confirm="handleDelete([row.id])">
-                  <template #reference>
-                    <ElButton type="danger" plain size="small" :disabled="row.daysObsolete < 90">删除</ElButton>
-                  </template>
-                </ElPopconfirm>
+                <ElButton type="primary" plain size="small" @click="handleRestore(row.id)">
+                  {{ $t('common.restore') || '恢复' }}
+                </ElButton>
+                <ElButton
+                  type="danger"
+                  plain
+                  size="small"
+                  :disabled="row.daysObsolete < 90"
+                  @click="handleDelete([row.id], row.daysObsolete)"
+                >
+                  {{ $t('common.delete') }}
+                </ElButton>
               </div>
             </template>
           </ElTableColumn>

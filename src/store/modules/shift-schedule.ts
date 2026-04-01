@@ -1,16 +1,15 @@
 import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
-import type { Api } from '@/typings/api';
-import { SetupStoreId } from '@/enum';
 import {
-  fetchGetShiftTypeList,
-  fetchGetShiftScheduleList,
-  fetchCreateShiftSchedule,
-  fetchUpdateShiftSchedule,
-  fetchDeleteShiftSchedule,
   fetchBatchCreateShiftSchedule,
-  fetchGetTeamShiftCalendar
+  fetchCreateShiftSchedule,
+  fetchDeleteShiftSchedule,
+  fetchGetShiftScheduleList,
+  fetchGetShiftTypeList,
+  fetchGetTeamShiftCalendar,
+  fetchUpdateShiftSchedule
 } from '@/service/api/shift';
+import { SetupStoreId } from '@/enum';
 
 export const useShiftScheduleStore = defineStore(SetupStoreId.ShiftSchedule, () => {
   // State

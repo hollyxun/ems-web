@@ -163,7 +163,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" preset="card" class="w-600px">
+  <ElDialog v-model="visible" :title="title" class="w-600px">
     <ElForm ref="formRef" :model="model" :rules="rules" label-position="right" :label-width="100">
       <ElFormItem label="上级部门" prop="parentId">
         <ElTreeSelect

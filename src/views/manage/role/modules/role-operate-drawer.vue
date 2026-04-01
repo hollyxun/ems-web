@@ -170,9 +170,7 @@ async function checkHierarchyDepth() {
 
   // Calculate max parent depth + 1 (parallel fetch)
   try {
-    const depthResults = await Promise.all(
-      model.value.parentIds.map(parentId => fetchGetRoleHierarchyDepth(parentId))
-    );
+    const depthResults = await Promise.all(model.value.parentIds.map(parentId => fetchGetRoleHierarchyDepth(parentId)));
 
     let maxParentDepth = 0;
     for (const { data: depth } of depthResults) {

@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import * as echarts from 'echarts';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'RankingTrendChart' });
 

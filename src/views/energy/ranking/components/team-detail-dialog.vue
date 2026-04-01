@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'TeamDetailDialog' });
 
@@ -18,7 +17,7 @@ const emit = defineEmits<Emits>();
 
 const dialogVisible = computed({
   get: () => props.visible,
-  set: (v) => emit('update:visible', v)
+  set: v => emit('update:visible', v)
 });
 
 function handleClose() {
@@ -27,12 +26,7 @@ function handleClose() {
 </script>
 
 <template>
-  <ElDialog
-    v-model="dialogVisible"
-    title="班组详情"
-    width="600px"
-    @close="handleClose"
-  >
+  <ElDialog v-model="dialogVisible" title="班组详情" width="600px" @close="handleClose">
     <template v-if="data">
       <ElDescriptions :column="2" border>
         <ElDescriptionsItem label="班组名称">{{ data.teamName }}</ElDescriptionsItem>
@@ -41,9 +35,7 @@ function handleClose() {
         <ElDescriptionsItem label="所属车间">{{ data.workshopName }}</ElDescriptionsItem>
         <ElDescriptionsItem label="能源介质">{{ data.energyMedium }}</ElDescriptionsItem>
         <ElDescriptionsItem label="当前排名">
-          <ElTag :type="data.rank <= 3 ? 'success' : data.rank > 10 ? 'danger' : ''">
-            第 {{ data.rank }} 名
-          </ElTag>
+          <ElTag :type="data.rank <= 3 ? 'success' : data.rank > 10 ? 'danger' : ''">第 {{ data.rank }} 名</ElTag>
         </ElDescriptionsItem>
       </ElDescriptions>
 

@@ -15,6 +15,8 @@ declare namespace Api {
     interface RouteMeta {
       /** 路由标题 */
       title: string;
+      /** 国际化key */
+      i18nKey?: App.I18n.I18nKey;
       /** 路由图标 */
       icon?: string;
       /** 排序 */

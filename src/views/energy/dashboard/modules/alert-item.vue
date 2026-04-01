@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Icon } from '@iconify/vue';
 import dayjs from 'dayjs';
+import { Icon } from '@iconify/vue';
 
 interface Props {
   alert: Api.Dashboard.AlertItem;
@@ -45,13 +45,13 @@ const isActionable = computed(() => props.alert.status === 'active');
       <!-- Content -->
       <div class="min-w-0 flex-1">
         <div class="flex items-center gap-2">
-          <span :class="config.color" class="text-sm font-medium"> [{{ config.label }}] </span>
+          <span :class="config.color" class="text-sm font-medium">[{{ config.label }}]</span>
           <span class="text-sm text-gray-500">
             {{ typeConf.label }}
           </span>
         </div>
 
-        <div class="mt-1 font-medium text-gray-900 dark:text-white">
+        <div class="mt-1 text-gray-900 font-medium dark:text-white">
           {{ alert.meterName }}
         </div>
 

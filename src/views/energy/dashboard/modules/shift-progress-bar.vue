@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { Icon } from '@iconify/vue';
 import dayjs from 'dayjs';
+import { Icon } from '@iconify/vue';
 
 interface Props {
   shift: Api.Dashboard.ShiftInfo;
@@ -79,8 +79,14 @@ const progressText = computed(() => {
 
     <!-- Progress Bar -->
     <div class="relative">
-      <ElProgress :percentage="progress.percentage" :stroke-width="20" :color="statusColors.bar" :show-text="false" class="shift-progress" />
-      <div class="absolute left-0 right-0 top-0 flex h-5 items-center justify-center text-xs text-white">
+      <ElProgress
+        :percentage="progress.percentage"
+        :stroke-width="20"
+        :color="statusColors.bar"
+        :show-text="false"
+        class="shift-progress"
+      />
+      <div class="absolute left-0 right-0 top-0 h-5 flex items-center justify-center text-xs text-white">
         <span>{{ progress.percentage.toFixed(0) }}%</span>
       </div>
     </div>

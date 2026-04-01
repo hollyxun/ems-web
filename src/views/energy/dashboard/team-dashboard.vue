@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { useDashboardRefresh } from '@/hooks/business/use-dashboard-refresh';
 import { fetchTeamDashboard } from '@/service/api/dashboard';
+import { useDashboardRefresh } from '@/hooks/business/use-dashboard-refresh';
 import TotalConsumptionCard from './modules/total-consumption-card.vue';
 import ShiftProgressBar from './modules/shift-progress-bar.vue';
 import RealtimeIndicator from './modules/realtime-indicator.vue';
@@ -36,7 +36,7 @@ const targetPercentage = computed(() => {
 </script>
 
 <template>
-  <div class="team-dashboard flex h-full flex-col gap-4 p-4">
+  <div class="team-dashboard h-full flex flex-col gap-4 p-4">
     <!-- Header with Breadcrumb -->
     <div class="flex items-center justify-between">
       <div>

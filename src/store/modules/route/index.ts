@@ -49,13 +49,13 @@ function transformBackendRoutesToElegantRoutes(
 ): ElegantConstRoute[] {
   return backendRoutes.map(route => {
     // 自动生成 i18nKey：如果 title 看起来像路由名称（非中文），则生成 route.xxx 格式的 i18nKey
-    const generateI18nKey = (title: string, name: string): string | undefined => {
+    const generateI18nKey = (title: string, name: string): App.I18n.I18nKey | undefined => {
       // 如果 title 是中文，说明已经是翻译后的文本，不需要 i18nKey
       if (title && /[\u4e00-\u9fa5]/.test(title)) {
         return undefined;
       }
       // 否则使用 route.{name} 格式的 i18nKey
-      return `route.${name}`;
+      return `route.${name}` as App.I18n.I18nKey;
     };
 
     const i18nKey = route.meta?.i18nKey || generateI18nKey(route.meta?.title || '', route.name);
@@ -75,7 +75,7 @@ function transformBackendRoutesToElegantRoutes(
             keepAlive: route.meta.keepAlive,
             constant: isConstant
           }
-        : { title: route.name || '', i18nKey: `route.${route.name}`, constant: isConstant },
+        : { title: route.name || '', i18nKey: `route.${route.name}` as App.I18n.I18nKey, constant: isConstant },
       children: route.children ? transformBackendRoutesToElegantRoutes(route.children, isConstant) : undefined
     };
     return elegantRoute;
@@ -373,15 +373,14 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
         return;
       }
 
-      if (syncResult?.success) {
-        // 处理响应中的更新统计
-        if (syncResult.changes?.updated) {
-          console.log('[RouteSync] Routes updated:', syncResult.changes.updated);
-        }
-        if (syncResult.changes?.constantChanges) {
-          console.log('[RouteSync] Constant routes changes:', syncResult.changes.constantChanges);
-        }
-        console.log('[RouteSync] Sync success:', syncResult.changes);
+      if (syncResult) {
+        // syncResult 直接是 RouteSyncChanges: { added, updated, obsoleted, unchanged }
+        console.log('[RouteSync] Sync completed:', {
+          added: syncResult.added || 0,
+          updated: syncResult.updated || 0,
+          obsoleted: syncResult.obsoleted || 0,
+          unchanged: syncResult.unchanged || 0
+        });
         // 更新本地缓存版本
         setCachedRouteVersion(currentVersion);
       }

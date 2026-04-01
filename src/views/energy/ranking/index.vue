@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue';
-import { fetchTeamRanking, fetchRankingTrend } from '@/service/api/energy';
-import type { Api } from '@/typings/api';
-
-defineOptions({ name: 'EnergyRanking' });
-
+import { computed, onMounted, reactive, ref } from 'vue';
+import { ElMessage } from 'element-plus';
+import { fetchRankingTrend, fetchTeamRanking } from '@/service/api/energy';
 import RankingFilter from './components/ranking-filter.vue';
 import RankingTable from './components/ranking-table.vue';
 import RankingTrendChart from './components/ranking-trend-chart.vue';
 import TeamDetailDialog from './components/team-detail-dialog.vue';
+
+defineOptions({ name: 'EnergyRanking' });
 
 const loading = ref(false);
 const trendLoading = ref(false);
@@ -175,9 +174,6 @@ onMounted(() => {
       />
     </ElDialog>
 
-    <TeamDetailDialog
-      v-model:visible="detailDialogVisible"
-      :data="detailData"
-    />
+    <TeamDetailDialog v-model:visible="detailDialogVisible" :data="detailData" />
   </div>
 </template>

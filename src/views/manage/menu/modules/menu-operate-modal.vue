@@ -77,9 +77,9 @@ const rules = {
 };
 
 const statusOptions = [
-  { label: '启用', value: 1 },
-  { label: '禁用', value: 2 },
-  { label: '废弃', value: 3 }
+  { label: $t('page.manage.common.status.enable'), value: 1 },
+  { label: $t('page.manage.common.status.disable'), value: 2 },
+  { label: $t('page.manage.route.obsolete'), value: 3 }
 ];
 
 const localIcons = getLocalIcons();
@@ -154,24 +154,24 @@ watch(visible, () => {
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" preset="card" class="w-600px">
+  <ElDialog v-model="visible" :title="title" class="w-600px">
     <ElScrollbar class="h-400px pr-20px">
       <ElForm ref="formRef" :model="model" :rules="rules" label-position="right" :label-width="100">
         <ElRow :gutter="20">
           <!-- 基本信息（只读展示） -->
           <ElCol :span="24">
-            <ElFormItem label="路由名称">
-              <ElInput v-model="model.name" disabled placeholder="路由名称（只读）" />
+            <ElFormItem :label="$t('page.manage.menu.routeName')">
+              <ElInput v-model="model.name" disabled :placeholder="$t('page.manage.menu.routeName') + $t('page.manage.menu.readOnly')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
-            <ElFormItem label="路由路径">
-              <ElInput v-model="model.path" disabled placeholder="路由路径（只读）" />
+            <ElFormItem :label="$t('page.manage.menu.routePath')">
+              <ElInput v-model="model.path" disabled :placeholder="$t('page.manage.menu.routePath') + $t('page.manage.menu.readOnly')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
-            <ElFormItem label="组件路径">
-              <ElInput v-model="model.component" disabled placeholder="组件路径（只读）" />
+            <ElFormItem :label="$t('page.manage.menu.componentPath')">
+              <ElInput v-model="model.component" disabled :placeholder="$t('page.manage.menu.componentPath') + $t('page.manage.menu.readOnly')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
@@ -180,24 +180,24 @@ watch(visible, () => {
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
-            <ElFormItem label="常量路由">
+            <ElFormItem :label="$t('page.manage.menu.constant')">
               <ElRadioGroup v-model="model.isConstant" disabled>
-                <ElRadio :value="true">是</ElRadio>
-                <ElRadio :value="false">否</ElRadio>
+                <ElRadio :value="true">{{ $t('common.yesOrNo.yes') }}</ElRadio>
+                <ElRadio :value="false">{{ $t('common.yesOrNo.no') }}</ElRadio>
               </ElRadioGroup>
             </ElFormItem>
           </ElCol>
 
           <!-- 可编辑字段 -->
-          <ElDivider content-position="left">自定义配置（可编辑）</ElDivider>
+          <ElDivider content-position="left">{{ $t('page.manage.menu.editableConfig') }}</ElDivider>
           <ElCol :span="12">
-            <ElFormItem label="菜单标题" prop="title">
-              <ElInput v-model="model.title" placeholder="请输入菜单标题" clearable />
+            <ElFormItem :label="$t('page.manage.menu.menuTitle')" prop="title">
+              <ElInput v-model="model.title" :placeholder="$t('page.manage.menu.form.menuName')" clearable />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
-            <ElFormItem label="菜单图标" prop="icon">
-              <ElSelect v-model="model.icon" placeholder="请选择图标" class="w-full" clearable filterable>
+            <ElFormItem :label="$t('page.manage.menu.menuIcon')" prop="icon">
+              <ElSelect v-model="model.icon" :placeholder="$t('page.manage.menu.pleaseSelectIcon')" class="w-full" clearable filterable>
                 <template #label="{ value }">
                   <component :is="getIconLabelVNode(value)" />
                 </template>
@@ -208,12 +208,12 @@ watch(visible, () => {
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
-            <ElFormItem label="排序" prop="sort">
-              <ElInputNumber v-model="model.sort" :min="0" class="w-full" placeholder="请输入排序" />
+            <ElFormItem :label="$t('page.manage.menu.order')" prop="sort">
+              <ElInputNumber v-model="model.sort" :min="0" class="w-full" :placeholder="$t('page.manage.menu.pleaseInputOrder')" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
-            <ElFormItem label="状态" prop="status">
+            <ElFormItem :label="$t('page.manage.menu.menuStatus')" prop="status">
               <ElRadioGroup v-model="model.status">
                 <ElRadio v-for="item in statusOptions" :key="item.value" :value="item.value" :label="item.label" />
               </ElRadioGroup>

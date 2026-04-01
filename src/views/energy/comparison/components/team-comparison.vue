@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, reactive, computed } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import { ElMessage } from 'element-plus';
 import { fetchCompareTeams } from '@/service/api/energy';
-import type { Api } from '@/typings/api';
 import ComparisonChart from './comparison-chart.vue';
 
 defineOptions({ name: 'TeamComparison' });
@@ -24,7 +24,9 @@ const query = reactive<Api.Energy.Comparison.TeamComparisonQuery>({
   periodEnd: new Date().toISOString().split('T')[0]
 });
 
-const selectedMetric = ref<'total_energy' | 'specific_consumption' | 'cost' | 'peak_valley_flat'>('specific_consumption');
+const selectedMetric = ref<'total_energy' | 'specific_consumption' | 'cost' | 'peak_valley_flat'>(
+  'specific_consumption'
+);
 
 const isCrossFactory = computed(() => {
   const teamA = props.teamOptions.find(t => t.value === query.teamAId);
@@ -80,23 +82,13 @@ function formatValue(value: number, metric: string) {
       <ElForm :inline="true" class="flex flex-wrap gap-4">
         <ElFormItem label="班组A">
           <ElSelect v-model="query.teamAId" placeholder="选择班组" class="w-48">
-            <ElOption
-              v-for="team in teamOptions"
-              :key="team.value"
-              :value="team.value"
-              :label="team.label"
-            />
+            <ElOption v-for="team in teamOptions" :key="team.value" :value="team.value" :label="team.label" />
           </ElSelect>
         </ElFormItem>
 
         <ElFormItem label="班组B">
           <ElSelect v-model="query.teamBId" placeholder="选择班组" class="w-48">
-            <ElOption
-              v-for="team in teamOptions"
-              :key="team.value"
-              :value="team.value"
-              :label="team.label"
-            />
+            <ElOption v-for="team in teamOptions" :key="team.value" :value="team.value" :label="team.label" />
           </ElSelect>
         </ElFormItem>
 
@@ -109,24 +101,15 @@ function formatValue(value: number, metric: string) {
         </ElFormItem>
 
         <ElFormItem label="日期">
-          <ElDatePicker
-            v-model="query.periodStart"
-            type="date"
-            placeholder="选择日期"
-            value-format="YYYY-MM-DD"
-          />
+          <ElDatePicker v-model="query.periodStart" type="date" placeholder="选择日期" value-format="YYYY-MM-DD" />
         </ElFormItem>
 
         <ElFormItem>
-          <ElButton type="primary" :loading="loading" @click="handleCompare">
-            开始对比
-          </ElButton>
+          <ElButton type="primary" :loading="loading" @click="handleCompare">开始对比</ElButton>
         </ElFormItem>
       </ElForm>
 
-      <ElAlert v-if="isCrossFactory" type="warning" class="mt-2" :closable="false">
-        跨厂对比需要特殊权限
-      </ElAlert>
+      <ElAlert v-if="isCrossFactory" type="warning" class="mt-2" :closable="false">跨厂对比需要特殊权限</ElAlert>
     </ElCard>
 
     <ElAlert v-if="crossFactoryWarning" type="error" class="mb-4" :closable="false">
@@ -171,9 +154,7 @@ function formatValue(value: number, metric: string) {
           </ElTableColumn>
           <ElTableColumn label="差值" width="120">
             <template #default="{ row }">
-              <span :class="getDiffClass(row)">
-                {{ row.difference > 0 ? '+' : '' }}{{ row.difference.toFixed(2) }}
-              </span>
+              <span :class="getDiffClass(row)">{{ row.difference > 0 ? '+' : '' }}{{ row.difference.toFixed(2) }}</span>
             </template>
           </ElTableColumn>
           <ElTableColumn label="变化率" width="120">

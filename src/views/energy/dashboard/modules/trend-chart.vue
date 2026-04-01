@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue';
-import { useEcharts } from '@/hooks/common/echarts';
-import { fetchTrendData } from '@/service/api/dashboard';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { Icon } from '@iconify/vue';
+import { fetchTrendData } from '@/service/api/dashboard';
+import { useEcharts } from '@/hooks/common/echarts';
 
 interface Props {
   orgId: string;
@@ -74,8 +74,8 @@ const { domRef, updateOptions } = useEcharts(() => ({
     name: 'kWh',
     axisLabel: {
       formatter: (value: number) => {
-        if (value >= 1000000) return (value / 1000000).toFixed(1) + 'M';
-        if (value >= 1000) return (value / 1000).toFixed(1) + 'K';
+        if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+        if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
         return value.toString();
       }
     }
@@ -214,7 +214,7 @@ watch(
 
     <ElAlert v-if="error" type="error" :title="error.message" class="mb-4" />
 
-    <div v-if="loading && !trendData" class="flex h-400px items-center justify-center">
+    <div v-if="loading && !trendData" class="h-400px flex items-center justify-center">
       <ElIcon class="is-loading text-4xl text-primary">
         <Icon icon="mdi:loading" />
       </ElIcon>

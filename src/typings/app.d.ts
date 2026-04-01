@@ -592,6 +592,9 @@ declare namespace App {
             constant: string;
             disabled: string;
             obsolete: string;
+            obsoleteTime: string;
+            obsoleteDays: string;
+            batchRestore: string;
           };
           user: {
             title: string;

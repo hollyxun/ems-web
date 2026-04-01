@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'RankingTable' });
 
@@ -68,11 +67,7 @@ function handleSortChange({ prop, order }: { prop: string; order: string }) {
       <template #default="{ row }">
         <div class="flex items-center gap-2">
           <span class="font-bold">{{ row.rank }}</span>
-          <span
-            v-if="row.rankChange !== 0"
-            :style="{ color: formatRankChange(row.rankChange).color }"
-            class="text-xs"
-          >
+          <span v-if="row.rankChange !== 0" :style="{ color: formatRankChange(row.rankChange).color }" class="text-xs">
             {{ formatRankChange(row.rankChange).text }}
           </span>
         </div>
@@ -92,9 +87,7 @@ function handleSortChange({ prop, order }: { prop: string; order: string }) {
     <ElTableColumn prop="workshopName" label="车间" width="120" />
 
     <ElTableColumn prop="totalEnergy" label="总能耗" width="120" sortable>
-      <template #default="{ row }">
-        {{ row.totalEnergy.toFixed(2) }} kWh
-      </template>
+      <template #default="{ row }">{{ row.totalEnergy.toFixed(2) }} kWh</template>
     </ElTableColumn>
 
     <ElTableColumn prop="productionOutput" label="产量" width="100">
@@ -123,9 +116,7 @@ function handleSortChange({ prop, order }: { prop: string; order: string }) {
 
     <ElTableColumn label="操作" width="100" fixed="right">
       <template #default="{ row }">
-        <ElButton type="primary" link @click.stop="handleTrendClick(row)">
-          趋势
-        </ElButton>
+        <ElButton type="primary" link @click.stop="handleTrendClick(row)">趋势</ElButton>
       </template>
     </ElTableColumn>
   </ElTable>
@@ -136,13 +127,13 @@ function handleSortChange({ prop, order }: { prop: string; order: string }) {
   background-color: rgba(103, 194, 58, 0.1) !important;
 }
 :deep(.row-top-3 td) {
-  color: #67C23A !important;
+  color: #67c23a !important;
   font-weight: 600;
 }
 :deep(.row-bottom-3) {
   background-color: rgba(245, 108, 108, 0.1) !important;
 }
 :deep(.row-bottom-3 td) {
-  color: #F56C6C !important;
+  color: #f56c6c !important;
 }
 </style>

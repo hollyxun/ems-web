@@ -1,10 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchDeleteShiftPattern,
-  fetchGetShiftPatternList
-} from '@/service/api/scheduling';
+import { fetchDeleteShiftPattern, fetchGetShiftPatternList } from '@/service/api/scheduling';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import ShiftPatternOperateDrawer from './modules/shiftPattern-operate-drawer.vue';
@@ -120,7 +117,11 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteShiftPattern(id);

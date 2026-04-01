@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useEcharts } from '@/hooks/common/echarts';
-import { fetchPeakValleyDistribution } from '@/service/api/dashboard';
 import { Icon } from '@iconify/vue';
+import { fetchPeakValleyDistribution } from '@/service/api/dashboard';
+import { useEcharts } from '@/hooks/common/echarts';
 import type { ECOption } from '@/hooks/common/echarts';
 
 interface Props {
@@ -167,7 +167,7 @@ watch(
       </div>
     </template>
 
-    <div v-if="loadingState" class="flex h-320px items-center justify-center">
+    <div v-if="loadingState" class="h-320px flex items-center justify-center">
       <ElIcon class="is-loading text-3xl text-primary">
         <Icon icon="mdi:loading" />
       </ElIcon>

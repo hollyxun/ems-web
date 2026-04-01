@@ -1,10 +1,19 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { ElDialog, ElForm, ElFormItem, ElSelect, ElOption, ElDatePicker, ElInput, ElButton, ElMessage } from 'element-plus';
+import {
+  ElButton,
+  ElDatePicker,
+  ElDialog,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElMessage,
+  ElOption,
+  ElSelect
+} from 'element-plus';
+import type { FormInstance, FormRules } from 'element-plus';
 import dayjs from 'dayjs';
 import { useShiftScheduleStore } from '@/store/modules/shift-schedule';
-import type { FormInstance, FormRules } from 'element-plus';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'ScheduleForm' });
 
@@ -25,10 +34,10 @@ const store = useShiftScheduleStore();
 const formRef = ref<FormInstance>();
 const loading = ref(false);
 
-const isEdit = computed(() => !!props.schedule);
+const isEdit = computed(() => Boolean(props.schedule));
 
 const formData = ref({
-  teamId: props.teamId || undefined as number | undefined,
+  teamId: props.teamId || (undefined as number | undefined),
   shiftTypeId: undefined as number | undefined,
   scheduleDate: props.date || '',
   status: 1,
@@ -125,12 +134,7 @@ function handleClose() {
   >
     <ElForm ref="formRef" :model="formData" :rules="rules" label-width="100px">
       <ElFormItem label="班组" prop="teamId">
-        <ElSelect
-          v-model="formData.teamId"
-          placeholder="请选择班组"
-          :disabled="isEdit"
-          style="width: 100%"
-        >
+        <ElSelect v-model="formData.teamId" placeholder="请选择班组" :disabled="isEdit" style="width: 100%">
           <!-- TODO: Load teams from organization API -->
           <ElOption :value="1" label="甲班" />
           <ElOption :value="2" label="乙班" />
@@ -140,12 +144,7 @@ function handleClose() {
 
       <ElFormItem label="班次类型" prop="shiftTypeId">
         <ElSelect v-model="formData.shiftTypeId" placeholder="请选择班次类型" style="width: 100%">
-          <ElOption
-            v-for="st in store.activeShiftTypes"
-            :key="st.id"
-            :value="st.id"
-            :label="st.name"
-          >
+          <ElOption v-for="st in store.activeShiftTypes" :key="st.id" :value="st.id" :label="st.name">
             <span>{{ st.name }}</span>
             <span style="color: var(--el-text-color-secondary); margin-left: 8px; font-size: 12px">
               {{ st.startTime }} - {{ st.endTime }}

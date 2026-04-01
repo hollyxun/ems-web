@@ -171,7 +171,7 @@ watch(visible, val => {
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" preset="card" class="w-560px">
+  <ElDialog v-model="visible" :title="title" class="w-560px">
     <!-- 图例说明 -->
     <div class="flex items-center gap-16px border-b border-gray-200 pb-12px text-12px text-gray-500">
       <div class="flex items-center gap-4px">

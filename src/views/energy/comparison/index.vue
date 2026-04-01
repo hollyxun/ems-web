@@ -21,21 +21,15 @@ const teamOptions = ref([
     <ElCard>
       <ElTabs v-model="activeTab">
         <ElTabPane label="班组对比" name="team">
-          <TeamComparison
-            :team-options="teamOptions"
-          />
+          <TeamComparison :team-options="teamOptions" />
         </ElTabPane>
 
         <ElTabPane label="班次对比" name="shift">
-          <ShiftComparison
-            :team-options="teamOptions"
-          />
+          <ShiftComparison :team-options="teamOptions" />
         </ElTabPane>
 
         <ElTabPane label="时间对比" name="time">
-          <TimeComparison
-            :team-options="teamOptions"
-          />
+          <TimeComparison :team-options="teamOptions" />
         </ElTabPane>
       </ElTabs>
     </ElCard>

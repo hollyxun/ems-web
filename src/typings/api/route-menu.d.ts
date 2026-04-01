@@ -150,6 +150,8 @@ declare namespace Api {
       version: string;
       /** 路由列表 */
       routes: RouteSyncItem[];
+      /** 常量路由列表 */
+      constantRoutes?: RouteSyncItem[];
     }
 
     /**

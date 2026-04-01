@@ -121,7 +121,11 @@ export function getOptimalUnit(value: number, baseUnit: string): string {
 /**
  * Convert value to optimal display unit
  */
-export function convertEnergyUnit(value: number, fromUnit: string, toUnit?: string): { value: number; unit: string; displayValue: string } {
+export function convertEnergyUnit(
+  value: number,
+  fromUnit: string,
+  toUnit?: string
+): { value: number; unit: string; displayValue: string } {
   // Convert to base unit first
   const baseValue = toBaseUnit(value, fromUnit);
 
@@ -150,10 +154,10 @@ export function formatEnergyValue(value: number, precision: number = 2): string 
   const absValue = Math.abs(value);
 
   if (absValue >= 1000000) {
-    return (value / 1000000).toFixed(precision) + 'M';
+    return `${(value / 1000000).toFixed(precision)}M`;
   }
   if (absValue >= 1000) {
-    return (value / 1000).toFixed(precision) + 'K';
+    return `${(value / 1000).toFixed(precision)}K`;
   }
   if (absValue >= 100) {
     return value.toFixed(1);
@@ -168,9 +172,7 @@ export function formatEnergyValue(value: number, precision: number = 2): string 
  * Format with thousand separators
  */
 export function formatWithCommas(value: number, precision: number = 0): string {
-  return value
-    .toFixed(precision)
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return value.toFixed(precision).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 /**

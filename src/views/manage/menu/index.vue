@@ -24,10 +24,10 @@ const statusFilter = ref<Api.RouteMenu.RouteMenuStatus | undefined>(undefined);
 
 // 路由菜单状态选项
 const statusOptions: { label: string; value: Api.RouteMenu.RouteMenuStatus | undefined }[] = [
-  { label: '全部', value: undefined },
-  { label: '启用', value: 1 },
-  { label: '禁用', value: 2 },
-  { label: '废弃', value: 3 }
+  { label: $t('common.lookForward') || '全部', value: undefined },
+  { label: $t('page.manage.common.status.enable'), value: 1 },
+  { label: $t('page.manage.common.status.disable'), value: 2 },
+  { label: $t('page.manage.route.obsolete'), value: 3 }
 ];
 
 // 获取路由菜单树
@@ -94,9 +94,9 @@ const statusTagMap: Record<number, UI.ThemeColor> = {
 
 // 状态文本映射
 const statusTextMap: Record<number, string> = {
-  1: '启用',
-  2: '禁用',
-  3: '废弃'
+  1: $t('page.manage.common.status.enable'),
+  2: $t('page.manage.common.status.disable'),
+  3: $t('page.manage.route.obsolete')
 };
 
 // 是否常量路由
@@ -147,7 +147,7 @@ init();
         <div class="flex items-center justify-between">
           <p>{{ $t('page.manage.menu.title') }} ({{ totalCount }})</p>
           <div class="flex items-center gap-12px">
-            <ElSelect v-model="statusFilter" placeholder="状态筛选" class="w-120px" clearable>
+            <ElSelect v-model="statusFilter" :placeholder="$t('page.manage.menu.statusFilter')" class="w-120px" clearable>
               <ElOption
                 v-for="item in statusOptions"
                 :key="item.label"
@@ -186,16 +186,16 @@ init();
           </ElTableColumn>
           <ElTableColumn prop="name" :label="$t('page.manage.menu.routeName')" min-width="160" />
           <ElTableColumn prop="path" :label="$t('page.manage.menu.routePath')" min-width="160" />
-          <ElTableColumn prop="component" label="组件路径" min-width="140">
+          <ElTableColumn prop="component" :label="$t('page.manage.menu.componentPath')" min-width="140">
             <template #default="{ row }">
               <span v-if="row.component" class="text-gray-600">{{ row.component }}</span>
               <span v-else class="text-gray-400">-</span>
             </template>
           </ElTableColumn>
-          <ElTableColumn prop="isConstant" label="常量路由" width="100">
+          <ElTableColumn prop="isConstant" :label="$t('page.manage.menu.constant')" width="100">
             <template #default="{ row }">
               <ElTag :type="isConstantTagMap[String(row.isConstant)] || 'info'" size="small">
-                {{ row.isConstant ? '是' : '否' }}
+                {{ row.isConstant ? $t('common.yesOrNo.yes') : $t('common.yesOrNo.no') }}
               </ElTag>
             </template>
           </ElTableColumn>
@@ -215,12 +215,12 @@ init();
                 </ElButton>
                 <ElPopconfirm
                   v-if="row.status !== 3"
-                  :title="row.status === 1 ? '确定要禁用该路由吗？' : '确定要启用该路由吗？'"
+                  :title="row.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable')"
                   @confirm="handleToggleStatus(row)"
                 >
                   <template #reference>
                     <ElButton :type="row.status === 1 ? 'warning' : 'success'" plain size="small">
-                      {{ row.status === 1 ? '禁用' : '启用' }}
+                      {{ row.status === 1 ? $t('page.manage.common.status.disable') : $t('page.manage.common.status.enable') }}
                     </ElButton>
                   </template>
                 </ElPopconfirm>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { Icon } from '@iconify/vue';
-import { convertEnergyUnit, formatPercentageChange, calculatePercentageChange } from '@/utils/unit-conversion';
+import { calculatePercentageChange, convertEnergyUnit, formatPercentageChange } from '@/utils/unit-conversion';
 
 interface MetricProps {
   /** Raw value in base unit */
@@ -97,7 +97,11 @@ const trendIcons = {
       </div>
 
       <!-- Trend Badge -->
-      <div v-if="showTrend && previousValue !== undefined" :class="trendColors[trend.direction]" class="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium">
+      <div
+        v-if="showTrend && previousValue !== undefined"
+        :class="trendColors[trend.direction]"
+        class="flex items-center gap-1 rounded-full px-2 py-1 text-xs font-medium"
+      >
         <Icon :icon="trendIcons[trend.direction]" class="text-sm" />
         <span>{{ formatPercentageChange(trend.value) }}</span>
       </div>
@@ -112,7 +116,7 @@ const trendIcons = {
       <template v-else>
         <div class="text-sm text-gray-500">{{ title }}</div>
         <div class="mt-1 flex items-baseline gap-1">
-          <span class="text-3xl font-bold text-gray-900 dark:text-white">{{ converted.displayValue }}</span>
+          <span class="text-3xl text-gray-900 font-bold dark:text-white">{{ converted.displayValue }}</span>
           <span class="text-sm text-gray-500">{{ converted.unit }}</span>
         </div>
       </template>
@@ -120,7 +124,12 @@ const trendIcons = {
 
     <!-- Target Progress -->
     <div v-if="targetProgress !== null && !loading" class="mt-4">
-      <ElProgress :percentage="targetProgress" :stroke-width="6" :color="targetProgress >= 100 ? '#ef4444' : '#10b981'" :show-text="false" />
+      <ElProgress
+        :percentage="targetProgress"
+        :stroke-width="6"
+        :color="targetProgress >= 100 ? '#ef4444' : '#10b981'"
+        :show-text="false"
+      />
       <div class="mt-1 text-xs text-gray-400">Target completion: {{ targetProgress.toFixed(1) }}%</div>
     </div>
   </ElCard>

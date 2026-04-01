@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { ElDatePicker, ElButton, ElBreadcrumb, ElBreadcrumbItem, ElSelect, ElOption } from 'element-plus';
+import { ElBreadcrumb, ElBreadcrumbItem, ElButton, ElDatePicker, ElOption, ElSelect } from 'element-plus';
 import { ArrowLeft } from '@element-plus/icons-vue';
 
 defineOptions({ name: 'FlowToolbar' });
@@ -107,13 +107,7 @@ function handleMediumChange(value: string) {
 <template>
   <div class="flow-toolbar">
     <div class="toolbar-left">
-      <ElButton
-        v-if="currentLevel === 'workshop'"
-        :icon="ArrowLeft"
-        @click="emit('back')"
-      >
-        返回工厂
-      </ElButton>
+      <ElButton v-if="currentLevel === 'workshop'" :icon="ArrowLeft" @click="emit('back')">返回工厂</ElButton>
 
       <ElBreadcrumb separator="/">
         <ElBreadcrumbItem v-for="(item, index) in breadcrumbItems" :key="index">
@@ -151,12 +145,7 @@ function handleMediumChange(value: string) {
         class="medium-select"
         @change="handleMediumChange"
       >
-        <ElOption
-          v-for="option in mediumOptions"
-          :key="option.value"
-          :label="option.label"
-          :value="option.value"
-        />
+        <ElOption v-for="option in mediumOptions" :key="option.value" :label="option.label" :value="option.value" />
       </ElSelect>
     </div>
   </div>

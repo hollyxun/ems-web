@@ -1,11 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchChangeTeamStatus,
-  fetchDeleteTeam,
-  fetchGetTeamList
-} from '@/service/api/scheduling';
+import { fetchChangeTeamStatus, fetchDeleteTeam, fetchGetTeamList } from '@/service/api/scheduling';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import TeamOperateDrawer from './modules/team-operate-drawer.vue';

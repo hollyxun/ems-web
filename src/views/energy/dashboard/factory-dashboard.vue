@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useDashboardRefresh } from '@/hooks/business/use-dashboard-refresh';
 import { fetchFactoryDashboard } from '@/service/api/dashboard';
+import { useDashboardRefresh } from '@/hooks/business/use-dashboard-refresh';
 import TotalConsumptionCard from './modules/total-consumption-card.vue';
 import WorkshopBreakdownChart from './modules/workshop-breakdown-chart.vue';
 import RealtimeIndicator from './modules/realtime-indicator.vue';
@@ -34,7 +34,7 @@ const alertCount = computed(() => data.value?.alertCount || 0);
 </script>
 
 <template>
-  <div class="factory-dashboard flex h-full flex-col gap-4 p-4">
+  <div class="factory-dashboard h-full flex flex-col gap-4 p-4">
     <!-- Header with Breadcrumb -->
     <div class="flex items-center justify-between">
       <div>
@@ -79,17 +79,17 @@ const alertCount = computed(() => data.value?.alertCount || 0);
     <!-- Quick Stats -->
     <div class="grid gap-4 md:grid-cols-3">
       <ElCard class="card-wrapper text-center">
-        <div class="text-2xl font-bold text-primary">{{ workshopBreakdown.length }}</div>
+        <div class="text-2xl text-primary font-bold">{{ workshopBreakdown.length }}</div>
         <div class="text-sm text-gray-500">Workshops</div>
       </ElCard>
       <ElCard class="card-wrapper text-center">
-        <div class="text-2xl font-bold text-green-500">
+        <div class="text-2xl text-green-500 font-bold">
           {{ workshopBreakdown.reduce((sum: number, w) => sum + w.teams.length, 0) }}
         </div>
         <div class="text-sm text-gray-500">Teams</div>
       </ElCard>
       <ElCard
-        class="card-wrapper cursor-pointer text-center transition-shadow hover:shadow-md"
+        class="cursor-pointer card-wrapper text-center transition-shadow hover:shadow-md"
         @click="router.push({ query: { level: 'alerts', orgId: factoryId } })"
       >
         <div class="text-2xl font-bold" :class="alertCount > 0 ? 'text-red-500' : 'text-gray-400'">

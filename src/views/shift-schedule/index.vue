@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { ElButton, ElSelect, ElOption, ElSpace, ElMessage } from 'element-plus';
+import { ElButton, ElMessage, ElOption, ElSelect, ElSpace } from 'element-plus';
 import dayjs from 'dayjs';
 import { useShiftScheduleStore } from '@/store/modules/shift-schedule';
 import CalendarView from './components/calendar-view.vue';
 import ScheduleForm from './components/schedule-form.vue';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'ShiftSchedulePage' });
 
@@ -85,9 +84,7 @@ onMounted(() => {
     <div class="page-header">
       <h2 class="page-title">班组排班管理</h2>
       <div class="header-actions">
-        <ElButton type="primary" @click="formVisible = true">
-          添加排班
-        </ElButton>
+        <ElButton type="primary" @click="formVisible = true">添加排班</ElButton>
       </div>
     </div>
 
@@ -102,12 +99,7 @@ onMounted(() => {
           style="width: 200px"
           @change="handleTeamChange"
         >
-          <ElOption
-            v-for="team in teams"
-            :key="team.id"
-            :value="team.id"
-            :label="team.name"
-          />
+          <ElOption v-for="team in teams" :key="team.id" :value="team.id" :label="team.name" />
         </ElSelect>
       </div>
 
@@ -125,11 +117,7 @@ onMounted(() => {
 
     <!-- Calendar -->
     <div class="calendar-container">
-      <CalendarView
-        :team-id="selectedTeamId"
-        @add-schedule="handleAddSchedule"
-        @edit-schedule="handleEditSchedule"
-      />
+      <CalendarView :team-id="selectedTeamId" @add-schedule="handleAddSchedule" @edit-schedule="handleEditSchedule" />
     </div>
 
     <!-- Form Dialog -->
