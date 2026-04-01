@@ -13,7 +13,6 @@ import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const route = useRoute();
-  const authStore = useAuthStore();
   const routeStore = useRouteStore();
   const tabStore = useTabStore();
   const { toLogin, redirectFromLogin } = useRouterPush(false);
@@ -57,7 +56,20 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
     clearAuthStorage();
 
-    authStore.$reset();
+    // 直接清空 token，不依赖 $reset（$reset 使用初始化时的克隆状态，可能包含旧 token）
+    token.value = '';
+    userInfo.id = 0;
+    userInfo.uuid = '';
+    userInfo.username = '';
+    userInfo.nickName = '';
+    userInfo.headerImg = '';
+    userInfo.phone = '';
+    userInfo.email = '';
+    userInfo.enabled = 1;
+    userInfo.roles = [];
+    userInfo.buttons = [];
+    userInfo.userId = '';
+    userInfo.userName = '';
 
     if (!route.meta.constant) {
       await toLogin();
