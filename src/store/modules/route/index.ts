@@ -2,13 +2,27 @@ import { computed, nextTick, ref, shallowRef } from 'vue';
 import type { RouteRecordRaw } from 'vue-router';
 import { defineStore } from 'pinia';
 import { useBoolean } from '@sa/hooks';
-import type { CustomRoute, ElegantConstRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
+import type {
+  CustomRoute,
+  ElegantConstRoute,
+  GeneratedRoute,
+  LastLevelRouteKey,
+  RouteKey,
+  RouteMap
+} from '@elegant-router/types';
 import { router } from '@/router';
-import { fetchGetConstantRoutes, fetchGetUserRoutes, fetchIsRouteExist } from '@/service/api';
+import {
+  fetchGetConstantRoutes,
+  fetchGetRouteVersion,
+  fetchGetUserAuthorizedRoutes,
+  fetchIsRouteExist,
+  fetchSyncRoutes
+} from '@/service/api';
 import { SetupStoreId } from '@/enum';
 import { createStaticRoutes, getAuthVueRoutes } from '@/router/routes';
 import { ROOT_ROUTE } from '@/router/routes/builtin';
 import { getRouteName, getRoutePath } from '@/router/elegant/transform';
+import { generatedRoutes } from '@/router/elegant/routes';
 import { useAuthStore } from '../auth';
 import { useTabStore } from '../tab';
 import {
@@ -34,6 +48,18 @@ function transformBackendRoutesToElegantRoutes(
   isConstant: boolean = false
 ): ElegantConstRoute[] {
   return backendRoutes.map(route => {
+    // 自动生成 i18nKey：如果 title 看起来像路由名称（非中文），则生成 route.xxx 格式的 i18nKey
+    const generateI18nKey = (title: string, name: string): string | undefined => {
+      // 如果 title 是中文，说明已经是翻译后的文本，不需要 i18nKey
+      if (title && /[\u4e00-\u9fa5]/.test(title)) {
+        return undefined;
+      }
+      // 否则使用 route.{name} 格式的 i18nKey
+      return `route.${name}`;
+    };
+
+    const i18nKey = route.meta?.i18nKey || generateI18nKey(route.meta?.title || '', route.name);
+
     const elegantRoute: ElegantConstRoute = {
       path: route.path,
       name: route.name as never,
@@ -42,17 +68,97 @@ function transformBackendRoutesToElegantRoutes(
       meta: route.meta
         ? {
             title: route.meta.title,
+            i18nKey,
             icon: route.meta.icon,
             order: route.meta.order,
             hideInMenu: route.meta.hideInMenu,
             keepAlive: route.meta.keepAlive,
             constant: isConstant
           }
-        : { title: route.name || '', constant: isConstant },
+        : { title: route.name || '', i18nKey: `route.${route.name}`, constant: isConstant },
       children: route.children ? transformBackendRoutesToElegantRoutes(route.children, isConstant) : undefined
     };
     return elegantRoute;
   });
+}
+
+/**
+ * 收集路由并按类型分类（常量路由 vs 动态路由）
+ * @param routes 路由列表
+ * @returns 分类后的路由数据
+ */
+interface CollectedRoutes {
+  routes: Api.Route.FrontendRouteItem[];
+  constantRoutes: Api.Route.FrontendRouteItem[];
+}
+
+function collectRoutesByType(routes: GeneratedRoute[]): CollectedRoutes {
+  const result: CollectedRoutes = { routes: [], constantRoutes: [] };
+
+  function collect(items: GeneratedRoute[], parentName: string = '') {
+    items.forEach(item => {
+      const routeItem: Api.Route.FrontendRouteItem = {
+        name: item.name,
+        path: item.path,
+        component: item.component,
+        parentName: parentName || undefined,
+        meta: item.meta as Record<string, unknown> | undefined
+      };
+
+      // 根据 meta.constant 分类
+      if (item.meta?.constant) {
+        result.constantRoutes.push(routeItem);
+      } else {
+        result.routes.push(routeItem);
+      }
+
+      // 递归处理子路由，传递当前路由名称作为父级
+      const children = (item as ElegantConstRoute).children;
+      if (children && children.length > 0) {
+        collect(children as unknown as GeneratedRoute[], item.name as string);
+      }
+    });
+  }
+
+  collect(routes);
+  return result;
+}
+
+/**
+ * 计算路由版本号（基于路由内容 hash）
+ * @param routes 路由列表
+ * @returns 版本号字符串
+ */
+function calculateRouteVersion(routes: Api.Route.FrontendRouteItem[]): string {
+  // 使用路由名称列表生成简单 hash
+  const routeNames = routes.map(r => r.name).sort();
+  const content = JSON.stringify(routeNames);
+
+  // 使用简单字符串累加算法（避免位操作）
+  let hash = 0;
+  for (let i = 0; i < content.length; i += 1) {
+    const char = content.charCodeAt(i);
+    hash = Math.imul(31, hash) + char;
+  }
+
+  // 转换为正数的十六进制字符串
+  return Math.abs(hash).toString(16).padStart(8, '0');
+}
+
+/**
+ * 从 localStorage 获取缓存的版本号
+ * @returns 缓存的版本号
+ */
+function getCachedRouteVersion(): string {
+  return localStorage.getItem('ems_route_version') || '';
+}
+
+/**
+ * 缓存版本号到 localStorage
+ * @param version 版本号
+ */
+function setCachedRouteVersion(version: string): void {
+  localStorage.setItem('ems_route_version', version);
 }
 
 export const useRouteStore = defineStore(SetupStoreId.Route, () => {
@@ -191,12 +297,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     } else {
       const { data, error } = await fetchGetConstantRoutes();
 
-      if (!error) {
+      if (!error && data && data.length > 0) {
         // 将后端路由格式转换为前端路由格式（常量路由）
         const convertedRoutes = transformBackendRoutesToElegantRoutes(data, true);
         addConstantRoutes(convertedRoutes);
       } else {
-        // if fetch constant routes failed, use static constant routes
+        // if fetch constant routes failed or empty, use static constant routes
         addConstantRoutes(staticRoute.constantRoutes);
       }
     }
@@ -206,6 +312,83 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     setIsInitConstantRoute(true);
 
     tabStore.initHomeTab();
+  }
+
+  /**
+   * 收集并同步前端路由到后端
+   * 在应用初始化时调用，用于自动注册前端路由
+   */
+  async function syncRoutesWithBackend(): Promise<void> {
+    // 仅在动态路由模式下执行同步
+    if (authRouteMode.value !== 'dynamic') {
+      return;
+    }
+
+    try {
+      // 1. 使用新函数收集路由（包含常量路由和动态路由）
+      const { routes, constantRoutes: collectedConstantRoutes } = collectRoutesByType(generatedRoutes);
+
+      if (routes.length === 0 && collectedConstantRoutes.length === 0) {
+        console.warn('[RouteSync] No routes to sync');
+        return;
+      }
+
+      // 2. 计算版本号（基于两类路由）
+      const allRoutes = [...routes, ...collectedConstantRoutes];
+      const currentVersion = calculateRouteVersion(allRoutes);
+
+      // 3. 检查本地缓存版本
+      const cachedVersion = getCachedRouteVersion();
+      if (cachedVersion === currentVersion) {
+        console.log('[RouteSync] Version match, skip sync');
+        return;
+      }
+
+      // 4. 获取后端版本号
+      const { data: backendVersion, error: versionError } = await fetchGetRouteVersion();
+
+      if (versionError) {
+        console.warn('[RouteSync] Failed to get backend version:', versionError);
+        // 继续执行同步，不阻塞流程
+      }
+
+      // 5. 如果版本一致，跳过同步
+      if (backendVersion === currentVersion) {
+        console.log('[RouteSync] Backend version match, skip sync');
+        setCachedRouteVersion(currentVersion);
+        return;
+      }
+
+      // 6. 执行同步（包含常量路由）
+      console.log('[RouteSync] Syncing routes...');
+      const { data: syncResult, error: syncError } = await fetchSyncRoutes({
+        version: currentVersion,
+        routes,
+        constantRoutes: collectedConstantRoutes
+      });
+
+      if (syncError) {
+        console.error('[RouteSync] Sync failed:', syncError);
+        // 同步失败不影响正常使用
+        return;
+      }
+
+      if (syncResult?.success) {
+        // 处理响应中的更新统计
+        if (syncResult.changes?.updated) {
+          console.log('[RouteSync] Routes updated:', syncResult.changes.updated);
+        }
+        if (syncResult.changes?.constantChanges) {
+          console.log('[RouteSync] Constant routes changes:', syncResult.changes.constantChanges);
+        }
+        console.log('[RouteSync] Sync success:', syncResult.changes);
+        // 更新本地缓存版本
+        setCachedRouteVersion(currentVersion);
+      }
+    } catch (error) {
+      // 同步失败不影响正常使用，仅记录日志
+      console.error('[RouteSync] Unexpected error:', error);
+    }
   }
 
   /** Init auth route */
@@ -245,7 +428,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init dynamic auth route */
   async function initDynamicAuthRoute() {
-    const { data, error } = await fetchGetUserRoutes();
+    // 使用新的基于 Casbin 的授权路由接口
+    const { data, error } = await fetchGetUserAuthorizedRoutes();
 
     if (!error) {
       const { routes, home } = data;
@@ -381,6 +565,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     getIsAuthRouteExist,
     getSelectedMenuKeyPath,
     onRouteSwitchWhenLoggedIn,
-    onRouteSwitchWhenNotLoggedIn
+    onRouteSwitchWhenNotLoggedIn,
+    syncRoutesWithBackend
   };
 });

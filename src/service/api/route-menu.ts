@@ -1,3 +1,5 @@
+import type { AxiosError } from 'axios';
+import type { FlatResponseData } from '@sa/axios';
 import { request } from '../request';
 
 /**
@@ -6,15 +8,72 @@ import { request } from '../request';
  */
 
 /**
- * 同步前端路由到后端
+ * 重试配置
+ */
+const RETRY_CONFIG = {
+  maxRetries: 3,
+  baseDelay: 1000, // 1秒
+  maxDelay: 10000 // 最大10秒
+};
+
+/**
+ * 计算指数退避延迟时间
+ * @param retryCount 当前重试次数
+ */
+function calculateDelay(retryCount: number): number {
+  const delay = Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retryCount), RETRY_CONFIG.maxDelay);
+  // 添加随机抖动，避免重试请求同时到达
+  return delay + Math.random() * 100;
+}
+
+/**
+ * 带指数退避的请求重试（递归实现，避免循环内 await）
+ * @param requestFn 请求函数
+ * @param shouldRetry 判断是否需要重试的条件
+ * @param retryCount 当前重试次数
+ * @param lastResult 上一次请求结果
+ */
+async function retryWithBackoff<T>(
+  requestFn: () => Promise<FlatResponseData<App.Service.Response<any>, T>>,
+  shouldRetry: (error: AxiosError | null) => boolean = error =>
+    error !== null && (error.code === 'NETWORK_ERROR' || error.code === 'ECONNABORTED' || error?.response?.status === 500),
+  retryCount: number = 0,
+  lastResult: FlatResponseData<App.Service.Response<any>, T> | null = null
+): Promise<FlatResponseData<App.Service.Response<any>, T>> {
+  const result = await requestFn();
+
+  if (result.error === null) {
+    return result;
+  }
+
+  // 检查是否应该重试
+  if (!shouldRetry(result.error) || retryCount >= RETRY_CONFIG.maxRetries) {
+    return result;
+  }
+
+  const delay = calculateDelay(retryCount);
+  // eslint-disable-next-line no-console
+  console.warn(`[RouteMenuAPI] Retry ${retryCount + 1}/${RETRY_CONFIG.maxRetries} after ${delay}ms due to:`, result.error?.message);
+
+  await new Promise(resolve => {
+    setTimeout(resolve, delay);
+  });
+
+  return retryWithBackoff(requestFn, shouldRetry, retryCount + 1, result);
+}
+
+/**
+ * 同步前端路由到后端（带重试）
  * @param data 路由同步请求
  */
 export function fetchSyncRoutes(data: Api.RouteMenu.RouteSyncRequest) {
-  return request<Api.RouteMenu.RouteSyncResponse>({
-    url: '/api/v1/route-menu/sync',
-    method: 'post',
-    data
-  });
+  return retryWithBackoff<Api.RouteMenu.RouteSyncResponse>(() =>
+    request<Api.RouteMenu.RouteSyncResponse>({
+      url: '/api/v1/route-menu/sync',
+      method: 'post',
+      data
+    })
+  );
 }
 
 /**

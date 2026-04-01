@@ -1,4 +1,52 @@
 /**
+ * 前端路由配置类型
+ * 用于 elegant-router 生成的路由结构
+ */
+declare namespace App {
+  namespace Route {
+    /**
+     * 路由元信息（前端格式）
+     * 与 Api.RouteMenu.RouteSyncMeta 字段对应但类型略有差异
+     */
+    interface RouteMeta {
+      /** 标题 */
+      title?: string;
+      /** 图标 */
+      icon?: string;
+      /** 排序顺序 */
+      order?: number;
+      /** 是否隐藏菜单 */
+      hideInMenu?: boolean;
+      /** 是否缓存页面 */
+      keepAlive?: boolean;
+      /** 是否为常量路由 */
+      constant?: boolean;
+      /** 外链地址 */
+      href?: string;
+    }
+
+    /**
+     * 路由配置项（前端格式）
+     * 用于 elegant-router 生成的路由结构
+     */
+    interface RouteConfig {
+      /** 路由名称 */
+      name: string;
+      /** 路由路径 */
+      path: string;
+      /** 组件路径 */
+      component?: string;
+      /** 父级路由名称（用于扁平化处理） */
+      parentName?: string;
+      /** 路由元信息 */
+      meta?: RouteMeta;
+      /** 子路由 */
+      children?: RouteConfig[];
+    }
+  }
+}
+
+/**
  * Namespace Api.RouteMenu
  *
  * Backend api module: "route-menu"
@@ -120,18 +168,17 @@ declare namespace Api {
 
     /**
      * 路由同步响应
-     * 与后端 RouteSyncResponse 结构对应
+     * 与后端 SyncRoutes 方法返回结构对应
+     *
+     * 后端响应格式说明：
+     * - 后端通过 response.OkWithData(c, result) 返回
+     * - 完整响应结构: { code: 200, data: RouteSyncChanges, msg: "操作成功" }
+     * - 前端 request 的 transform 提取 data 字段，即 RouteSyncChanges
+     * - 因此 fetchSyncRoutes 返回的 data 就是 { added, updated, obsoleted, unchanged }
+     *
+     * 特殊标记：当版本未变化时，unchanged 为 -1，表示后端跳过了同步处理
      */
-    interface RouteSyncResponse {
-      /** 同步是否成功 */
-      success: boolean;
-      /** 变更统计 */
-      changes: RouteSyncChanges;
-      /** 后端确认的版本号 */
-      version: string;
-      /** 提示消息 */
-      message: string;
-    }
+    type RouteSyncResponse = RouteSyncChanges;
 
     /**
      * 用户路由菜单项

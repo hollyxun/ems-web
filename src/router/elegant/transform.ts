@@ -38,10 +38,13 @@ function transformElegantRouteToVueRoute(
   const FIRST_LEVEL_ROUTE_COMPONENT_SPLIT = '$';
 
   function isLayout(component: string) {
-    return component.startsWith(LAYOUT_PREFIX);
+    return component?.startsWith(LAYOUT_PREFIX);
   }
 
   function getLayoutName(component: string) {
+    if (!component) {
+      return 'base'; // 默认使用 base layout
+    }
     const layout = component.replace(LAYOUT_PREFIX, '');
 
     if(!layouts[layout]) {
@@ -52,10 +55,13 @@ function transformElegantRouteToVueRoute(
   }
 
   function isView(component: string) {
-    return component.startsWith(VIEW_PREFIX);
+    return component?.startsWith(VIEW_PREFIX);
   }
 
   function getViewName(component: string) {
+    if (!component) {
+      return '404'; // 默认使用 404 页面
+    }
     const view = component.replace(VIEW_PREFIX, '');
 
     if(!views[view]) {
