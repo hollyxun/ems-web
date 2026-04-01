@@ -6,6 +6,45 @@
 
 按钮权限用于控制页面内操作按钮的显示/隐藏，实现精细化权限控制。
 
+## API 接口说明
+
+### 核心接口
+
+| 接口 | 路径 | 用途 |
+|------|------|------|
+| 获取用户按钮权限 | `GET /api/v1/button/user-buttons` | 返回当前用户的权限码列表 |
+| 获取菜单按钮树 | `GET /api/v1/button/menu-buttons` | 返回菜单-按钮树形结构（用于权限配置） |
+| 获取角色按钮 | `GET /api/v1/button/role-buttons?roleId=N` | 返回指定角色的按钮ID列表 |
+| 设置角色按钮 | `POST /api/v1/button/set-role-buttons` | 配置角色的按钮权限 |
+
+### `/api/v1/button/user-buttons` 详细说明
+
+**调用时机**：
+- 用户登录后自动调用
+- 权限刷新时调用
+
+**返回格式**：
+```json
+{
+  "code": 200,
+  "data": ["user:create", "user:delete", "role:assign"]
+}
+```
+
+**特殊处理**：
+- 超级管理员（userId=1）返回 `["*"]`，拥有所有权限
+- 多角色用户自动合并所有角色的按钮权限（取并集）
+- 权限继承遵循 RBAC-1 模型
+
+**前端调用链**：
+```
+authStore.fetchButtonPermissions()
+  → fetchGetUserButtons()
+    → userInfo.buttons 存储
+      → useButtonPermissionStore.fetchButtons()
+        → hasPermission() 检查
+```
+
 ## 使用方式
 
 ### 方式一：指令方式（推荐）
