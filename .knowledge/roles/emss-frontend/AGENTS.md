@@ -194,6 +194,7 @@ const emit = defineEmits<{
 | `skills/component-development.md` | 组件开发规范 | 创建新组件时 |
 | `skills/plugin-integration.md` | 插件集成流程 | 集成新插件时 |
 | `skills/module-removal.md` | 功能模块删除完整流程 | 删除功能模块时 |
+| `skills/route-sync-development.md` | 路由同步开发流程 | 开发路由同步功能时 |
 
 ### Insights（规律性认知）
 
@@ -201,16 +202,20 @@ const emit = defineEmits<{
 |------|------|----------|
 | `insights/typescript-generic.md` | TypeScript 泛型使用技巧 | 使用泛型时 |
 | `insights/reactive-destructuring.md` | 响应式数据解构陷阱 | 解构响应式数据时 |
+| `insights/boolean-serialization.md` | 布尔值序列化陷阱 | 处理布尔字段时 |
 
 ### Experience（事件复盘）
 
-暂无记录。
+| 文件 | 描述 | 触发场景 |
+|------|------|----------|
+| `experience/route-sync-fix-2026-03-30.md` | 路由同步 P0/P1 修复复盘 | 路由同步相关开发时 |
+| `experience/route-hierarchy-fix-2026-04-01.md` | 路由层级结构与 parentName 同步修复 | 路由层级/parentName 相关问题时 |
 
 ### Questions（待验证问题）
 
 - [ ] Element Plus 的表格组件在数据量大时是否有虚拟滚动方案？
 - [ ] Pinia Store 的持久化存储是否有统一方案？
-- [ ] 动态路由在前端缓存中的最佳实践是什么？
+- [x] 动态路由在前端缓存中的最佳实践是什么？→ 2026-03-30 验证：使用 localStorage 缓存路由版本，同步失败时降级使用缓存
 
 ---
 
@@ -234,4 +239,4 @@ const emit = defineEmits<{
 
 ---
 
-**最后更新**: 2026-03-18
+**最后更新**: 2026-04-01
