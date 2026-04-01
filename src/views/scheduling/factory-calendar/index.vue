@@ -117,7 +117,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, checkedRowKeys, onDeleted } = useTableOperate(data, 'id', getData);
 
 async function loadShifts() {
   const { data } = await fetchGetAllShifts();

@@ -143,7 +143,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleEdit, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, checkedRowKeys, onDeleted } = useTableOperate(data, 'id', getData);
 
 async function handleToggleStatus(row: Api.Scheduling.Shift) {
   const status = row.status === 1 ? 2 : 1;

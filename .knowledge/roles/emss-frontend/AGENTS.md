@@ -185,6 +185,7 @@ const emit = defineEmits<{
 | `principles/composition-api.md` | Composition API 最佳实践 | 编写 Vue 组件时 |
 | `principles/pinia-store.md` | Pinia Store 设计规范 | 创建状态管理时 |
 | `principles/api-encapsulation.md` | API 封装规范 | 封装后端接口时 |
+| `principles/typescript-constraints.md` | TypeScript 类型约束最佳实践 | 遇到类型错误时 |
 
 ### Skills（操作流程）
 
