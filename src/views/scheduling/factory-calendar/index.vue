@@ -3,9 +3,9 @@ import { onMounted, ref } from 'vue';
 import { ElButton, ElDialog, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
 import dayjs from 'dayjs';
 import {
+  fetchBatchDeleteFactoryCalendars,
   fetchDeleteFactoryCalendar,
   fetchGenerateFactoryCalendar,
-  fetchGetAllShifts,
   fetchGetFactoryCalendarList,
   fetchGetFactoryCalendarView,
   fetchUpdateMappingConfig
@@ -21,7 +21,6 @@ const searchParams = ref(getInitSearchParams());
 const showDetailDialog = ref(false);
 const currentCalendar = ref<Api.Scheduling.FactoryCalendarView | null>(null);
 const showGenerateDialog = ref(false);
-const allShifts = ref<Api.Scheduling.Shift[]>([]);
 
 // 日历映射配置抽屉
 const mappingDrawerVisible = ref(false);
@@ -40,12 +39,10 @@ const generateForm = ref({
   month: dayjs().month() + 1,
   calendarCode: '',
   calendarName: '',
-  startDay: 25,
-  totalDays: 31,
-  workDays: 22,
+  startDate: dayjs().format('YYYY-MM-DD'),
+  endDate: dayjs().add(30, 'day').format('YYYY-MM-DD'),
   weekendDays: [0, 6] as number[],
-  holidays: [] as Array<{ date: string; holidayName: string; isWorkDay: boolean }>,
-  defaultShift: undefined as number | undefined
+  holidays: [] as Array<{ date: string; holidayName: string; isWorkDay: boolean }>
 });
 
 const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
@@ -134,21 +131,20 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { checkedRowKeys, onDeleted } = useTableOperate(
-  data,
-  'id',
-  getData
-);
-
-async function loadShifts() {
-  const { data: shiftData } = await fetchGetAllShifts();
-  if (shiftData) {
-    allShifts.value = shiftData.filter(s => s.status === 1);
-  }
-}
+const { checkedRowKeys, onDeleted } = useTableOperate(data, 'id', getData);
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteFactoryCalendar(id);
+  if (!error) {
+    onDeleted();
+  }
+}
+
+async function handleBatchDelete() {
+  const ids = checkedRowKeys.value.map(key => Number(key));
+  if (ids.length === 0) return;
+
+  const { error } = await fetchBatchDeleteFactoryCalendars(ids);
   if (!error) {
     onDeleted();
   }
@@ -174,19 +170,19 @@ function openGenerateDialog() {
   showGenerateDialog.value = true;
   const now = dayjs();
   const nextMonth = now.add(1, 'month');
+  // 默认从下月25日开始
+  const startDate = nextMonth.date(25);
+  const endDate = startDate.add(30, 'day');
   generateForm.value = {
     year: nextMonth.year(),
     month: nextMonth.month() + 1,
     calendarCode: `FC-${nextMonth.format('YYYYMM')}`,
     calendarName: `${nextMonth.year()}年${nextMonth.month() + 1}月工厂日历`,
-    startDay: 25,
-    totalDays: 31,
-    workDays: 22,
+    startDate: startDate.format('YYYY-MM-DD'),
+    endDate: endDate.format('YYYY-MM-DD'),
     weekendDays: [0, 6],
-    holidays: [],
-    defaultShift: undefined
+    holidays: []
   };
-  loadShifts();
 }
 
 function addHoliday() {
@@ -207,22 +203,30 @@ async function handleGenerate() {
     return;
   }
 
+  if (!generateForm.value.startDate || !generateForm.value.endDate) {
+    ElMessage.warning('请选择日期范围');
+    return;
+  }
+
+  if (dayjs(generateForm.value.endDate).isBefore(dayjs(generateForm.value.startDate))) {
+    ElMessage.warning('结束日期不能早于开始日期');
+    return;
+  }
+
   const params: Api.Scheduling.GenerateFactoryCalendarParams = {
     year: generateForm.value.year,
     month: generateForm.value.month,
     calendarCode: generateForm.value.calendarCode,
     calendarName: generateForm.value.calendarName,
-    startDay: generateForm.value.startDay,
-    totalDays: generateForm.value.totalDays,
-    workDays: generateForm.value.workDays,
+    startDate: generateForm.value.startDate,
+    endDate: generateForm.value.endDate,
     weekendDays: generateForm.value.weekendDays,
-    holidays: generateForm.value.holidays,
-    defaultShift: generateForm.value.defaultShift
+    holidays: generateForm.value.holidays
   };
 
   const { error } = await fetchGenerateFactoryCalendar(params);
   if (!error) {
-    ElMessage.success('工厂月生成成功');
+    ElMessage.success('工厂日历生成成功');
     showGenerateDialog.value = false;
     getDataByPage();
   }
@@ -266,7 +270,6 @@ async function handleSaveMappingConfig(config: {
 
 onMounted(() => {
   getData();
-  loadShifts();
 });
 </script>
 
@@ -288,6 +291,7 @@ onMounted(() => {
             :disabled-delete="checkedRowKeys.length === 0"
             :loading="loading"
             @add="openGenerateDialog"
+            @delete="handleBatchDelete"
             @refresh="getData"
           />
         </div>
@@ -300,7 +304,7 @@ onMounted(() => {
           class="sm:h-full"
           :data="data"
           row-key="id"
-          @selection-change="checkedRowKeys = $event"
+          @selection-change="(rows: any[]) => (checkedRowKeys = rows.map(r => r.id))"
         >
           <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
         </ElTable>
@@ -398,38 +402,25 @@ onMounted(() => {
 
         <ElRow :gutter="16">
           <ElCol :span="12">
-            <ElFormItem label="起始日期" required>
-              <ElInputNumber v-model="generateForm.startDay" :min="1" :max="31" style="width: 100%">
-                <template #suffix>日</template>
-              </ElInputNumber>
+            <ElFormItem label="开始日期" required>
+              <ElDatePicker
+                v-model="generateForm.startDate"
+                type="date"
+                placeholder="选择开始日期"
+                value-format="YYYY-MM-DD"
+                style="width: 100%"
+              />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">
-            <ElFormItem label="总天数" required>
-              <ElInputNumber v-model="generateForm.totalDays" :min="1" :max="31" style="width: 100%">
-                <template #suffix>天</template>
-              </ElInputNumber>
-            </ElFormItem>
-          </ElCol>
-        </ElRow>
-        <ElRow :gutter="16">
-          <ElCol :span="12">
-            <ElFormItem label="工作日数" required>
-              <ElInputNumber v-model="generateForm.workDays" :min="1" :max="31" style="width: 100%">
-                <template #suffix>天</template>
-              </ElInputNumber>
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="12">
-            <ElFormItem label="默认班次">
-              <ElSelect v-model="generateForm.defaultShift" clearable placeholder="请选择默认班次" style="width: 100%">
-                <ElOption v-for="shift in allShifts" :key="shift.id" :label="shift.name" :value="shift.id">
-                  <div class="flex items-center gap-2">
-                    <div class="h-3 w-3 rounded" :style="{ backgroundColor: shift.color }" />
-                    <span>{{ shift.name }}</span>
-                  </div>
-                </ElOption>
-              </ElSelect>
+            <ElFormItem label="结束日期" required>
+              <ElDatePicker
+                v-model="generateForm.endDate"
+                type="date"
+                placeholder="选择结束日期"
+                value-format="YYYY-MM-DD"
+                style="width: 100%"
+              />
             </ElFormItem>
           </ElCol>
         </ElRow>

@@ -368,6 +368,15 @@ export function fetchDeleteFactoryCalendar(id: number) {
   });
 }
 
+/** batch delete factory calendars */
+export function fetchBatchDeleteFactoryCalendars(ids: number[]) {
+  return request<boolean>({
+    url: '/api/v1/scheduling/factoryCalendar/deleteFactoryCalendarsByIds',
+    method: 'delete',
+    data: { ids }
+  });
+}
+
 /** generate factory calendar */
 export function fetchGenerateFactoryCalendar(data: Api.Scheduling.GenerateFactoryCalendarParams) {
   return request<boolean>({

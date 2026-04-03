@@ -1,12 +1,11 @@
 <script setup lang="tsx">
 import { computed, onMounted, ref, watch } from 'vue';
-import { ElButton, ElDialog, ElMessage, ElMessageBox, ElTag } from 'element-plus';
+import { ElButton, ElDialog, ElMessage, ElTag } from 'element-plus';
 import dayjs from 'dayjs';
 import {
   fetchGenerateSchedule,
   fetchGetAllShiftPatterns,
   fetchGetAllTeams,
-  fetchGetFactoryCalendarView,
   fetchGetScheduleCalendarView
 } from '@/service/api/scheduling';
 import { $t } from '@/locales';
@@ -57,11 +56,6 @@ const calendarDays = computed(() => {
   const emptySlots = Array(firstDayOfWeek).fill(null);
 
   return [...emptySlots, ...days];
-});
-
-const filteredTeams = computed(() => {
-  if (!selectedTeamId.value) return allTeams.value;
-  return allTeams.value.filter(t => t.id === selectedTeamId.value);
 });
 
 async function loadCalendarData() {
@@ -148,10 +142,6 @@ async function handleGenerateSchedule() {
     showGenerateDialog.value = false;
     loadCalendarData();
   }
-}
-
-function getTeamColor(teamId: number) {
-  return allTeams.value.find(t => t.id === teamId)?.color || '#999';
 }
 
 function getTeamName(teamId: number) {
@@ -285,7 +275,12 @@ watch([year, month], () => {
                   borderLeft: `3px solid ${team.shiftColor || '#999'}`
                 }"
               >
-                {{ getTeamName(team.teamId) }}: {{ team.shiftName || '-' }}
+                <span class="font-medium">{{ getTeamName(team.teamId) }}</span>
+                <span v-if="team.shiftName" class="ml-1">{{ team.shiftName }}</span>
+                <span v-if="team.startTime && team.endTime" class="ml-1 text-gray-500">
+                  ({{ team.startTime }}-{{ team.endTime }})
+                </span>
+                <span v-else class="ml-1 text-gray-400">-</span>
               </div>
             </div>
           </template>

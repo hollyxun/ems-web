@@ -256,7 +256,6 @@ declare namespace Api.Scheduling {
     isWorkDay: boolean;
     isHoliday: boolean;
     holidayName?: string;
-    workShiftId?: number;
     remark?: string;
   }
 
@@ -294,12 +293,10 @@ declare namespace Api.Scheduling {
     month: number;
     calendarCode: string;
     calendarName: string;
-    startDay: number;
-    totalDays?: number;
-    workDays?: number;
+    startDate: string;
+    endDate: string;
     weekendDays?: number[];
     holidays?: HolidayParams[];
-    defaultShift?: number;
   }
 
   interface HolidayParams {
@@ -316,7 +313,6 @@ declare namespace Api.Scheduling {
     mappingRuleId?: number;
     mappingConfig?: string;
     holidays?: HolidayParams[];
-    defaultShift?: number;
   }
 
   interface NaturalMonthMappingInfo {
