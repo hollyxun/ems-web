@@ -212,6 +212,7 @@ const emit = defineEmits<{
 |------|------|----------|
 | `experience/route-sync-fix-2026-03-30.md` | 路由同步 P0/P1 修复复盘 | 路由同步相关开发时 |
 | `experience/route-hierarchy-fix-2026-04-01.md` | 路由层级结构与 parentName 同步修复 | 路由层级/parentName 相关问题时 |
+| `experience/route-init-order-fix-2026-04-03.md` | 路由初始化顺序问题修复 | 数据库重置后 404 问题时 |
 | `experience/rule-engine-development-2026-04-03.md` | 规则引擎前端开发问题复盘 | 开发规则引擎相关功能时 |
 
 ### Questions（待验证问题）

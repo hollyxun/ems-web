@@ -317,6 +317,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   /**
    * 收集并同步前端路由到后端
    * 在应用初始化时调用，用于自动注册前端路由
+   *
+   * P0-fix: 此函数必须在 initAuthRoute 之前调用
+   * 原因：数据库重置后路由表为空，需要先同步才能获取用户路由
    */
   async function syncRoutesWithBackend(): Promise<void> {
     // 仅在动态路由模式下执行同步

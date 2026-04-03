@@ -125,11 +125,12 @@ async function initRoute(to: RouteLocationNormalized): Promise<RouteLocationRaw 
   }
 
   if (!routeStore.isInitAuthRoute) {
+    // P0-fix: 先同步前端路由到后端，确保数据库有路由数据
+    // 修复数据库重置后路由为空导致 404 的问题
+    await routeStore.syncRoutesWithBackend();
+
     // initialize the auth route
     await routeStore.initAuthRoute();
-
-    // 同步前端路由到后端（仅在动态路由模式下）
-    await routeStore.syncRoutesWithBackend();
 
     // the route is captured by the "not-found" route because the auth route is not initialized
     // after the auth route is initialized, redirect to the original route
