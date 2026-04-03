@@ -107,10 +107,12 @@ declare module "@elegant-router/types" {
     "scheduling": "/scheduling";
     "scheduling_calendar": "/scheduling/calendar";
     "scheduling_factory-calendar": "/scheduling/factory-calendar";
+    "scheduling_rule-config": "/scheduling/rule-config";
+    "scheduling_rule-template": "/scheduling/rule-template";
+    "scheduling_rule-version": "/scheduling/rule-version";
     "scheduling_shift": "/scheduling/shift";
     "scheduling_shift-pattern": "/scheduling/shift-pattern";
     "scheduling_team": "/scheduling/team";
-    "shift-schedule": "/shift-schedule";
   };
 
   /**
@@ -170,7 +172,6 @@ declare module "@elegant-router/types" {
     | "plugin"
     | "profile"
     | "scheduling"
-    | "shift-schedule"
   >;
 
   /**
@@ -252,10 +253,12 @@ declare module "@elegant-router/types" {
     | "profile_password"
     | "scheduling_calendar"
     | "scheduling_factory-calendar"
+    | "scheduling_rule-config"
+    | "scheduling_rule-template"
+    | "scheduling_rule-version"
     | "scheduling_shift-pattern"
     | "scheduling_shift"
     | "scheduling_team"
-    | "shift-schedule"
   >;
 
   /**

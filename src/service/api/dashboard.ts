@@ -79,7 +79,7 @@ export function fetchAlerts(params: Api.Dashboard.AlertQueryParams) {
  * @param remark 备注
  */
 export function confirmAlert(alertId: string, remark?: string) {
-  return request<void>({
+  return request({
     url: '/alert/confirm',
     method: 'post',
     data: { alertId, remark }
@@ -92,7 +92,7 @@ export function confirmAlert(alertId: string, remark?: string) {
  * @param remark 备注
  */
 export function ignoreAlert(alertId: string, remark?: string) {
-  return request<void>({
+  return request({
     url: '/alert/ignore',
     method: 'post',
     data: { alertId, remark }

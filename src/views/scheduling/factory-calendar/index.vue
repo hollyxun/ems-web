@@ -7,11 +7,13 @@ import {
   fetchGenerateFactoryCalendar,
   fetchGetAllShifts,
   fetchGetFactoryCalendarList,
-  fetchGetFactoryCalendarView
+  fetchGetFactoryCalendarView,
+  fetchUpdateMappingConfig
 } from '@/service/api/scheduling';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import FactoryCalendarSearch from './modules/factoryCalendar-search.vue';
+import CalendarMappingConfigDrawer from './modules/calendar-mapping-config-drawer.vue';
 
 defineOptions({ name: 'FactoryCalendarManage' });
 
@@ -20,6 +22,18 @@ const showDetailDialog = ref(false);
 const currentCalendar = ref<Api.Scheduling.FactoryCalendarView | null>(null);
 const showGenerateDialog = ref(false);
 const allShifts = ref<Api.Scheduling.Shift[]>([]);
+
+// 日历映射配置抽屉
+const mappingDrawerVisible = ref(false);
+const editingCalendarId = ref<number>(0);
+const editingMappingConfig = ref<
+  | {
+      mappingRuleId?: number;
+      mappingConfig?: string;
+      naturalMonthStart?: number;
+    }
+  | undefined
+>();
 
 const generateForm = ref({
   year: dayjs().year(),
@@ -96,11 +110,14 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       prop: 'operate',
       label: $t('common.operate'),
       align: 'center',
-      width: 200,
+      width: 260,
       formatter: row => (
         <div class="flex-center">
           <ElButton type="primary" plain size="small" onClick={() => viewDetail(row)}>
             详情
+          </ElButton>
+          <ElButton type="success" plain size="small" onClick={() => openMappingConfig(row)}>
+            映射配置
           </ElButton>
           <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
             {{
@@ -117,12 +134,16 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, checkedRowKeys, onDeleted } = useTableOperate(data, 'id', getData);
+const { checkedRowKeys, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 async function loadShifts() {
-  const { data } = await fetchGetAllShifts();
-  if (data) {
-    allShifts.value = data.filter(s => s.status === 1);
+  const { data: shiftData } = await fetchGetAllShifts();
+  if (shiftData) {
+    allShifts.value = shiftData.filter(s => s.status === 1);
   }
 }
 
@@ -138,9 +159,9 @@ async function viewDetail(row: Api.Scheduling.FactoryCalendar) {
     ElMessage.warning('日历年份或月份信息不完整');
     return;
   }
-  const { data } = await fetchGetFactoryCalendarView({ year: row.year, month: row.month });
-  if (data) {
-    currentCalendar.value = data;
+  const { data: viewData } = await fetchGetFactoryCalendarView({ year: row.year, month: row.month });
+  if (viewData) {
+    currentCalendar.value = viewData;
     showDetailDialog.value = true;
   }
 }
@@ -211,6 +232,36 @@ function getDayTypeClass(day: Api.Scheduling.FactoryCalendarDayView) {
   if (day.isHoliday) return 'bg-red-100 text-red-600';
   if (!day.isWorkDay) return 'bg-gray-100 text-gray-500';
   return 'bg-green-50 text-green-600';
+}
+
+// 打开日历映射配置
+function openMappingConfig(row: Api.Scheduling.FactoryCalendar) {
+  editingCalendarId.value = row.id;
+  editingMappingConfig.value = {
+    naturalMonthStart: row.startDate ? Number.parseInt(dayjs(row.startDate).format('D'), 10) : 25
+  };
+  mappingDrawerVisible.value = true;
+}
+
+// 保存映射配置
+async function handleSaveMappingConfig(config: {
+  mappingRuleId: number;
+  mappingConfig: string;
+  naturalMonthStart: number;
+}) {
+  const { error } = await fetchUpdateMappingConfig({
+    calendarId: editingCalendarId.value,
+    mappingRuleId: config.mappingRuleId,
+    mappingConfig: config.mappingConfig
+  });
+
+  if (!error) {
+    ElMessage.success('映射配置保存成功');
+    mappingDrawerVisible.value = false;
+    getData();
+  } else {
+    ElMessage.error('保存失败');
+  }
 }
 
 onMounted(() => {
@@ -431,6 +482,14 @@ onMounted(() => {
         </ElSpace>
       </template>
     </ElDialog>
+
+    <!-- 日历映射配置抽屉 -->
+    <CalendarMappingConfigDrawer
+      v-model:visible="mappingDrawerVisible"
+      :calendar-id="editingCalendarId"
+      :initial-config="editingMappingConfig"
+      @save="handleSaveMappingConfig"
+    />
   </div>
 </template>
 

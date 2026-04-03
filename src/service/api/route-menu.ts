@@ -21,7 +21,7 @@ const RETRY_CONFIG = {
  * @param retryCount 当前重试次数
  */
 function calculateDelay(retryCount: number): number {
-  const delay = Math.min(RETRY_CONFIG.baseDelay * Math.pow(2, retryCount), RETRY_CONFIG.maxDelay);
+  const delay = Math.min(RETRY_CONFIG.baseDelay * 2 ** retryCount, RETRY_CONFIG.maxDelay);
   // 添加随机抖动，避免重试请求同时到达
   return delay + Math.random() * 100;
 }
@@ -36,9 +36,10 @@ function calculateDelay(retryCount: number): number {
 async function retryWithBackoff<T>(
   requestFn: () => Promise<FlatResponseData<App.Service.Response<any>, T>>,
   shouldRetry: (error: AxiosError | null) => boolean = error =>
-    error !== null && (error.code === 'NETWORK_ERROR' || error.code === 'ECONNABORTED' || error?.response?.status === 500),
+    error !== null &&
+    (error.code === 'NETWORK_ERROR' || error.code === 'ECONNABORTED' || error?.response?.status === 500),
   retryCount: number = 0,
-  lastResult: FlatResponseData<App.Service.Response<any>, T> | null = null
+  _lastResult: FlatResponseData<App.Service.Response<any>, T> | null = null
 ): Promise<FlatResponseData<App.Service.Response<any>, T>> {
   const result = await requestFn();
 
@@ -53,7 +54,10 @@ async function retryWithBackoff<T>(
 
   const delay = calculateDelay(retryCount);
   // eslint-disable-next-line no-console
-  console.warn(`[RouteMenuAPI] Retry ${retryCount + 1}/${RETRY_CONFIG.maxRetries} after ${delay}ms due to:`, result.error?.message);
+  console.warn(
+    `[RouteMenuAPI] Retry ${retryCount + 1}/${RETRY_CONFIG.maxRetries} after ${delay}ms due to:`,
+    result.error?.message
+  );
 
   await new Promise(resolve => {
     setTimeout(resolve, delay);

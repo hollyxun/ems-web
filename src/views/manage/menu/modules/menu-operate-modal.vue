@@ -161,17 +161,29 @@ watch(visible, () => {
           <!-- 基本信息（只读展示） -->
           <ElCol :span="24">
             <ElFormItem :label="$t('page.manage.menu.routeName')">
-              <ElInput v-model="model.name" disabled :placeholder="$t('page.manage.menu.routeName') + $t('page.manage.menu.readOnly')" />
+              <ElInput
+                v-model="model.name"
+                disabled
+                :placeholder="$t('page.manage.menu.routeName') + $t('page.manage.menu.readOnly')"
+              />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
             <ElFormItem :label="$t('page.manage.menu.routePath')">
-              <ElInput v-model="model.path" disabled :placeholder="$t('page.manage.menu.routePath') + $t('page.manage.menu.readOnly')" />
+              <ElInput
+                v-model="model.path"
+                disabled
+                :placeholder="$t('page.manage.menu.routePath') + $t('page.manage.menu.readOnly')"
+              />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
             <ElFormItem :label="$t('page.manage.menu.componentPath')">
-              <ElInput v-model="model.component" disabled :placeholder="$t('page.manage.menu.componentPath') + $t('page.manage.menu.readOnly')" />
+              <ElInput
+                v-model="model.component"
+                disabled
+                :placeholder="$t('page.manage.menu.componentPath') + $t('page.manage.menu.readOnly')"
+              />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
@@ -197,7 +209,13 @@ watch(visible, () => {
           </ElCol>
           <ElCol :span="12">
             <ElFormItem :label="$t('page.manage.menu.menuIcon')" prop="icon">
-              <ElSelect v-model="model.icon" :placeholder="$t('page.manage.menu.pleaseSelectIcon')" class="w-full" clearable filterable>
+              <ElSelect
+                v-model="model.icon"
+                :placeholder="$t('page.manage.menu.pleaseSelectIcon')"
+                class="w-full"
+                clearable
+                filterable
+              >
                 <template #label="{ value }">
                   <component :is="getIconLabelVNode(value)" />
                 </template>
@@ -209,7 +227,12 @@ watch(visible, () => {
           </ElCol>
           <ElCol :span="12">
             <ElFormItem :label="$t('page.manage.menu.order')" prop="sort">
-              <ElInputNumber v-model="model.sort" :min="0" class="w-full" :placeholder="$t('page.manage.menu.pleaseInputOrder')" />
+              <ElInputNumber
+                v-model="model.sort"
+                :min="0"
+                class="w-full"
+                :placeholder="$t('page.manage.menu.pleaseInputOrder')"
+              />
             </ElFormItem>
           </ElCol>
           <ElCol :span="12">

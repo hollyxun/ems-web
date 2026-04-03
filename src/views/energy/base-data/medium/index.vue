@@ -1,12 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchChangeMediumStatus,
-  fetchDeleteMedium,
-  fetchGetAllMediums,
-  fetchGetMediumList
-} from '@/service/api/energy';
+import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
+import { fetchDeleteMedium, fetchGetMediumList } from '@/service/api/energy';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import MediumSearch from './modules/medium-search.vue';
@@ -15,6 +10,9 @@ import MediumOperateDrawer from './modules/medium-operate-drawer.vue';
 defineOptions({ name: 'EnergyMedium' });
 
 const searchParams = ref(getInitSearchParams());
+
+// Late binding for handleEdit (populated after useTableOperate)
+const editHandler = ref<(row: any) => void>(() => {});
 
 const mediumTypeMap: Record<number, { label: string; type: UI.ThemeColor }> = {
   1: { label: '一次能源', type: 'success' },
@@ -92,7 +90,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       width: 200,
       formatter: row => (
         <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => handleEdit(row)}>
+          <ElButton type="primary" plain size="small" onClick={() => editHandler.value(row)}>
             {$t('common.edit')}
           </ElButton>
           <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
@@ -110,21 +108,19 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
+
+// Bind editHandler after useTableOperate returns handleEdit
+editHandler.value = handleEdit;
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteMedium(id);
   if (!error) {
     onDeleted();
-  }
-}
-
-async function handleChangeStatus(id: number, status: number) {
-  const { error } = await fetchChangeMediumStatus(id, status);
-  if (!error) {
-    ElMessage.success('状态修改成功');
-    getDataByPage();
   }
 }
 

@@ -806,6 +806,33 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'scheduling_rule-config',
+        path: '/scheduling/rule-config',
+        component: 'view.scheduling_rule-config',
+        meta: {
+          title: 'scheduling_rule-config',
+          i18nKey: 'route.scheduling_rule-config'
+        }
+      },
+      {
+        name: 'scheduling_rule-template',
+        path: '/scheduling/rule-template',
+        component: 'view.scheduling_rule-template',
+        meta: {
+          title: 'scheduling_rule-template',
+          i18nKey: 'route.scheduling_rule-template'
+        }
+      },
+      {
+        name: 'scheduling_rule-version',
+        path: '/scheduling/rule-version',
+        component: 'view.scheduling_rule-version',
+        meta: {
+          title: 'scheduling_rule-version',
+          i18nKey: 'route.scheduling_rule-version'
+        }
+      },
+      {
         name: 'scheduling_shift',
         path: '/scheduling/shift',
         component: 'view.scheduling_shift',
@@ -833,14 +860,5 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       }
     ]
-  },
-  {
-    name: 'shift-schedule',
-    path: '/shift-schedule',
-    component: 'layout.base$view.shift-schedule',
-    meta: {
-      title: 'shift-schedule',
-      i18nKey: 'route.shift-schedule'
-    }
   }
 ];

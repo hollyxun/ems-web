@@ -120,6 +120,18 @@ declare namespace Api.Scheduling {
     teamIds: number[];
   }
 
+  interface GeneratePatternDetailsByRuleParams {
+    ruleId: number;
+    teamIds: number[];
+    cycleDays: number;
+  }
+
+  interface GeneratePatternDetailsWithConfigParams {
+    patternType: number;
+    teamIds: number[];
+    configJson: string;
+  }
+
   /** Schedule Calendar */
   interface ScheduleCalendar {
     id: number;
@@ -294,5 +306,32 @@ declare namespace Api.Scheduling {
     date: string;
     holidayName: string;
     isWorkDay: boolean;
+  }
+
+  interface GenerateFactoryCalendarWithMappingParams {
+    year: number;
+    month: number;
+    calendarCode: string;
+    calendarName: string;
+    mappingRuleId?: number;
+    mappingConfig?: string;
+    holidays?: HolidayParams[];
+    defaultShift?: number;
+  }
+
+  interface NaturalMonthMappingInfo {
+    calendarId: number;
+    factoryMonth: string;
+    startDate: string;
+    endDate: string;
+    mappingType: string;
+    naturalMonths: string[];
+    boundaryType: string;
+  }
+
+  interface UpdateMappingConfigParams {
+    calendarId: number;
+    mappingRuleId?: number;
+    mappingConfig?: string;
   }
 }

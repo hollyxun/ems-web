@@ -51,7 +51,7 @@ function transformBackendRoutesToElegantRoutes(
     // 自动生成 i18nKey：如果 title 看起来像路由名称（非中文），则生成 route.xxx 格式的 i18nKey
     const generateI18nKey = (title: string, name: string): App.I18n.I18nKey | undefined => {
       // 如果 title 是中文，说明已经是翻译后的文本，不需要 i18nKey
-      if (title && /[\u4e00-\u9fa5]/.test(title)) {
+      if (title && /[\u4E00-\u9FA5]/.test(title)) {
         return undefined;
       }
       // 否则使用 route.{name} 格式的 i18nKey

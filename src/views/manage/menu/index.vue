@@ -147,7 +147,12 @@ init();
         <div class="flex items-center justify-between">
           <p>{{ $t('page.manage.menu.title') }} ({{ totalCount }})</p>
           <div class="flex items-center gap-12px">
-            <ElSelect v-model="statusFilter" :placeholder="$t('page.manage.menu.statusFilter')" class="w-120px" clearable>
+            <ElSelect
+              v-model="statusFilter"
+              :placeholder="$t('page.manage.menu.statusFilter')"
+              class="w-120px"
+              clearable
+            >
               <ElOption
                 v-for="item in statusOptions"
                 :key="item.label"
@@ -215,12 +220,18 @@ init();
                 </ElButton>
                 <ElPopconfirm
                   v-if="row.status !== 3"
-                  :title="row.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable')"
+                  :title="
+                    row.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable')
+                  "
                   @confirm="handleToggleStatus(row)"
                 >
                   <template #reference>
                     <ElButton :type="row.status === 1 ? 'warning' : 'success'" plain size="small">
-                      {{ row.status === 1 ? $t('page.manage.common.status.disable') : $t('page.manage.common.status.enable') }}
+                      {{
+                        row.status === 1
+                          ? $t('page.manage.common.status.disable')
+                          : $t('page.manage.common.status.enable')
+                      }}
                     </ElButton>
                   </template>
                 </ElPopconfirm>

@@ -78,8 +78,10 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   profile_password: () => import("@/views/profile/password/index.vue"),
   scheduling_calendar: () => import("@/views/scheduling/calendar/index.vue"),
   "scheduling_factory-calendar": () => import("@/views/scheduling/factory-calendar/index.vue"),
+  "scheduling_rule-config": () => import("@/views/scheduling/rule-config/index.vue"),
+  "scheduling_rule-template": () => import("@/views/scheduling/rule-template/index.vue"),
+  "scheduling_rule-version": () => import("@/views/scheduling/rule-version/index.vue"),
   "scheduling_shift-pattern": () => import("@/views/scheduling/shift-pattern/index.vue"),
   scheduling_shift: () => import("@/views/scheduling/shift/index.vue"),
   scheduling_team: () => import("@/views/scheduling/team/index.vue"),
-  "shift-schedule": () => import("@/views/shift-schedule/index.vue"),
 };

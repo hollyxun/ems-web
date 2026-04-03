@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
+import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
 import dayjs from 'dayjs';
 import { fetchDeleteCoefficient, fetchGetAllMediums, fetchGetCoefficientList } from '@/service/api/energy';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
@@ -12,6 +12,9 @@ defineOptions({ name: 'EnergyCoefficient' });
 
 const searchParams = ref(getInitSearchParams());
 const allMediums = ref<Api.Energy.Medium[]>([]);
+
+// Late binding for handleEdit (populated after useTableOperate)
+const editHandler = ref<(row: any) => void>(() => {});
 
 const coefficientTypeMap: Record<number, { label: string; type: UI.ThemeColor }> = {
   1: { label: '折标煤系数', type: 'primary' },
@@ -104,7 +107,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       width: 200,
       formatter: row => (
         <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => handleEdit(row)}>
+          <ElButton type="primary" plain size="small" onClick={() => editHandler.value(row)}>
             {$t('common.edit')}
           </ElButton>
           <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
@@ -127,6 +130,9 @@ const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedR
   'id',
   getData
 );
+
+// Bind editHandler after useTableOperate returns handleEdit
+editHandler.value = handleEdit;
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteCoefficient(id);

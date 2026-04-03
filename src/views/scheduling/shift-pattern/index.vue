@@ -1,15 +1,34 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import { fetchDeleteShiftPattern, fetchGetShiftPatternList } from '@/service/api/scheduling';
+import {
+  fetchDeleteShiftPattern,
+  fetchGeneratePatternDetailsByRule,
+  fetchGetAllTeams,
+  fetchGetShiftPatternList
+} from '@/service/api/scheduling';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import ShiftPatternOperateDrawer from './modules/shiftPattern-operate-drawer.vue';
 import ShiftPatternSearch from './modules/shiftPattern-search.vue';
+import RotationRuleConfigDrawer from './modules/rotation-rule-config-drawer.vue';
 
 defineOptions({ name: 'ShiftPatternManage' });
 
 const searchParams = ref(getInitSearchParams());
+
+// 轮班规则配置抽屉
+const ruleConfigDrawerVisible = ref(false);
+const editingPatternId = ref<number>(0);
+const editingPatternConfig = ref<
+  | {
+      ruleBindingId?: number;
+      ruleConfig?: string;
+      baseTemplateId?: number;
+    }
+  | undefined
+>();
+const allTeams = ref<Api.Scheduling.Team[]>([]);
 
 function getInitSearchParams(): Api.Scheduling.ShiftPatternSearchParams {
   return {
@@ -96,11 +115,14 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       prop: 'operate',
       label: $t('common.operate'),
       align: 'center',
-      width: 150,
+      width: 200,
       formatter: row => (
         <div class="flex-center">
           <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
             {$t('common.edit')}
+          </ElButton>
+          <ElButton type="success" plain size="small" onClick={() => openRuleConfig(row)}>
+            规则配置
           </ElButton>
           <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
             {{
@@ -138,8 +160,57 @@ function edit(id: number) {
   handleEdit(id);
 }
 
+// 加载所有班组
+async function loadTeams() {
+  const { data: teamData } = await fetchGetAllTeams();
+  if (teamData) {
+    allTeams.value = teamData.filter(t => t.status === 1);
+  }
+}
+
+// 打开规则配置
+function openRuleConfig(row: Api.Scheduling.ShiftPattern) {
+  editingPatternId.value = row.id;
+  editingPatternConfig.value = {
+    ruleBindingId: undefined,
+    ruleConfig: undefined,
+    baseTemplateId: undefined
+  };
+  ruleConfigDrawerVisible.value = true;
+}
+
+// 保存规则配置并生成排班详情
+async function handleSaveRuleConfig(config: {
+  ruleBindingId: number;
+  ruleConfig: string;
+  baseTemplateId?: number;
+  rotationType: string;
+}) {
+  if (!editingPatternId.value) return;
+
+  try {
+    const teamIds = allTeams.value.slice(0, 5).map(t => t.id); // 取前5个班组
+    const { error } = await fetchGeneratePatternDetailsByRule({
+      ruleId: config.ruleBindingId,
+      teamIds,
+      cycleDays: 8 // 默认8天周期
+    });
+
+    if (!error) {
+      ElMessage.success('规则配置已应用，排班详情已生成');
+      ruleConfigDrawerVisible.value = false;
+      getData();
+    } else {
+      ElMessage.error('生成失败');
+    }
+  } catch {
+    ElMessage.error('操作失败');
+  }
+}
+
 onMounted(() => {
   getData();
+  loadTeams();
 });
 </script>
 
@@ -186,6 +257,14 @@ onMounted(() => {
         :operate-type="operateType"
         :row-data="editingData"
         @submitted="getDataByPage"
+      />
+
+      <!-- 轮班规则配置抽屉 -->
+      <RotationRuleConfigDrawer
+        v-model:visible="ruleConfigDrawerVisible"
+        :pattern-id="editingPatternId"
+        :initial-config="editingPatternConfig"
+        @save="handleSaveRuleConfig"
       />
     </ElCard>
   </div>

@@ -75,27 +75,27 @@ async function handleBatchRestore() {
 
   try {
     await ElMessageBox.confirm(
-      $t('common.batchRestoreConfirm', { count: selectedIds.value.length }) || `确定要批量恢复选中的 ${selectedIds.value.length} 个路由吗？`,
+      $t('common.batchRestoreConfirm', { count: selectedIds.value.length }) ||
+        `确定要批量恢复选中的 ${selectedIds.value.length} 个路由吗？`,
       $t('common.tip') || '提示',
       { type: 'warning' }
     );
 
     loading.value = true;
+
+    // 使用 Promise.allSettled 并行处理，避免循环内 await
+    const results = await Promise.allSettled(selectedIds.value.map(id => fetchRestoreRoute({ id })));
+
     let successCount = 0;
     let failCount = 0;
 
-    for (const id of selectedIds.value) {
-      try {
-        const { data: result } = await fetchRestoreRoute({ id });
-        if (result?.success) {
-          successCount++;
-        } else {
-          failCount++;
-        }
-      } catch {
-        failCount++;
+    results.forEach(result => {
+      if (result.status === 'fulfilled' && result.value.data?.success) {
+        successCount += 1;
+      } else {
+        failCount += 1;
       }
-    }
+    });
 
     if (successCount > 0) {
       ElMessage.success($t('common.batchRestoreSuccess', { count: successCount }) || `成功恢复 ${successCount} 个路由`);
@@ -112,7 +112,7 @@ async function handleBatchRestore() {
 }
 
 // 物理删除（单个）
-async function handleDelete(ids: number[], daysObsolete?: number) {
+async function handleDelete(ids: number[], _daysObsolete?: number) {
   // 检查废弃天数是否满足90天要求
   const minDays = 90;
   const itemsToDelete = data.value.filter(item => ids.includes(item.id));
@@ -122,7 +122,7 @@ async function handleDelete(ids: number[], daysObsolete?: number) {
   if (notReadyItems.length > 0) {
     ElMessage.warning(
       $t('common.minObsoleteDaysWarning', { days: minDays, routes: notReadyItems.map(i => i.name).join(', ') }) ||
-      `以下路由废弃天数不足 ${minDays} 天，无法删除：${notReadyItems.map(i => i.name).join(', ')}`
+        `以下路由废弃天数不足 ${minDays} 天，无法删除：${notReadyItems.map(i => i.name).join(', ')}`
     );
     return;
   }
@@ -212,20 +212,10 @@ onMounted(() => {
           <p>{{ $t('page.manage.menu.title') }} - {{ $t('page.manage.route.obsolete') }} ({{ paginationInfo }})</p>
           <div class="flex items-center gap-12px">
             <!-- 批量操作按钮 -->
-            <ElButton
-              type="success"
-              plain
-              :disabled="selectedIds.length === 0"
-              @click="handleBatchRestore"
-            >
+            <ElButton type="success" plain :disabled="selectedIds.length === 0" @click="handleBatchRestore">
               {{ $t('page.manage.route.batchRestore') || '批量恢复' }}
             </ElButton>
-            <ElButton
-              type="danger"
-              plain
-              :disabled="!canBatchDelete"
-              @click="handleBatchDelete"
-            >
+            <ElButton type="danger" plain :disabled="!canBatchDelete" @click="handleBatchDelete">
               {{ $t('common.batchDelete') || '批量删除' }}
             </ElButton>
             <ElInputNumber

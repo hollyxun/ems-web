@@ -21,7 +21,7 @@ interface FormModel {
 
 const model = ref<FormModel>({
   userName: 'admin',
-  password: '123456',
+  password: '12345678',
   captcha: ''
 });
 

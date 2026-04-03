@@ -6,7 +6,6 @@ import {
   fetchDeleteShiftSchedule,
   fetchGetShiftScheduleList,
   fetchGetShiftTypeList,
-  fetchGetTeamShiftCalendar,
   fetchUpdateShiftSchedule
 } from '@/service/api/shift';
 import { SetupStoreId } from '@/enum';

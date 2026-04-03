@@ -77,9 +77,7 @@ function extractRouteInfo(route: App.Route.RouteConfig): App.Route.RouteConfig {
   }
   // Recursively process children with stable sorting
   if (route.children && Array.isArray(route.children) && route.children.length > 0) {
-    info.children = route.children
-      .map(extractRouteInfo)
-      .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    info.children = route.children.map(extractRouteInfo).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   }
   return info;
 }
@@ -92,9 +90,7 @@ function extractRouteInfo(route: App.Route.RouteConfig): App.Route.RouteConfig {
  */
 function calculateRouteHash(routes: App.Route.RouteConfig[]): string {
   // Sort routes by name for stable hash calculation
-  const sortedRoutes = routes
-    .map(extractRouteInfo)
-    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  const sortedRoutes = routes.map(extractRouteInfo).sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
   // Use deterministic JSON serialization with sorted keys
   const jsonStr = stableJsonStringify(sortedRoutes);
@@ -117,7 +113,7 @@ function stableJsonStringify(obj: unknown): string {
 
   if (Array.isArray(obj)) {
     const items = obj.map(item => stableJsonStringify(item));
-    return '[' + items.join(',') + ']';
+    return `[${items.join(',')}]`;
   }
 
   // Sort keys alphabetically for stable output
@@ -125,9 +121,9 @@ function stableJsonStringify(obj: unknown): string {
   const keys = Object.keys(objRecord).sort();
   const pairs = keys.map(key => {
     const value = stableJsonStringify(objRecord[key]);
-    return '"' + key + '":' + value;
+    return `"${key}":${value}`;
   });
-  return '{' + pairs.join(',') + '}';
+  return `{${pairs.join(',')}}`;
 }
 
 /**
@@ -235,9 +231,7 @@ export async function syncRoutes(): Promise<boolean> {
 
   // Only super admin triggers sync
   const roles = authStore.userInfo.roles || [];
-  const isSuperAdmin = roles.some(
-    role => typeof role === 'object' && 'authorityId' in role && role.authorityId === 1
-  );
+  const isSuperAdmin = roles.some(role => typeof role === 'object' && 'authorityId' in role && role.authorityId === 1);
 
   if (!isSuperAdmin) {
     console.log('[RouteSync] User is not super admin, skipping sync');

@@ -261,6 +261,9 @@ const local: App.I18n.Schema = {
     'scheduling_shift-pattern': 'Shift Pattern',
     scheduling_calendar: 'Schedule Calendar',
     'scheduling_factory-calendar': 'Factory Calendar',
+    'scheduling_rule-config': 'Rule Config',
+    'scheduling_rule-version': 'Version Manage',
+    'scheduling_rule-template': 'Rule Template',
     'shift-schedule': 'Shift Schedule',
     'manage_advanced-permission': 'Advanced Permission',
     manage_organization: 'Organization'

@@ -198,6 +198,24 @@ export function fetchGeneratePatternDetails(data: Api.Scheduling.GeneratePattern
   });
 }
 
+/** generate pattern details by rule */
+export function fetchGeneratePatternDetailsByRule(data: Api.Scheduling.GeneratePatternDetailsByRuleParams) {
+  return request<Api.Scheduling.ShiftPatternDetail[]>({
+    url: '/api/v1/scheduling/shiftPattern/generatePatternDetailsByRule',
+    method: 'post',
+    data
+  });
+}
+
+/** generate pattern details with config */
+export function fetchGeneratePatternDetailsWithConfig(data: Api.Scheduling.GeneratePatternDetailsWithConfigParams) {
+  return request<Api.Scheduling.ShiftPatternDetail[]>({
+    url: '/api/v1/scheduling/shiftPattern/generatePatternDetailsWithConfig',
+    method: 'post',
+    data
+  });
+}
+
 /**
  * Schedule Calendar API
  */
@@ -365,5 +383,32 @@ export function fetchGetFactoryCalendarView(params: { year: number; month: numbe
     url: '/api/v1/scheduling/factoryCalendar/getFactoryCalendarView',
     method: 'get',
     params
+  });
+}
+
+/** generate factory calendar with mapping */
+export function fetchGenerateFactoryCalendarWithMapping(data: Api.Scheduling.GenerateFactoryCalendarWithMappingParams) {
+  return request<Api.Scheduling.FactoryCalendar>({
+    url: '/api/v1/scheduling/factoryCalendar/generateFactoryCalendarWithMapping',
+    method: 'post',
+    data
+  });
+}
+
+/** get natural month mapping */
+export function fetchGetNaturalMonthMapping(id: number) {
+  return request<Api.Scheduling.NaturalMonthMappingInfo>({
+    url: '/api/v1/scheduling/factoryCalendar/getNaturalMonthMapping',
+    method: 'get',
+    params: { id }
+  });
+}
+
+/** update mapping config */
+export function fetchUpdateMappingConfig(data: Api.Scheduling.UpdateMappingConfigParams) {
+  return request<boolean>({
+    url: '/api/v1/scheduling/factoryCalendar/updateMappingConfig',
+    method: 'put',
+    data
   });
 }
