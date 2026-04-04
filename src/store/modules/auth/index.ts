@@ -20,6 +20,12 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   const token = ref(getToken());
 
+  /** Check if debug mode is enabled */
+  const isDebugMode = computed(() => {
+    const { VITE_DEBUG_MODE } = import.meta.env;
+    return VITE_DEBUG_MODE === 'Y' || VITE_DEBUG_MODE === 'true';
+  });
+
   const userInfo: Api.Auth.UserInfo = reactive({
     id: 0,
     uuid: '',
@@ -237,15 +243,45 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     }
   }
 
+  /** Initialize debug user for automated testing */
+  function initDebugUser() {
+    if (!isDebugMode.value) return false;
+
+    // Set mock token
+    const mockToken = 'debug-mock-token-' + Date.now();
+    localStg.set('token', mockToken);
+    token.value = mockToken;
+
+    // Set mock user info with super admin role
+    Object.assign(userInfo, {
+      id: 1,
+      uuid: 'debug-user-uuid',
+      username: 'debug-user',
+      nickName: 'Debug User',
+      headerImg: '',
+      phone: '',
+      email: 'debug@test.com',
+      enabled: 1,
+      roles: [{ authorityId: 1, authorityName: '超级管理员' }],
+      buttons: [],
+      userId: '1',
+      userName: 'debug-user'
+    });
+
+    return true;
+  }
+
   return {
     token,
     userInfo,
     isStaticSuper,
     isLogin,
     loginLoading,
+    isDebugMode,
     resetStore,
     login,
     initUserInfo,
+    initDebugUser,
     fetchButtonPermissions
   };
 });

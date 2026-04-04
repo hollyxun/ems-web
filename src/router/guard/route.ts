@@ -11,6 +11,12 @@ import { useRouteStore } from '@/store/modules/route';
 import { localStg } from '@/utils/storage';
 import { getRouteName } from '@/router/elegant/transform';
 
+/** Check if debug mode is enabled */
+function isDebugModeEnabled(): boolean {
+  const { VITE_DEBUG_MODE } = import.meta.env;
+  return VITE_DEBUG_MODE === 'Y' || VITE_DEBUG_MODE === 'true';
+}
+
 /**
  * create route guard
  *
@@ -18,6 +24,12 @@ import { getRouteName } from '@/router/elegant/transform';
  */
 export function createRouteGuard(router: Router) {
   router.beforeEach(async (to, from, next) => {
+    // Debug mode: auto-login with mock user
+    if (isDebugModeEnabled() && !localStg.get('token')) {
+      const authStore = useAuthStore();
+      authStore.initDebugUser();
+    }
+
     const location = await initRoute(to);
 
     if (location) {

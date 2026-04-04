@@ -240,13 +240,14 @@ const local: App.I18n.Schema = {
     plugin_tables: 'Tables',
     plugin_tables_vtable: 'VTable',
     energy: 'Energy Management',
-    'energy_base-data': 'Base Data',
-    'energy_base-data_coefficient': 'Coefficient',
-    'energy_base-data_ledger': 'Ledger',
-    'energy_base-data_medium': 'Medium',
-    'energy_base-data_unit': 'Unit',
-    'energy_base-data_meter': 'Meter',
-    'energy_base-data_tou': 'Time of Use',
+    'base-data': 'Base Data Management',
+    'base-data_home': 'Base Data Overview',
+    'base-data_medium': 'Medium Settings',
+    'base-data_unit': 'Unit Settings',
+    'base-data_coefficient': 'Coefficient',
+    'base-data_meter': 'Meter Settings',
+    'base-data_tou': 'Time of Use',
+    'base-data_virtual-meter': 'Virtual Meter',
     energy_dashboard: 'Dashboard',
     energy_comparison: 'Comparison',
     energy_flow: 'Energy Flow',
@@ -264,9 +265,10 @@ const local: App.I18n.Schema = {
     'scheduling_rule-config': 'Rule Config',
     'scheduling_rule-version': 'Version Manage',
     'scheduling_rule-template': 'Rule Template',
-    'shift-schedule': 'Shift Schedule',
     'manage_advanced-permission': 'Advanced Permission',
-    manage_organization: 'Organization'
+    manage_organization: 'Organization',
+    gatewaySetting: 'Gateway Setting',
+    'gatewaySetting_manage': 'Gateway Config'
   },
   page: {
     login: {
@@ -327,36 +329,7 @@ const local: App.I18n.Schema = {
         previewLink: 'Preview Link'
       },
       prdDep: 'Production Dependency',
-      devDep: 'Development Dependency',
-      server: {
-        title: 'Server Status',
-        cpu: 'CPU',
-        cpuCores: 'Cores',
-        cpuUser: 'User',
-        cpuSystem: 'System',
-        cpuIdle: 'Idle',
-        memory: 'Memory',
-        memoryTotal: 'Total',
-        memoryUsed: 'Used',
-        memoryAvailable: 'Available',
-        memoryUsage: 'Usage',
-        os: 'OS',
-        osType: 'Type',
-        osPlatform: 'Platform',
-        osVersion: 'Version',
-        osArch: 'Arch',
-        uptime: 'Uptime',
-        uptimeBootTime: 'Boot Time',
-        ports: 'Ports',
-        portListening: 'Listening',
-        portClosed: 'Closed',
-        version: 'Version Info',
-        systemVersion: 'System Version',
-        backendVersion: 'Backend Version',
-        frontendVersion: 'Frontend Version',
-        autoRefresh: 'Auto Refresh',
-        refresh: 'Refresh'
-      }
+      devDep: 'Development Dependency'
     },
     home: {
       branchDesc:
@@ -663,6 +636,75 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: 'Total {total} items'
+  },
+  devtools: {
+    server: {
+      title: 'Server Status',
+      cpu: 'CPU',
+      cpuCores: 'Cores',
+      cpuUser: 'User',
+      cpuSystem: 'System',
+      cpuIdle: 'Idle',
+      memory: 'Memory',
+      memoryTotal: 'Total',
+      memoryUsed: 'Used',
+      memoryAvailable: 'Available',
+      memoryUsage: 'Usage',
+      os: 'OS',
+      osType: 'Type',
+      osPlatform: 'Platform',
+      osVersion: 'Version',
+      osArch: 'Arch',
+      uptime: 'Uptime',
+      uptimeBootTime: 'Boot Time',
+      ports: 'Ports',
+      portListening: 'Listening',
+      portClosed: 'Closed',
+      version: 'Version Info',
+      systemVersion: 'System Version',
+      backendVersion: 'Backend Version',
+      frontendVersion: 'Frontend Version',
+      autoRefresh: 'Auto Refresh',
+      refresh: 'Refresh'
+    },
+    aiChat: {
+      title: 'AI Assistant',
+      config: {
+        title: 'Configuration',
+        baseUrl: 'Base URL',
+        baseUrlPlaceholder: 'Please enter API base URL',
+        apiKey: 'API Key',
+        apiKeyPlaceholder: 'Please enter API Key',
+        defaultModel: 'Default Model',
+        defaultModelPlaceholder: 'Please enter default model name',
+        saveConfig: 'Save Config',
+        clearConfig: 'Clear Config',
+        getModels: 'Get Models',
+        configGuide: 'Config Guide'
+      },
+      session: {
+        newChat: 'New Chat',
+        createSession: 'Create Session',
+        sessionLimit: 'Session limit reached',
+        clearAll: 'Clear All',
+        deleteConfirm: 'Are you sure you want to delete this session?',
+        clearAllConfirm: 'Are you sure you want to clear all sessions?',
+        selectModel: 'Select Model'
+      },
+      chat: {
+        inputPlaceholder: 'Enter message...',
+        send: 'Send',
+        thinking: 'Thinking...',
+        startChat: 'Start Chat',
+        inputHint: 'Press Enter to send, Shift+Enter for new line',
+        messageLimit: 'Message limit reached',
+        messageCount: 'Messages',
+        regenerate: 'Regenerate',
+        stop: 'Stop',
+        copy: 'Copy',
+        copied: 'Copied'
+      }
+    }
   }
 };
 

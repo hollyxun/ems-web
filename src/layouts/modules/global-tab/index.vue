@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from 'vue';
+import { nextTick, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useElementBounding } from '@vueuse/core';
 import { PageTab } from '@sa/materials';
@@ -29,23 +29,47 @@ type TabNamedNodeMap = NamedNodeMap & {
   [TAB_DATA_ID]: Attr;
 };
 
+// 用于取消过期的滚动操作
+let scrollAbortController: AbortController | null = null;
+
 async function scrollToActiveTab() {
+  // 取消之前的滚动操作
+  if (scrollAbortController) {
+    scrollAbortController.abort();
+  }
+  scrollAbortController = new AbortController();
+  const signal = scrollAbortController.signal;
+
   await nextTick();
-  if (!tabRef.value) return;
+
+  // 检查是否已取消或组件已卸载
+  if (signal.aborted || !tabRef.value) return;
 
   const { children } = tabRef.value;
 
   for (let i = 0; i < children.length; i += 1) {
+    // 检查是否已取消
+    if (signal.aborted) return;
+
     const child = children[i];
 
-    const { value: tabId } = (child.attributes as TabNamedNodeMap)[TAB_DATA_ID];
+    // 防御性检查
+    if (!child || !child.attributes) continue;
+
+    const attr = (child.attributes as TabNamedNodeMap)[TAB_DATA_ID];
+    if (!attr) continue;
+
+    const { value: tabId } = attr;
 
     if (tabId === tabStore.activeTabId) {
       const { left, width } = child.getBoundingClientRect();
       const clientX = left + width / 2;
 
       setTimeout(() => {
-        scrollByClientX(clientX);
+        // 执行前再次检查是否已取消
+        if (!signal.aborted) {
+          scrollByClientX(clientX);
+        }
       }, 50);
 
       break;
@@ -158,6 +182,14 @@ watch(
 
 // init
 init();
+
+// cleanup
+onUnmounted(() => {
+  if (scrollAbortController) {
+    scrollAbortController.abort();
+    scrollAbortController = null;
+  }
+});
 </script>
 
 <template>

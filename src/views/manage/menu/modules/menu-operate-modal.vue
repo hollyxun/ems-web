@@ -154,7 +154,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <ElDialog v-model="visible" :title="title" class="w-600px">
+  <ElDialog v-model="visible" :title="title" class="w-900px">
     <ElScrollbar class="h-400px pr-20px">
       <ElForm ref="formRef" :model="model" :rules="rules" label-position="right" :label-width="100">
         <ElRow :gutter="20">

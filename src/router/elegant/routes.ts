@@ -51,6 +51,44 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'alarm',
+    path: '/alarm',
+    component: 'layout.base',
+    meta: {
+      title: 'alarm',
+      i18nKey: 'route.alarm'
+    },
+    children: [
+      {
+        name: 'alarm_history',
+        path: '/alarm/history',
+        component: 'view.alarm_history',
+        meta: {
+          title: 'alarm_history',
+          i18nKey: 'route.alarm_history'
+        }
+      },
+      {
+        name: 'alarm_item',
+        path: '/alarm/item',
+        component: 'view.alarm_item',
+        meta: {
+          title: 'alarm_item',
+          i18nKey: 'route.alarm_item'
+        }
+      },
+      {
+        name: 'alarm_limit-type',
+        path: '/alarm/limit-type',
+        component: 'view.alarm_limit-type',
+        meta: {
+          title: 'alarm_limit-type',
+          i18nKey: 'route.alarm_limit-type'
+        }
+      }
+    ]
+  },
+  {
     name: 'alova',
     path: '/alova',
     component: 'layout.base',
@@ -91,6 +129,241 @@ export const generatedRoutes: GeneratedRoute[] = [
           i18nKey: 'route.alova_user',
           icon: 'carbon:user-multiple',
           order: 2
+        }
+      }
+    ]
+  },
+  {
+    name: 'analysis',
+    path: '/analysis',
+    component: 'layout.base',
+    meta: {
+      title: 'analysis',
+      i18nKey: 'route.analysis'
+    },
+    children: [
+      {
+        name: 'analysis_consumption',
+        path: '/analysis/consumption',
+        component: 'view.analysis_consumption',
+        meta: {
+          title: 'analysis_consumption',
+          i18nKey: 'route.analysis_consumption'
+        }
+      }
+    ]
+  },
+  {
+    name: 'base-data',
+    path: '/base-data',
+    component: 'layout.base',
+    meta: {
+      title: 'base-data',
+      i18nKey: 'route.base-data'
+    },
+    children: [
+      {
+        name: 'base-data_coefficient',
+        path: '/base-data/coefficient',
+        component: 'view.base-data_coefficient',
+        meta: {
+          title: 'base-data_coefficient',
+          i18nKey: 'route.base-data_coefficient'
+        }
+      },
+      {
+        name: 'base-data_home',
+        path: '/base-data/home',
+        component: 'view.base-data_home',
+        meta: {
+          title: 'base-data_home',
+          i18nKey: 'route.base-data_home'
+        }
+      },
+      {
+        name: 'base-data_medium',
+        path: '/base-data/medium',
+        component: 'view.base-data_medium',
+        meta: {
+          title: 'base-data_medium',
+          i18nKey: 'route.base-data_medium'
+        }
+      },
+      {
+        name: 'base-data_meter',
+        path: '/base-data/meter',
+        component: 'view.base-data_meter',
+        meta: {
+          title: 'base-data_meter',
+          i18nKey: 'route.base-data_meter'
+        }
+      },
+      {
+        name: 'base-data_power-distribution',
+        path: '/base-data/power-distribution',
+        component: 'view.base-data_power-distribution',
+        meta: {
+          title: 'base-data_power-distribution',
+          i18nKey: 'route.base-data_power-distribution'
+        }
+      },
+      {
+        name: 'base-data_tou',
+        path: '/base-data/tou',
+        component: 'view.base-data_tou',
+        meta: {
+          title: 'base-data_tou',
+          i18nKey: 'route.base-data_tou'
+        }
+      },
+      {
+        name: 'base-data_unit',
+        path: '/base-data/unit',
+        component: 'view.base-data_unit',
+        meta: {
+          title: 'base-data_unit',
+          i18nKey: 'route.base-data_unit'
+        }
+      },
+      {
+        name: 'base-data_virtual-meter',
+        path: '/base-data/virtual-meter',
+        component: 'view.base-data_virtual-meter',
+        meta: {
+          title: 'base-data_virtual-meter',
+          i18nKey: 'route.base-data_virtual-meter'
+        }
+      }
+    ]
+  },
+  {
+    name: 'benchmark',
+    path: '/benchmark',
+    component: 'layout.base$view.benchmark',
+    meta: {
+      title: 'benchmark',
+      i18nKey: 'route.benchmark'
+    }
+  },
+  {
+    name: 'branchanalysis',
+    path: '/branchanalysis',
+    component: 'layout.base$view.branchanalysis',
+    meta: {
+      title: 'branchanalysis',
+      i18nKey: 'route.branchanalysis'
+    }
+  },
+  {
+    name: 'carbonemission',
+    path: '/carbonemission',
+    component: 'layout.base',
+    meta: {
+      title: 'carbonemission',
+      i18nKey: 'route.carbonemission'
+    },
+    children: [
+      {
+        name: 'carbonemission_calculate',
+        path: '/carbonemission/calculate',
+        component: 'view.carbonemission_calculate',
+        meta: {
+          title: 'carbonemission_calculate',
+          i18nKey: 'route.carbonemission_calculate'
+        }
+      }
+    ]
+  },
+  {
+    name: 'comprehensivestatistics',
+    path: '/comprehensivestatistics',
+    component: 'layout.base$view.comprehensivestatistics',
+    meta: {
+      title: 'comprehensivestatistics',
+      i18nKey: 'route.comprehensivestatistics'
+    }
+  },
+  {
+    name: 'consumptionanalysis',
+    path: '/consumptionanalysis',
+    component: 'layout.base$view.consumptionanalysis',
+    meta: {
+      title: 'consumptionanalysis',
+      i18nKey: 'route.consumptionanalysis'
+    }
+  },
+  {
+    name: 'cost',
+    path: '/cost',
+    component: 'layout.base',
+    meta: {
+      title: 'cost',
+      i18nKey: 'route.cost'
+    },
+    children: [
+      {
+        name: 'cost_electricity',
+        path: '/cost/electricity',
+        component: 'view.cost_electricity',
+        meta: {
+          title: 'cost_electricity',
+          i18nKey: 'route.cost_electricity'
+        }
+      },
+      {
+        name: 'cost_tactics',
+        path: '/cost/tactics',
+        component: 'view.cost_tactics',
+        meta: {
+          title: 'cost_tactics',
+          i18nKey: 'route.cost_tactics'
+        }
+      },
+      {
+        name: 'cost_trend',
+        path: '/cost/trend',
+        component: 'view.cost_trend',
+        meta: {
+          title: 'cost_trend',
+          i18nKey: 'route.cost_trend'
+        }
+      }
+    ]
+  },
+  {
+    name: 'costmanagement',
+    path: '/costmanagement',
+    component: 'layout.base',
+    meta: {
+      title: 'costmanagement',
+      i18nKey: 'route.costmanagement'
+    },
+    children: [
+      {
+        name: 'costmanagement_electricity',
+        path: '/costmanagement/electricity',
+        component: 'view.costmanagement_electricity',
+        meta: {
+          title: 'costmanagement_electricity',
+          i18nKey: 'route.costmanagement_electricity'
+        }
+      },
+      {
+        name: 'costmanagement_tactics',
+        path: '/costmanagement/tactics',
+        component: 'view.costmanagement_tactics',
+        meta: {
+          title: 'costmanagement_tactics',
+          i18nKey: 'route.costmanagement_tactics'
+        }
+      },
+      {
+        name: 'costmanagement_trend',
+        path: '/costmanagement/trend',
+        component: 'view.costmanagement_trend',
+        meta: {
+          title: 'costmanagement_trend',
+          i18nKey: 'route.costmanagement_trend'
         }
       }
     ]
@@ -169,6 +442,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         ]
       },
       {
+        name: 'energy_branch-analysis',
+        path: '/energy/branch-analysis',
+        component: 'view.energy_branch-analysis',
+        meta: {
+          title: 'energy_branch-analysis',
+          i18nKey: 'route.energy_branch-analysis'
+        }
+      },
+      {
         name: 'energy_comparison',
         path: '/energy/comparison',
         component: 'view.energy_comparison',
@@ -185,6 +467,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'energy_dashboard',
           i18nKey: 'route.energy_dashboard'
+        }
+      },
+      {
+        name: 'energy_electric-analysis',
+        path: '/energy/electric-analysis',
+        component: 'view.energy_electric-analysis',
+        meta: {
+          title: 'energy_electric-analysis',
+          i18nKey: 'route.energy_electric-analysis'
         }
       },
       {
@@ -217,6 +508,72 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       }
     ]
+  },
+  {
+    name: 'energy-analysis',
+    path: '/energy-analysis',
+    component: 'layout.base',
+    meta: {
+      title: 'energy-analysis',
+      i18nKey: 'route.energy-analysis'
+    },
+    children: [
+      {
+        name: 'energy-analysis_comprehensive',
+        path: '/energy-analysis/comprehensive',
+        meta: {
+          title: 'energy-analysis_comprehensive',
+          i18nKey: 'route.energy-analysis_comprehensive'
+        },
+        children: [
+          {
+            name: 'energy-analysis_comprehensive_daily',
+            path: '/energy-analysis/comprehensive/daily',
+            component: 'view.energy-analysis_comprehensive_daily',
+            meta: {
+              title: 'energy-analysis_comprehensive_daily',
+              i18nKey: 'route.energy-analysis_comprehensive_daily'
+            }
+          },
+          {
+            name: 'energy-analysis_comprehensive_monthly',
+            path: '/energy-analysis/comprehensive/monthly',
+            component: 'view.energy-analysis_comprehensive_monthly',
+            meta: {
+              title: 'energy-analysis_comprehensive_monthly',
+              i18nKey: 'route.energy-analysis_comprehensive_monthly'
+            }
+          },
+          {
+            name: 'energy-analysis_comprehensive_statistics',
+            path: '/energy-analysis/comprehensive/statistics',
+            component: 'view.energy-analysis_comprehensive_statistics',
+            meta: {
+              title: 'energy-analysis_comprehensive_statistics',
+              i18nKey: 'route.energy-analysis_comprehensive_statistics'
+            }
+          },
+          {
+            name: 'energy-analysis_comprehensive_year',
+            path: '/energy-analysis/comprehensive/year',
+            component: 'view.energy-analysis_comprehensive_year',
+            meta: {
+              title: 'energy-analysis_comprehensive_year',
+              i18nKey: 'route.energy-analysis_comprehensive_year'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'energy-indicators',
+    path: '/energy-indicators',
+    component: 'layout.base$view.energy-indicators',
+    meta: {
+      title: 'energy-indicators',
+      i18nKey: 'route.energy-indicators'
+    }
   },
   {
     name: 'function',
@@ -337,6 +694,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'gatewaysetting',
+    path: '/gatewaysetting',
+    component: 'layout.base$view.gatewaysetting',
+    meta: {
+      title: 'gatewaysetting',
+      i18nKey: 'route.gatewaysetting'
+    }
+  },
+  {
     name: 'home',
     path: '/home',
     component: 'layout.base$view.home',
@@ -358,6 +724,71 @@ export const generatedRoutes: GeneratedRoute[] = [
       constant: true,
       hideInMenu: true,
       keepAlive: true
+    }
+  },
+  {
+    name: 'itemized',
+    path: '/itemized',
+    component: 'layout.base$view.itemized',
+    meta: {
+      title: 'itemized',
+      i18nKey: 'route.itemized'
+    }
+  },
+  {
+    name: 'itemizedenergyanalysis',
+    path: '/itemizedenergyanalysis',
+    component: 'layout.base$view.itemizedenergyanalysis',
+    meta: {
+      title: 'itemizedenergyanalysis',
+      i18nKey: 'route.itemizedenergyanalysis'
+    }
+  },
+  {
+    name: 'keyequipment',
+    path: '/keyequipment',
+    component: 'layout.base',
+    meta: {
+      title: 'keyequipment',
+      i18nKey: 'route.keyequipment'
+    },
+    children: [
+      {
+        name: 'keyequipment_daily',
+        path: '/keyequipment/daily',
+        component: 'view.keyequipment_daily',
+        meta: {
+          title: 'keyequipment_daily',
+          i18nKey: 'route.keyequipment_daily'
+        }
+      },
+      {
+        name: 'keyequipment_monthly',
+        path: '/keyequipment/monthly',
+        component: 'view.keyequipment_monthly',
+        meta: {
+          title: 'keyequipment_monthly',
+          i18nKey: 'route.keyequipment_monthly'
+        }
+      },
+      {
+        name: 'keyequipment_year',
+        path: '/keyequipment/year',
+        component: 'view.keyequipment_year',
+        meta: {
+          title: 'keyequipment_year',
+          i18nKey: 'route.keyequipment_year'
+        }
+      }
+    ]
+  },
+  {
+    name: 'knowledge',
+    path: '/knowledge',
+    component: 'layout.base$view.knowledge',
+    meta: {
+      title: 'knowledge',
+      i18nKey: 'route.knowledge'
     }
   },
   {
@@ -500,6 +931,24 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       }
     ]
+  },
+  {
+    name: 'peakvalley',
+    path: '/peakvalley',
+    component: 'layout.base$view.peakvalley',
+    meta: {
+      title: 'peakvalley',
+      i18nKey: 'route.peakvalley'
+    }
+  },
+  {
+    name: 'peakvalley-analysis',
+    path: '/peakvalley-analysis',
+    component: 'layout.base$view.peakvalley-analysis',
+    meta: {
+      title: 'peakvalley-analysis',
+      i18nKey: 'route.peakvalley-analysis'
+    }
   },
   {
     name: 'plugin',
@@ -750,6 +1199,72 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'process-energy',
+    path: '/process-energy',
+    component: 'layout.base',
+    meta: {
+      title: 'process-energy',
+      i18nKey: 'route.process-energy'
+    },
+    children: [
+      {
+        name: 'process-energy_statistics',
+        path: '/process-energy/statistics',
+        meta: {
+          title: 'process-energy_statistics',
+          i18nKey: 'route.process-energy_statistics'
+        },
+        children: [
+          {
+            name: 'process-energy_statistics_daily',
+            path: '/process-energy/statistics/daily',
+            component: 'view.process-energy_statistics_daily',
+            meta: {
+              title: 'process-energy_statistics_daily',
+              i18nKey: 'route.process-energy_statistics_daily'
+            }
+          },
+          {
+            name: 'process-energy_statistics_monthly',
+            path: '/process-energy/statistics/monthly',
+            component: 'view.process-energy_statistics_monthly',
+            meta: {
+              title: 'process-energy_statistics_monthly',
+              i18nKey: 'route.process-energy_statistics_monthly'
+            }
+          },
+          {
+            name: 'process-energy_statistics_year',
+            path: '/process-energy/statistics/year',
+            component: 'view.process-energy_statistics_year',
+            meta: {
+              title: 'process-energy_statistics_year',
+              i18nKey: 'route.process-energy_statistics_year'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'processenergy',
+    path: '/processenergy',
+    component: 'layout.base$view.processenergy',
+    meta: {
+      title: 'processenergy',
+      i18nKey: 'route.processenergy'
+    }
+  },
+  {
+    name: 'productoutput',
+    path: '/productoutput',
+    component: 'layout.base$view.productoutput',
+    meta: {
+      title: 'productoutput',
+      i18nKey: 'route.productoutput'
+    }
+  },
+  {
     name: 'profile',
     path: '/profile',
     component: 'layout.base',
@@ -774,6 +1289,35 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'profile_password',
           i18nKey: 'route.profile_password'
+        }
+      }
+    ]
+  },
+  {
+    name: 'saving',
+    path: '/saving',
+    component: 'layout.base',
+    meta: {
+      title: 'saving',
+      i18nKey: 'route.saving'
+    },
+    children: [
+      {
+        name: 'saving_policy',
+        path: '/saving/policy',
+        component: 'view.saving_policy',
+        meta: {
+          title: 'saving_policy',
+          i18nKey: 'route.saving_policy'
+        }
+      },
+      {
+        name: 'saving_program',
+        path: '/saving/program',
+        component: 'view.saving_program',
+        meta: {
+          title: 'saving_program',
+          i18nKey: 'route.saving_program'
         }
       }
     ]
@@ -857,6 +1401,53 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'scheduling_team',
           i18nKey: 'route.scheduling_team'
+        }
+      }
+    ]
+  },
+  {
+    name: 'spikesandvalleys',
+    path: '/spikesandvalleys',
+    component: 'layout.base$view.spikesandvalleys',
+    meta: {
+      title: 'spikesandvalleys',
+      i18nKey: 'route.spikesandvalleys'
+    }
+  },
+  {
+    name: 'statistical',
+    path: '/statistical',
+    component: 'layout.base',
+    meta: {
+      title: 'statistical',
+      i18nKey: 'route.statistical'
+    },
+    children: [
+      {
+        name: 'statistical_cost',
+        path: '/statistical/cost',
+        component: 'view.statistical_cost',
+        meta: {
+          title: 'statistical_cost',
+          i18nKey: 'route.statistical_cost'
+        }
+      },
+      {
+        name: 'statistical_flow',
+        path: '/statistical/flow',
+        component: 'view.statistical_flow',
+        meta: {
+          title: 'statistical_flow',
+          i18nKey: 'route.statistical_flow'
+        }
+      },
+      {
+        name: 'statistical_yoy-mom',
+        path: '/statistical/yoy-mom',
+        component: 'view.statistical_yoy-mom',
+        meta: {
+          title: 'statistical_yoy-mom',
+          i18nKey: 'route.statistical_yoy-mom'
         }
       }
     ]

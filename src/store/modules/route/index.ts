@@ -161,6 +161,12 @@ function setCachedRouteVersion(version: string): void {
   localStorage.setItem('ems_route_version', version);
 }
 
+/** Check if debug mode is enabled */
+function isDebugModeEnabled(): boolean {
+  const { VITE_DEBUG_MODE } = import.meta.env;
+  return VITE_DEBUG_MODE === 'Y' || VITE_DEBUG_MODE === 'true';
+}
+
 export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   const authStore = useAuthStore();
   const tabStore = useTabStore();
@@ -322,6 +328,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
    * 原因：数据库重置后路由表为空，需要先同步才能获取用户路由
    */
   async function syncRoutesWithBackend(): Promise<void> {
+    // Debug mode: skip backend sync
+    if (isDebugModeEnabled()) {
+      console.log('[RouteSync] Debug mode, skip backend sync');
+      return;
+    }
+
     // 仅在动态路由模式下执行同步
     if (authRouteMode.value !== 'dynamic') {
       return;
@@ -398,6 +410,13 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     // check if user info is initialized
     if (!authStore.userInfo.userId) {
       await authStore.initUserInfo();
+    }
+
+    // Debug mode: always use static routes to avoid API calls with mock token
+    if (isDebugModeEnabled()) {
+      console.log('[RouteSync] Debug mode, using static routes');
+      initStaticAuthRoute();
+      return;
     }
 
     if (authRouteMode.value === 'static') {

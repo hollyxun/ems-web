@@ -239,11 +239,19 @@ const local: App.I18n.Schema = {
     plugin_tables: '表格',
     plugin_tables_vtable: 'VTable',
     energy: '能源管理',
-    'energy_base-data': '基础数据',
-    'energy_base-data_coefficient': '系数管理',
-    'energy_base-data_ledger': '台账管理',
-    'energy_base-data_medium': '介质管理',
-    'energy_base-data_unit': '单位管理',
+    'base-data': '基础数据管理',
+    'base-data_home': '基础数据概览',
+    'base-data_medium': '介质设置',
+    'base-data_unit': '单位设置',
+    'base-data_coefficient': '转换系数',
+    'base-data_meter': '计量点设置',
+    'base-data_tou': '分时电价',
+    'base-data_virtual-meter': '虚拟计量点',
+    energy_comparison: '能耗对比',
+    energy_dashboard: '能耗看板',
+    energy_flow: '能流图',
+    energy_ranking: '能效排名',
+    energy_report: '能耗报表',
     profile: '个人中心',
     profile_info: '个人信息',
     profile_password: '修改密码',
@@ -256,16 +264,10 @@ const local: App.I18n.Schema = {
     'scheduling_rule-config': '规则配置',
     'scheduling_rule-version': '版本管理',
     'scheduling_rule-template': '规则模板',
-    'shift-schedule': '班组排班管理',
-    'energy_base-data_meter': '计量点管理',
-    'energy_base-data_tou': '分时电价',
-    energy_comparison: '能耗对比',
-    energy_dashboard: '能耗看板',
-    energy_flow: '能流图',
-    energy_ranking: '能效排名',
-    energy_report: '能耗报表',
     'manage_advanced-permission': '高级权限',
-    manage_organization: '组织架构'
+    manage_organization: '组织架构',
+    gatewaySetting: '网关设置',
+    'gatewaySetting_manage': '网关配置管理'
   },
   page: {
     login: {
@@ -326,36 +328,7 @@ const local: App.I18n.Schema = {
         previewLink: '预览地址'
       },
       prdDep: '生产依赖',
-      devDep: '开发依赖',
-      server: {
-        title: '服务器状态',
-        cpu: 'CPU',
-        cpuCores: '核心数',
-        cpuUser: '用户态',
-        cpuSystem: '系统态',
-        cpuIdle: '空闲',
-        memory: '内存',
-        memoryTotal: '总量',
-        memoryUsed: '已用',
-        memoryAvailable: '可用',
-        memoryUsage: '使用率',
-        os: '操作系统',
-        osType: '系统类型',
-        osPlatform: '平台',
-        osVersion: '版本',
-        osArch: '架构',
-        uptime: '运行时长',
-        uptimeBootTime: '启动时间',
-        ports: '服务端口',
-        portListening: '监听中',
-        portClosed: '未监听',
-        version: '版本信息',
-        systemVersion: '系统版本',
-        backendVersion: '后端依赖',
-        frontendVersion: '前端依赖',
-        autoRefresh: '自动刷新',
-        refresh: '刷新'
-      }
+      devDep: '开发依赖'
     },
     home: {
       branchDesc:
@@ -662,6 +635,75 @@ const local: App.I18n.Schema = {
   },
   datatable: {
     itemCount: '共 {total} 条'
+  },
+  devtools: {
+    server: {
+      title: '服务器状态',
+      cpu: 'CPU',
+      cpuCores: '核心数',
+      cpuUser: '用户态',
+      cpuSystem: '系统态',
+      cpuIdle: '空闲',
+      memory: '内存',
+      memoryTotal: '总量',
+      memoryUsed: '已用',
+      memoryAvailable: '可用',
+      memoryUsage: '使用率',
+      os: '操作系统',
+      osType: '系统类型',
+      osPlatform: '平台',
+      osVersion: '版本',
+      osArch: '架构',
+      uptime: '运行时长',
+      uptimeBootTime: '启动时间',
+      ports: '服务端口',
+      portListening: '监听中',
+      portClosed: '未监听',
+      version: '版本信息',
+      systemVersion: '系统版本',
+      backendVersion: '后端依赖',
+      frontendVersion: '前端依赖',
+      autoRefresh: '自动刷新',
+      refresh: '刷新'
+    },
+    aiChat: {
+      title: 'AI 助手',
+      config: {
+        title: '配置',
+        baseUrl: '基础URL',
+        baseUrlPlaceholder: '请输入 API 基础 URL',
+        apiKey: 'API密钥',
+        apiKeyPlaceholder: '请输入 API Key',
+        defaultModel: '默认模型',
+        defaultModelPlaceholder: '请输入默认模型名称',
+        saveConfig: '保存配置',
+        clearConfig: '清除配置',
+        getModels: '获取模型列表',
+        configGuide: '配置指南'
+      },
+      session: {
+        newChat: '新对话',
+        createSession: '创建会话',
+        sessionLimit: '会话数量已达上限',
+        clearAll: '清空全部',
+        deleteConfirm: '确定删除该会话？',
+        clearAllConfirm: '确定清空所有会话？',
+        selectModel: '选择模型'
+      },
+      chat: {
+        inputPlaceholder: '输入消息...',
+        send: '发送',
+        thinking: '思考中...',
+        startChat: '开始对话',
+        inputHint: '按 Enter 发送，Shift+Enter 换行',
+        messageLimit: '消息数量已达上限',
+        messageCount: '消息数',
+        regenerate: '重新生成',
+        stop: '停止',
+        copy: '复制',
+        copied: '已复制'
+      }
+    }
   }
 };
 

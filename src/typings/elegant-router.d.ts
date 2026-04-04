@@ -35,10 +35,39 @@ declare module "@elegant-router/types" {
     "404": "/404";
     "500": "/500";
     "about": "/about";
+    "alarm": "/alarm";
+    "alarm_history": "/alarm/history";
+    "alarm_item": "/alarm/item";
+    "alarm_limit-type": "/alarm/limit-type";
     "alova": "/alova";
     "alova_request": "/alova/request";
     "alova_scenes": "/alova/scenes";
     "alova_user": "/alova/user";
+    "analysis": "/analysis";
+    "analysis_consumption": "/analysis/consumption";
+    "base-data": "/base-data";
+    "base-data_coefficient": "/base-data/coefficient";
+    "base-data_home": "/base-data/home";
+    "base-data_medium": "/base-data/medium";
+    "base-data_meter": "/base-data/meter";
+    "base-data_power-distribution": "/base-data/power-distribution";
+    "base-data_tou": "/base-data/tou";
+    "base-data_unit": "/base-data/unit";
+    "base-data_virtual-meter": "/base-data/virtual-meter";
+    "benchmark": "/benchmark";
+    "branchanalysis": "/branchanalysis";
+    "carbonemission": "/carbonemission";
+    "carbonemission_calculate": "/carbonemission/calculate";
+    "comprehensivestatistics": "/comprehensivestatistics";
+    "consumptionanalysis": "/consumptionanalysis";
+    "cost": "/cost";
+    "cost_electricity": "/cost/electricity";
+    "cost_tactics": "/cost/tactics";
+    "cost_trend": "/cost/trend";
+    "costmanagement": "/costmanagement";
+    "costmanagement_electricity": "/costmanagement/electricity";
+    "costmanagement_tactics": "/costmanagement/tactics";
+    "costmanagement_trend": "/costmanagement/trend";
     "energy": "/energy";
     "energy_base-data": "/energy/base-data";
     "energy_base-data_coefficient": "/energy/base-data/coefficient";
@@ -47,11 +76,20 @@ declare module "@elegant-router/types" {
     "energy_base-data_meter": "/energy/base-data/meter";
     "energy_base-data_tou": "/energy/base-data/tou";
     "energy_base-data_unit": "/energy/base-data/unit";
+    "energy_branch-analysis": "/energy/branch-analysis";
     "energy_comparison": "/energy/comparison";
     "energy_dashboard": "/energy/dashboard";
+    "energy_electric-analysis": "/energy/electric-analysis";
     "energy_flow": "/energy/flow";
     "energy_ranking": "/energy/ranking";
     "energy_report": "/energy/report";
+    "energy-analysis": "/energy-analysis";
+    "energy-analysis_comprehensive": "/energy-analysis/comprehensive";
+    "energy-analysis_comprehensive_daily": "/energy-analysis/comprehensive/daily";
+    "energy-analysis_comprehensive_monthly": "/energy-analysis/comprehensive/monthly";
+    "energy-analysis_comprehensive_statistics": "/energy-analysis/comprehensive/statistics";
+    "energy-analysis_comprehensive_year": "/energy-analysis/comprehensive/year";
+    "energy-indicators": "/energy-indicators";
     "function": "/function";
     "function_hide-child": "/function/hide-child";
     "function_hide-child_one": "/function/hide-child/one";
@@ -62,8 +100,16 @@ declare module "@elegant-router/types" {
     "function_super-page": "/function/super-page";
     "function_tab": "/function/tab";
     "function_toggle-auth": "/function/toggle-auth";
+    "gatewaysetting": "/gatewaysetting";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
+    "itemized": "/itemized";
+    "itemizedenergyanalysis": "/itemizedenergyanalysis";
+    "keyequipment": "/keyequipment";
+    "keyequipment_daily": "/keyequipment/daily";
+    "keyequipment_monthly": "/keyequipment/monthly";
+    "keyequipment_year": "/keyequipment/year";
+    "knowledge": "/knowledge";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "manage": "/manage";
     "manage_advanced-permission": "/manage/advanced-permission";
@@ -77,6 +123,8 @@ declare module "@elegant-router/types" {
     "manage_route-menu-obsolete": "/manage/route-menu-obsolete";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
+    "peakvalley": "/peakvalley";
+    "peakvalley-analysis": "/peakvalley-analysis";
     "plugin": "/plugin";
     "plugin_barcode": "/plugin/barcode";
     "plugin_charts": "/plugin/charts";
@@ -101,9 +149,19 @@ declare module "@elegant-router/types" {
     "plugin_tables_vtable": "/plugin/tables/vtable";
     "plugin_typeit": "/plugin/typeit";
     "plugin_video": "/plugin/video";
+    "process-energy": "/process-energy";
+    "process-energy_statistics": "/process-energy/statistics";
+    "process-energy_statistics_daily": "/process-energy/statistics/daily";
+    "process-energy_statistics_monthly": "/process-energy/statistics/monthly";
+    "process-energy_statistics_year": "/process-energy/statistics/year";
+    "processenergy": "/processenergy";
+    "productoutput": "/productoutput";
     "profile": "/profile";
     "profile_info": "/profile/info";
     "profile_password": "/profile/password";
+    "saving": "/saving";
+    "saving_policy": "/saving/policy";
+    "saving_program": "/saving/program";
     "scheduling": "/scheduling";
     "scheduling_calendar": "/scheduling/calendar";
     "scheduling_factory-calendar": "/scheduling/factory-calendar";
@@ -113,6 +171,11 @@ declare module "@elegant-router/types" {
     "scheduling_shift": "/scheduling/shift";
     "scheduling_shift-pattern": "/scheduling/shift-pattern";
     "scheduling_team": "/scheduling/team";
+    "spikesandvalleys": "/spikesandvalleys";
+    "statistical": "/statistical";
+    "statistical_cost": "/statistical/cost";
+    "statistical_flow": "/statistical/flow";
+    "statistical_yoy-mom": "/statistical/yoy-mom";
   };
 
   /**
@@ -162,16 +225,41 @@ declare module "@elegant-router/types" {
     | "404"
     | "500"
     | "about"
+    | "alarm"
     | "alova"
+    | "analysis"
+    | "base-data"
+    | "benchmark"
+    | "branchanalysis"
+    | "carbonemission"
+    | "comprehensivestatistics"
+    | "consumptionanalysis"
+    | "cost"
+    | "costmanagement"
     | "energy"
+    | "energy-analysis"
+    | "energy-indicators"
     | "function"
+    | "gatewaysetting"
     | "home"
     | "iframe-page"
+    | "itemized"
+    | "itemizedenergyanalysis"
+    | "keyequipment"
+    | "knowledge"
     | "login"
     | "manage"
+    | "peakvalley"
+    | "peakvalley-analysis"
     | "plugin"
+    | "process-energy"
+    | "processenergy"
+    | "productoutput"
     | "profile"
+    | "saving"
     | "scheduling"
+    | "spikesandvalleys"
+    | "statistical"
   >;
 
   /**
@@ -196,17 +284,47 @@ declare module "@elegant-router/types" {
     | "iframe-page"
     | "login"
     | "about"
+    | "alarm_history"
+    | "alarm_item"
+    | "alarm_limit-type"
     | "alova_request"
     | "alova_scenes"
     | "alova_user"
+    | "analysis_consumption"
+    | "base-data_coefficient"
+    | "base-data_home"
+    | "base-data_medium"
+    | "base-data_meter"
+    | "base-data_power-distribution"
+    | "base-data_tou"
+    | "base-data_unit"
+    | "base-data_virtual-meter"
+    | "benchmark"
+    | "branchanalysis"
+    | "carbonemission_calculate"
+    | "comprehensivestatistics"
+    | "consumptionanalysis"
+    | "cost_electricity"
+    | "cost_tactics"
+    | "cost_trend"
+    | "costmanagement_electricity"
+    | "costmanagement_tactics"
+    | "costmanagement_trend"
+    | "energy-analysis_comprehensive_daily"
+    | "energy-analysis_comprehensive_monthly"
+    | "energy-analysis_comprehensive_statistics"
+    | "energy-analysis_comprehensive_year"
+    | "energy-indicators"
     | "energy_base-data_coefficient"
     | "energy_base-data_ledger"
     | "energy_base-data_medium"
     | "energy_base-data_meter"
     | "energy_base-data_tou"
     | "energy_base-data_unit"
+    | "energy_branch-analysis"
     | "energy_comparison"
     | "energy_dashboard"
+    | "energy_electric-analysis"
     | "energy_flow"
     | "energy_ranking"
     | "energy_report"
@@ -218,7 +336,14 @@ declare module "@elegant-router/types" {
     | "function_super-page"
     | "function_tab"
     | "function_toggle-auth"
+    | "gatewaysetting"
     | "home"
+    | "itemized"
+    | "itemizedenergyanalysis"
+    | "keyequipment_daily"
+    | "keyequipment_monthly"
+    | "keyequipment_year"
+    | "knowledge"
     | "manage_advanced-permission"
     | "manage_api"
     | "manage_department"
@@ -230,6 +355,8 @@ declare module "@elegant-router/types" {
     | "manage_route-menu-obsolete"
     | "manage_user-detail"
     | "manage_user"
+    | "peakvalley-analysis"
+    | "peakvalley"
     | "plugin_barcode"
     | "plugin_charts_antv"
     | "plugin_charts_echarts"
@@ -249,8 +376,15 @@ declare module "@elegant-router/types" {
     | "plugin_tables_vtable"
     | "plugin_typeit"
     | "plugin_video"
+    | "process-energy_statistics_daily"
+    | "process-energy_statistics_monthly"
+    | "process-energy_statistics_year"
+    | "processenergy"
+    | "productoutput"
     | "profile_info"
     | "profile_password"
+    | "saving_policy"
+    | "saving_program"
     | "scheduling_calendar"
     | "scheduling_factory-calendar"
     | "scheduling_rule-config"
@@ -259,6 +393,11 @@ declare module "@elegant-router/types" {
     | "scheduling_shift-pattern"
     | "scheduling_shift"
     | "scheduling_team"
+    | "spikesandvalleys"
+    | "statistical_cost"
+    | "statistical_flow"
+    | "statistical"
+    | "statistical_yoy-mom"
   >;
 
   /**
