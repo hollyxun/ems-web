@@ -1,10 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchDeletePowerDistributions,
-  fetchGetPowerDistributionList
-} from '@/service/api/power-distribution';
+import { fetchDeletePowerDistributions, fetchGetPowerDistributionList } from '@/service/api/power-distribution';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import PowerDistributionOperateDrawer from './modules/power-distribution-operate-drawer.vue';

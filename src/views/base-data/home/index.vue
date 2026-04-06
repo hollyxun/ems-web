@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ElCard, ElProgress } from 'element-plus';
 import { fetchGetOverview } from '@/service/api/base-data';
@@ -202,7 +202,7 @@ onMounted(() => {
     </div>
 
     <!-- 统计卡片网格 -->
-    <div class="stats-grid" v-loading="loading">
+    <div v-loading="loading" class="stats-grid">
       <ElCard
         v-for="card in statsCards"
         :key="card.title"
@@ -220,12 +220,7 @@ onMounted(() => {
           </div>
         </div>
         <div class="card-stats">
-          <div
-            v-for="stat in card.stats"
-            :key="stat.label"
-            class="stat-item"
-            :class="stat.status"
-          >
+          <div v-for="stat in card.stats" :key="stat.label" class="stat-item" :class="stat.status">
             <span class="stat-label">{{ stat.label }}</span>
             <span class="stat-value">
               <strong>{{ stat.value }}</strong>
@@ -301,11 +296,11 @@ onMounted(() => {
     animation: blink 1.5s infinite;
 
     &.success {
-      background-color: #4CAF50;
+      background-color: #4caf50;
     }
 
     &.danger {
-      background-color: #E91E63;
+      background-color: #e91e63;
       animation: blink-danger 0.5s infinite;
     }
   }
@@ -433,19 +428,19 @@ onMounted(() => {
       border-radius: 4px;
 
       &.success {
-        border-left: 3px solid #4CAF50;
+        border-left: 3px solid #4caf50;
       }
 
       &.warning {
-        border-left: 3px solid #FF9800;
+        border-left: 3px solid #ff9800;
       }
 
       &.danger {
-        border-left: 3px solid #E91E63;
+        border-left: 3px solid #e91e63;
       }
 
       &.info {
-        border-left: 3px solid #2196F3;
+        border-left: 3px solid #2196f3;
       }
 
       .stat-label {
@@ -486,22 +481,46 @@ onMounted(() => {
 
 // 动画
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 @keyframes blink-danger {
-  0%, 100% { opacity: 1; box-shadow: 0 0 8px #E91E63; }
-  50% { opacity: 0.3; box-shadow: 0 0 4px #E91E63; }
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 8px #e91e63;
+  }
+  50% {
+    opacity: 0.3;
+    box-shadow: 0 0 4px #e91e63;
+  }
 }
 
 @keyframes pulse-bg {
-  0%, 100% { background: rgba(0, 0, 0, 0.4); }
-  50% { background: rgba(233, 30, 99, 0.2); }
+  0%,
+  100% {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  50% {
+    background: rgba(233, 30, 99, 0.2);
+  }
 }
 
 @keyframes pulse-dot {
-  0%, 100% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
 }
 </style>
