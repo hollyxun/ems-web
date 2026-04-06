@@ -4,8 +4,8 @@ import { ElButton, ElMessage, ElPopconfirm } from 'element-plus';
 import {
   fetchAlarmLimitTypeList,
   fetchCreateAlarmLimitType,
-  fetchUpdateAlarmLimitType,
-  fetchDeleteAlarmLimitType
+  fetchDeleteAlarmLimitType,
+  fetchUpdateAlarmLimitType
 } from '@/service/api/alarm';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';

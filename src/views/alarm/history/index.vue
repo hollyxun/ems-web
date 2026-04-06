@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElTag } from 'element-plus';
-import { fetchAlarmHistoryList, fetchHandleAlarm, fetchBatchHandleAlarm } from '@/service/api/alarm';
+import { fetchAlarmHistoryList, fetchBatchHandleAlarm, fetchHandleAlarm } from '@/service/api/alarm';
 import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import AlarmHistorySearch from './modules/alarm-history-search.vue';
@@ -160,11 +160,7 @@ onMounted(() => {
           @size-change="mobilePagination['size-change']"
         />
       </div>
-      <AlarmHandleDialog
-        v-model:visible="handleDialogVisible"
-        :row-data="selectedRow"
-        @confirm="handleConfirm"
-      />
+      <AlarmHandleDialog v-model:visible="handleDialogVisible" :row-data="selectedRow" @confirm="handleConfirm" />
     </ElCard>
   </div>
 </template>

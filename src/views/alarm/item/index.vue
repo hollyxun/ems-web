@@ -3,8 +3,8 @@ import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
 import {
   fetchAlarmItemList,
-  fetchDeleteAlarmItem,
   fetchBatchDeleteAlarmItems,
+  fetchDeleteAlarmItem,
   fetchUpdateAlarmStartStop
 } from '@/service/api/alarm';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
