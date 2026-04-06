@@ -78,30 +78,29 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 240,
-      formatter: row => (
-        <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </ElButton>
-          <ElButton
-            type={row.startStop === '1' ? 'warning' : 'success'}
-            plain
-            size="small"
-            onClick={() => handleToggleStatus(row)}
-          >
-            {row.startStop === '1' ? '停止' : '启用'}
-          </ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{
-              reference: () => (
-                <ElButton type="danger" plain size="small">
-                  {$t('common.delete')}
-                </ElButton>
-              )
-            }}
-          </ElPopconfirm>
-        </div>
-      )
+      formatter: row => {
+        const handleConfirm = () => handleDelete(row.id);
+        return (
+          <div class="flex-center">
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
+            <ElButton
+              type={row.startStop === '1' ? 'warning' : 'success'}
+              plain
+              size="small"
+              onClick={() => handleToggleStatus(row)}
+            >
+              {row.startStop === '1' ? '停止' : '启用'}
+            </ElButton>
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
+            </ElPopconfirm>
+          </div>
+        );
+      }
     }
   ]
 });

@@ -7,7 +7,7 @@ import StatusCard from './StatusCard.vue';
 const CpuIcon = 'mdi:cpu-64-bit';
 
 interface Props {
-  cpu: CPUInfo | null;
+  cpu?: CPUInfo | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {

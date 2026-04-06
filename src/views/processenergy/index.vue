@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { fetchProcessEnergyList } from '@/service/api/processenergy';
+import { fetchDailyProcessEnergyList as fetchProcessEnergyList } from '@/service/api/process-energy';
 import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 

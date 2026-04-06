@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { fetchConsumptionAnalysis } from '@/service/api/consumptionanalysis';
+import { fetchConsumptionAnalysis } from '@/service/api/consumption-analysis';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ConsumptionAnalysis' });

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElMessage, ElPopconfirm } from 'element-plus';
 import { fetchElectricityCostList, fetchCreateElectricityCost, fetchUpdateElectricityCost, fetchDeleteElectricityCost } from '@/service/api/costmanagement';
@@ -32,14 +32,17 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'valleyElectricity', label: '谷时段电量', minWidth: 120 },
     {
       prop: 'operate', label: $t('common.operate'), align: 'center', width: 160,
-      formatter: row => (
-        <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{ reference: () => <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton> }}
-          </ElPopconfirm>
-        </div>
-      )
+      formatter: row => {
+        const handleConfirm = () => handleDelete(row.id);
+        return (
+          <div class="flex-center">
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
+              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+            </ElPopconfirm>
+          </div>
+        );
+      }
     }
   ]
 });

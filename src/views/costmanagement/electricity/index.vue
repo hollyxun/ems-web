@@ -33,14 +33,17 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'powerFactor', label: '功率因数', width: 100 },
     {
       prop: 'operate', label: $t('common.operate'), align: 'center', width: 160,
-      formatter: row => (
-        <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{ reference: () => <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton> }}
-          </ElPopconfirm>
-        </div>
-      )
+      formatter: row => {
+        const handleConfirm = () => handleDelete(row.id);
+        return (
+          <div class="flex-center">
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
+              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+            </ElPopconfirm>
+          </div>
+        );
+      }
     }
   ]
 });

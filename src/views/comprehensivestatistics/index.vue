@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { fetchComprehensiveList } from '@/service/api/comprehensivestatistics';
+import { fetchGetComprehensiveList as fetchComprehensiveList } from '@/service/api/comprehensive';
 import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 

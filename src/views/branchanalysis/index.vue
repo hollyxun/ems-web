@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { fetchBranchAnalysisList } from '@/service/api/branchanalysis';
+import { fetchBranchAnalysisList } from '@/service/api/branch-analysis';
 import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 

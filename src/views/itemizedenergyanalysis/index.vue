@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { fetchItemizedEnergyList } from '@/service/api/itemizedenergyanalysis';
+import { fetchItemizedEnergyList } from '@/service/api/itemized-energy-analysis';
 import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
