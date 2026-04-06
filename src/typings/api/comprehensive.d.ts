@@ -231,7 +231,7 @@ declare namespace Api {
     /**
      * 月综合指标查询参数
      */
-    interface MonthlyComprehensiveQuery extends DailyComprehensiveQuery {}
+    type MonthlyComprehensiveQuery = DailyComprehensiveQuery;
 
     /**
      * 年综合指标查询参数
