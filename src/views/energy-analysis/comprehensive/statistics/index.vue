@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from 'vue';
-import * as echarts from 'echarts';
+import { computed, onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
+import dayjs from 'dayjs';
+import * as echarts from 'echarts';
 import {
+  fetchExportComprehensive,
   fetchGetComprehensiveList,
-  fetchGetYoY,
   fetchGetEnergyRanking,
-  fetchExportComprehensive
+  fetchGetYoY
 } from '@/service/api/comprehensive';
 import { useThemeStore } from '@/store/modules/theme';
-import dayjs from 'dayjs';
 
 defineOptions({ name: 'ComprehensiveStatistics' });
 
@@ -242,7 +242,10 @@ function updateChart1(data: Api.Comprehensive.ChartDataItem[]) {
         itemStyle: { borderRadius: [15, 15, 0, 0] },
         data: yValue,
         markPoint: {
-          data: [{ type: 'max', name: 'Max' }, { type: 'min', name: 'Min' }]
+          data: [
+            { type: 'max', name: 'Max' },
+            { type: 'min', name: 'Min' }
+          ]
         }
       },
       {
@@ -252,7 +255,10 @@ function updateChart1(data: Api.Comprehensive.ChartDataItem[]) {
         itemStyle: { borderRadius: [15, 15, 0, 0] },
         data: yCompareValue,
         markPoint: {
-          data: [{ type: 'max', name: 'Max' }, { type: 'min', name: 'Min' }]
+          data: [
+            { type: 'max', name: 'Max' },
+            { type: 'min', name: 'Min' }
+          ]
         }
       }
     ]
@@ -459,12 +465,7 @@ onUnmounted(() => {
             style="width: 120px"
             @change="handleTimeTypeChange"
           >
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="时间">
@@ -489,22 +490,22 @@ onUnmounted(() => {
     <!-- 图表区域 -->
     <div class="flex-1 overflow-auto">
       <!-- 综合能耗趋势图 -->
-      <ElCard class="card-wrapper mb-16px">
+      <ElCard class="mb-16px card-wrapper">
         <template #header>
           <span>{{ queryParams.nodeName || '全厂' }} - 综合能耗趋势</span>
         </template>
-        <div id="Chart1" style="height: 300px" v-loading="loading" />
+        <div id="Chart1" v-loading="loading" style="height: 300px" />
       </ElCard>
 
       <!-- 同比环比 + 占比 + 排名 -->
       <ElRow :gutter="16" class="mb-16px">
         <!-- 同比环比卡片 -->
         <ElCol :span="7">
-          <ElCard class="card-wrapper h-full">
+          <ElCard class="h-full card-wrapper">
             <template #header>
               <span>{{ queryParams.nodeName || '全厂' }} - 综合能耗同比环比</span>
             </template>
-            <div class="card-list" v-loading="loading">
+            <div v-loading="loading" class="card-list">
               <div
                 v-for="(item, index) in comprehensiveTable"
                 :key="index"
@@ -532,21 +533,21 @@ onUnmounted(() => {
 
         <!-- 各介质能耗占比图 -->
         <ElCol :span="8">
-          <ElCard class="card-wrapper h-full">
+          <ElCard class="h-full card-wrapper">
             <template #header>
               <span>{{ queryParams.nodeName || '全厂' }} - 各介质综合能耗占比</span>
             </template>
-            <div id="Chart2" style="height: 250px" v-loading="loading" />
+            <div id="Chart2" v-loading="loading" style="height: 250px" />
           </ElCard>
         </ElCol>
 
         <!-- 用能单元能耗排名图 -->
         <ElCol :span="9">
-          <ElCard class="card-wrapper h-full">
+          <ElCard class="h-full card-wrapper">
             <template #header>
               <span>{{ queryParams.nodeName || '全厂' }} - 用能单元综合能耗排名</span>
             </template>
-            <div id="Chart3" style="height: 250px" v-loading="loading" />
+            <div id="Chart3" v-loading="loading" style="height: 250px" />
           </ElCard>
         </ElCol>
       </ElRow>
@@ -556,7 +557,7 @@ onUnmounted(() => {
         <template #header>
           <span>{{ queryParams.nodeName || '全厂' }} - 综合能耗统计分析表</span>
         </template>
-        <ElTable :data="comprehensiveList" v-loading="loading" border show-summary>
+        <ElTable v-loading="loading" :data="comprehensiveList" border show-summary>
           <ElTableColumn prop="currentTime" label="日期" align="center" min-width="120" />
           <ElTableColumn prop="currentValue" label="综合能耗量(tce)" align="center" min-width="150" />
         </ElTable>

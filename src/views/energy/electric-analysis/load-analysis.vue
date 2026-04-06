@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as ECharts from 'echarts';
@@ -75,9 +75,9 @@ const updateChart = () => {
 
   const data = chartData.value;
   const xData = data.itemList.map(item => item.timeCodeChart);
-  const avgData = data.itemList.map(item => parseFloat(item.avg) || 0);
-  const maxData = data.itemList.map(item => parseFloat(item.max) || 0);
-  const minData = data.itemList.map(item => parseFloat(item.min) || 0);
+  const avgData = data.itemList.map(item => Number.parseFloat(item.avg) || 0);
+  const maxData = data.itemList.map(item => Number.parseFloat(item.max) || 0);
+  const minData = data.itemList.map(item => Number.parseFloat(item.min) || 0);
 
   const option: ECharts.EChartsOption = {
     title: {
@@ -184,13 +184,8 @@ onMounted(() => {
     <ElCard class="mb-4">
       <ElForm :model="queryParams" inline>
         <ElFormItem label="时间类型">
-          <ElSelect v-model="queryParams.timeType" @change="handleTimeTypeChange" style="width: 100px">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <ElSelect v-model="queryParams.timeType" style="width: 100px" @change="handleTimeTypeChange">
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="时间">
@@ -208,38 +203,27 @@ onMounted(() => {
             value-format="YYYY-MM"
             style="width: 150px"
           />
-          <ElDatePicker
-            v-else
-            v-model="queryParams.timeCode"
-            type="year"
-            value-format="YYYY"
-            style="width: 150px"
-          />
+          <ElDatePicker v-else v-model="queryParams.timeCode" type="year" value-format="YYYY" style="width: 150px" />
         </ElFormItem>
         <ElFormItem label="电表">
           <ElSelect v-model="queryParams.meterId" placeholder="请选择电表" style="width: 180px">
-            <ElOption
-              v-for="item in meterOptions"
-              :key="item.code"
-              :label="item.label"
-              :value="item.code"
-            />
+            <ElOption v-for="item in meterOptions" :key="item.code" :label="item.label" :value="item.code" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="fetchData" :loading="loading">查询</ElButton>
+          <ElButton type="primary" :loading="loading" @click="fetchData">查询</ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
 
     <!-- 汇总卡片 -->
-    <ElRow :gutter="16" class="mb-4" v-if="summaryData">
+    <ElRow v-if="summaryData" :gutter="16" class="mb-4">
       <ElCol :span="6">
         <ElCard shadow="hover">
           <ElStatistic title="最大负荷" :value="summaryData.max">
             <template #suffix>kW</template>
           </ElStatistic>
-          <div class="text-sm text-gray-500 mt-2">{{ summaryData.maxTime }}</div>
+          <div class="mt-2 text-sm text-gray-500">{{ summaryData.maxTime }}</div>
         </ElCard>
       </ElCol>
       <ElCol :span="6">
@@ -247,7 +231,7 @@ onMounted(() => {
           <ElStatistic title="最小负荷" :value="summaryData.min">
             <template #suffix>kW</template>
           </ElStatistic>
-          <div class="text-sm text-gray-500 mt-2">{{ summaryData.minTime }}</div>
+          <div class="mt-2 text-sm text-gray-500">{{ summaryData.minTime }}</div>
         </ElCard>
       </ElCol>
       <ElCol :span="6">
@@ -266,7 +250,7 @@ onMounted(() => {
 
     <!-- 图表 -->
     <ElCard>
-      <div ref="chartRef" style="height: 400px" v-loading="loading"></div>
+      <div ref="chartRef" v-loading="loading" style="height: 400px"></div>
     </ElCard>
   </div>
 </template>

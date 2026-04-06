@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
-import { fetchHistoricalData, exportHistoricalData } from '@/service/api/electric-analysis';
+import { exportHistoricalData, fetchHistoricalData } from '@/service/api/electric-analysis';
 import { fetchGetMeterList } from '@/service/api/energy-meter';
 import type { HistoricalData } from '@/service/api/electric-analysis';
 
@@ -110,28 +110,13 @@ onMounted(() => {
     <ElCard class="mb-4 flex-shrink-0">
       <ElForm :model="queryParams" inline>
         <ElFormItem label="计量点">
-          <ElSelect
-            v-model="queryParams.indexId"
-            placeholder="请选择计量点"
-            filterable
-            style="width: 200px"
-          >
-            <ElOption
-              v-for="item in meterOptions"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
+          <ElSelect v-model="queryParams.indexId" placeholder="请选择计量点" filterable style="width: 200px">
+            <ElOption v-for="item in meterOptions" :key="item.id" :label="item.name" :value="item.id" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="时间类型">
           <ElSelect v-model="queryParams.timeType" style="width: 100px">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="时间">
@@ -144,8 +129,8 @@ onMounted(() => {
           />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="fetchData" :loading="loading">查询</ElButton>
-          <ElButton @click="handleExport" :loading="exportLoading">导出Excel</ElButton>
+          <ElButton type="primary" :loading="loading" @click="fetchData">查询</ElButton>
+          <ElButton :loading="exportLoading" @click="handleExport">导出Excel</ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -155,17 +140,10 @@ onMounted(() => {
       <template #header>
         <div class="flex items-center justify-between">
           <span>历史数据列表</span>
-          <span v-if="indexName" class="text-gray-500 text-sm">计量点: {{ indexName }}</span>
+          <span v-if="indexName" class="text-sm text-gray-500">计量点: {{ indexName }}</span>
         </div>
       </template>
-      <ElTable
-        :data="tableData"
-        v-loading="loading"
-        border
-        stripe
-        height="100%"
-        style="height: calc(100% - 10px)"
-      >
+      <ElTable v-loading="loading" :data="tableData" border stripe height="100%" style="height: calc(100% - 10px)">
         <ElTableColumn
           v-for="col in columns"
           :key="col.prop"

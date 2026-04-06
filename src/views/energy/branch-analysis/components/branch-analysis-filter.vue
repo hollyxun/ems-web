@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import dayjs from 'dayjs';
 
 defineOptions({ name: 'BranchAnalysisFilter' });
@@ -45,8 +46,6 @@ const dateFormat = computed(() => {
       return 'YYYY-MM-DD';
   }
 });
-
-import { computed } from 'vue';
 </script>
 
 <template>
@@ -89,7 +88,7 @@ import { computed } from 'vue';
       <ElFormItem>
         <ElButton type="primary" @click="emit('search')">
           <template #icon>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.35-4.35" />
             </svg>
@@ -98,7 +97,7 @@ import { computed } from 'vue';
         </ElButton>
         <ElButton @click="emit('reset')">
           <template #icon>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
               <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
               <path d="M3 3v5h5" />
             </svg>
@@ -108,14 +107,14 @@ import { computed } from 'vue';
         <ElDropdown trigger="click" @command="(cmd: 'excel' | 'pdf') => emit('export', cmd)">
           <ElButton>
             <template #icon>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-4 h-4">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="h-4 w-4">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
             </template>
             导出
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-3 h-3 ml-1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ml-1 h-3 w-3">
               <path d="m6 9 6 6 6-6" />
             </svg>
           </ElButton>

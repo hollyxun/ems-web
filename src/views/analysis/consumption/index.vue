@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
-import dayjs from 'dayjs';
+import { computed, onMounted, ref } from 'vue';
 import type { FormInstance } from 'element-plus';
+import dayjs from 'dayjs';
 import {
+  type ConsumptionAnalysisVO,
+  type ProductEnergyAnalysisVO,
+  type RankingEnergyData,
   fetchGetByArea,
   fetchGetComprehensiveEnergy,
-  fetchGetYOY,
   fetchGetEnergyRanking,
   fetchGetProdEnergy,
-  type ConsumptionAnalysisVO,
-  type RankingEnergyData,
-  type ProductEnergyAnalysisVO
+  fetchGetYOY
 } from '@/service/api/consumption-analysis';
 
 defineOptions({ name: 'ConsumptionAnalysis' });
@@ -173,12 +173,7 @@ onMounted(() => {
 
         <ElFormItem label="时间类型">
           <ElSelect v-model="queryForm.timeType" placeholder="请选择" style="width: 100px">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
 
@@ -194,23 +189,13 @@ onMounted(() => {
 
         <ElFormItem label="能源类型">
           <ElSelect v-model="queryForm.energyType" placeholder="请选择" style="width: 120px">
-            <ElOption
-              v-for="item in energyTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in energyTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
 
         <ElFormItem label="分析类型">
           <ElSelect v-model="queryForm.analysisType" placeholder="请选择" style="width: 100px">
-            <ElOption
-              v-for="item in analysisTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in analysisTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
 
@@ -292,7 +277,7 @@ onMounted(() => {
       <ElTabs v-model="activeTab" @tab-change="handleTabChange">
         <!-- 科室能耗分析 -->
         <ElTabPane label="科室能耗分析" name="area">
-          <ElTable :data="analysisData?.dataList || []" v-loading="loading" stripe>
+          <ElTable v-loading="loading" :data="analysisData?.dataList || []" stripe>
             <ElTableColumn prop="currentTime" label="本期时间" min-width="150" />
             <ElTableColumn prop="currentValue" label="本期能耗(tce)" min-width="120">
               <template #default="{ row }">
@@ -305,7 +290,11 @@ onMounted(() => {
                 {{ row.compareValue?.toFixed(2) }}
               </template>
             </ElTableColumn>
-            <ElTableColumn prop="ratio" :label="queryForm.analysisType === 'YOY' ? '同比(%)' : '环比(%)'" min-width="100">
+            <ElTableColumn
+              prop="ratio"
+              :label="queryForm.analysisType === 'YOY' ? '同比(%)' : '环比(%)'"
+              min-width="100"
+            >
               <template #default="{ row }">
                 <span :class="getRatioColor(row.ratio)">
                   {{ formatRatio(row.ratio) }}
@@ -329,7 +318,7 @@ onMounted(() => {
               </ElCol>
             </ElRow>
           </div>
-          <ElTable :data="analysisData?.dataList || []" v-loading="loading" stripe>
+          <ElTable v-loading="loading" :data="analysisData?.dataList || []" stripe>
             <ElTableColumn prop="currentTime" label="时间" min-width="150" />
             <ElTableColumn prop="currentValue" label="综合能耗(tce)" min-width="140">
               <template #default="{ row }">
@@ -353,7 +342,7 @@ onMounted(() => {
 
         <!-- 能耗排名 -->
         <ElTabPane label="能耗排名" name="ranking">
-          <ElTable :data="rankingData" v-loading="loading" stripe>
+          <ElTable v-loading="loading" :data="rankingData" stripe>
             <ElTableColumn type="index" label="排名" width="80" />
             <ElTableColumn prop="nodeName" label="节点名称" min-width="150" />
             <ElTableColumn prop="energyConsumption" label="能耗量(tce)" min-width="140">
@@ -388,7 +377,7 @@ onMounted(() => {
               </ElCol>
             </ElRow>
           </div>
-          <ElTable :data="prodEnergyData?.chart || []" v-loading="loading" stripe>
+          <ElTable v-loading="loading" :data="prodEnergyData?.chart || []" stripe>
             <ElTableColumn prop="dateTime" label="时间" min-width="150" />
             <ElTableColumn prop="energyCount" label="能耗量(tce)" min-width="120">
               <template #default="{ row }">

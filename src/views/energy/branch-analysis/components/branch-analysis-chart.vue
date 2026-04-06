@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 import VChart from 'vue-echarts';
 import { use } from 'echarts/core';
 import { BarChart, LineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent, DataZoomComponent } from 'echarts/components';
+import { DataZoomComponent, GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 
 // 注册 ECharts 组件
@@ -58,14 +58,17 @@ const chartOption = computed(() => ({
       formatter: (value: number) => value.toFixed(0)
     }
   },
-  dataZoom: props.data.length > 24 ? [
-    {
-      type: 'slider',
-      start: 0,
-      end: 50,
-      bottom: 5
-    }
-  ] : [],
+  dataZoom:
+    props.data.length > 24
+      ? [
+          {
+            type: 'slider',
+            start: 0,
+            end: 50,
+            bottom: 5
+          }
+        ]
+      : [],
   series: [
     {
       name: '能耗',
@@ -74,31 +77,37 @@ const chartOption = computed(() => ({
       smooth: chartType.value === 'line',
       barMaxWidth: 40,
       itemStyle: {
-        color: chartType.value === 'bar' ? {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            { offset: 0, color: '#188df0' },
-            { offset: 1, color: '#83bff6' }
-          ]
-        } : '#188df0'
+        color:
+          chartType.value === 'bar'
+            ? {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: '#188df0' },
+                  { offset: 1, color: '#83bff6' }
+                ]
+              }
+            : '#188df0'
       },
-      areaStyle: chartType.value === 'line' ? {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            { offset: 0, color: 'rgba(24, 141, 240, 0.3)' },
-            { offset: 1, color: 'rgba(24, 141, 240, 0.05)' }
-          ]
-        }
-      } : undefined
+      areaStyle:
+        chartType.value === 'line'
+          ? {
+              color: {
+                type: 'linear',
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  { offset: 0, color: 'rgba(24, 141, 240, 0.3)' },
+                  { offset: 1, color: 'rgba(24, 141, 240, 0.05)' }
+                ]
+              }
+            }
+          : undefined
     }
   ]
 }));
@@ -120,11 +129,7 @@ function toggleChartType() {
     </div>
 
     <!-- ECharts 图表 -->
-    <VChart
-      :option="chartOption"
-      :style="{ height: '350px', width: '100%' }"
-      autoresize
-    />
+    <VChart :option="chartOption" :style="{ height: '350px', width: '100%' }" autoresize />
   </div>
 </template>
 

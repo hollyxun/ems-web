@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
-import * as echarts from 'echarts';
+import { computed, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
-import { fetchGetDailyList, fetchGetDailyListChart } from '@/service/api/comprehensive';
 import dayjs from 'dayjs';
+import * as echarts from 'echarts';
+import { fetchGetDailyList, fetchGetDailyListChart } from '@/service/api/comprehensive';
 
 defineOptions({ name: 'DailyComprehensive' });
 
@@ -152,15 +152,15 @@ onMounted(() => {
       <template #header>
         <span>日综合指标分析图表</span>
       </template>
-      <div id="dailyChart" style="height: 350px" v-loading="loading" />
+      <div id="dailyChart" v-loading="loading" style="height: 350px" />
     </ElCard>
 
     <!-- 数据表格 -->
-    <ElCard class="card-wrapper flex-1">
+    <ElCard class="flex-1 card-wrapper">
       <template #header>
         <span>日综合指标分析列表</span>
       </template>
-      <ElTable :data="dataList" v-loading="loading" border height="100%">
+      <ElTable v-loading="loading" :data="dataList" border height="100%">
         <ElTableColumn prop="dataTime" label="时间" align="center" min-width="150">
           <template #default="{ row }">
             {{ dayjs(row.dataTime).format('YYYY-MM-DD HH:mm') }}

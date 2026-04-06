@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as ECharts from 'echarts';
-import { fetchThreePhaseAnalysis, fetchElectricityMeterList } from '@/service/api/electric-analysis';
+import { fetchElectricityMeterList, fetchThreePhaseAnalysis } from '@/service/api/electric-analysis';
 import type { ThreePhase } from '@/service/api/electric-analysis';
 
 // 查询参数
@@ -86,9 +86,9 @@ const updateChart = () => {
 
   const data = chartData.value;
   const xData = data.itemList.map(item => item.timeCodeChart);
-  const phaseA = data.itemList.map(item => parseFloat(item.phaseA) || 0);
-  const phaseB = data.itemList.map(item => parseFloat(item.phaseB) || 0);
-  const phaseC = data.itemList.map(item => parseFloat(item.phaseC) || 0);
+  const phaseA = data.itemList.map(item => Number.parseFloat(item.phaseA) || 0);
+  const phaseB = data.itemList.map(item => Number.parseFloat(item.phaseB) || 0);
+  const phaseC = data.itemList.map(item => Number.parseFloat(item.phaseC) || 0);
 
   const unit = queryParams.value.requestType === '0' ? 'V' : 'A';
 
@@ -190,22 +190,12 @@ onMounted(() => {
       <ElForm :model="queryParams" inline>
         <ElFormItem label="类型">
           <ElSelect v-model="queryParams.requestType" style="width: 100px">
-            <ElOption
-              v-for="item in requestTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in requestTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="时间类型">
-          <ElSelect v-model="queryParams.timeType" @change="handleTimeTypeChange" style="width: 100px">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+          <ElSelect v-model="queryParams.timeType" style="width: 100px" @change="handleTimeTypeChange">
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="时间">
@@ -223,36 +213,25 @@ onMounted(() => {
             value-format="YYYY-MM"
             style="width: 150px"
           />
-          <ElDatePicker
-            v-else
-            v-model="queryParams.timeCode"
-            type="year"
-            value-format="YYYY"
-            style="width: 150px"
-          />
+          <ElDatePicker v-else v-model="queryParams.timeCode" type="year" value-format="YYYY" style="width: 150px" />
         </ElFormItem>
         <ElFormItem label="电表">
           <ElSelect v-model="queryParams.meterId" placeholder="请选择电表" style="width: 180px">
-            <ElOption
-              v-for="item in meterOptions"
-              :key="item.code"
-              :label="item.label"
-              :value="item.code"
-            />
+            <ElOption v-for="item in meterOptions" :key="item.code" :label="item.label" :value="item.code" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="fetchData" :loading="loading">查询</ElButton>
+          <ElButton type="primary" :loading="loading" @click="fetchData">查询</ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
 
     <!-- 汇总卡片 -->
-    <ElRow :gutter="16" class="mb-4" v-if="summaryData">
+    <ElRow v-if="summaryData" :gutter="16" class="mb-4">
       <ElCol :span="8">
         <ElCard shadow="hover">
           <ElStatistic title="最大不平衡率" :value="summaryData.maxUnbalance" />
-          <div class="text-sm text-gray-500 mt-2">{{ summaryData.maxUnbalanceTime }}</div>
+          <div class="mt-2 text-sm text-gray-500">{{ summaryData.maxUnbalanceTime }}</div>
         </ElCard>
       </ElCol>
       <ElCol :span="8">
@@ -264,7 +243,7 @@ onMounted(() => {
 
     <!-- 图表 -->
     <ElCard>
-      <div ref="chartRef" style="height: 400px" v-loading="loading"></div>
+      <div ref="chartRef" v-loading="loading" style="height: 400px"></div>
     </ElCard>
   </div>
 </template>

@@ -114,7 +114,7 @@ async function handleExport(format: 'excel' | 'pdf') {
 // 监听时间类型变化，更新时间格式
 watch(
   () => queryParams.timeType,
-  (newType) => {
+  newType => {
     const now = dayjs();
     if (newType === 'day') {
       queryParams.dataTime = now.format('YYYY-MM-DD');
@@ -156,7 +156,10 @@ onMounted(() => {
               {{ analysisData.nodeName }} - 总能耗: {{ analysisData.total.toFixed(2) }} {{ analysisData.unit }}
             </span>
           </div>
-          <ElTag v-if="analysisData" :type="queryParams.timeType === 'day' ? 'success' : queryParams.timeType === 'month' ? 'warning' : 'info'">
+          <ElTag
+            v-if="analysisData"
+            :type="queryParams.timeType === 'day' ? 'success' : queryParams.timeType === 'month' ? 'warning' : 'info'"
+          >
             {{ timeTypeOptions.find(t => t.value === queryParams.timeType)?.label }}维度分析
           </ElTag>
         </div>
@@ -173,9 +176,9 @@ onMounted(() => {
       </div>
 
       <!-- 无数据提示 -->
-      <div v-else class="flex items-center justify-center h-400px text-gray-400">
+      <div v-else class="h-400px flex items-center justify-center text-gray-400">
         <div class="text-center">
-          <svg class="w-16 h-16 mx-auto mb-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <svg class="mx-auto mb-4 h-16 w-16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M3 3v18h18" stroke-linecap="round" stroke-linejoin="round" />
             <path d="M7 16l4-4 4 4 5-6" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
@@ -192,9 +195,7 @@ onMounted(() => {
       <ElTable :data="analysisData.values.map((v, i) => ({ time: timeLabels[i], value: v }))" stripe border>
         <ElTableColumn prop="time" label="时间" width="100" />
         <ElTableColumn prop="value" label="能耗值">
-          <template #default="{ row }">
-            {{ row.value?.toFixed(2) || '-' }} {{ analysisData.unit }}
-          </template>
+          <template #default="{ row }">{{ row.value?.toFixed(2) || '-' }} {{ analysisData.unit }}</template>
         </ElTableColumn>
       </ElTable>
     </ElCard>

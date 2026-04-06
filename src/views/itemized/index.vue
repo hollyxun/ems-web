@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from 'vue';
-import { Icon } from '@iconify/vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import dayjs from 'dayjs';
+import { Icon } from '@iconify/vue';
 import { fetchItemizedEnergyAnalysis } from '@/service/api/itemized-energy-analysis';
-import { useEcharts } from '@/hooks/common/echarts';
 import type { ItemizedEnergyAnalysis } from '@/service/api/itemized-energy-analysis';
+import { useEcharts } from '@/hooks/common/echarts';
 
 defineOptions({ name: 'ItemizedEnergyAnalysis' });
 
@@ -181,18 +181,18 @@ function updateChartData(data: ItemizedEnergyAnalysis.Response) {
   if (queryParams.value.timeType === 'DAY') {
     for (let i = 0; i < 24; i++) {
       xData.push(`${i}时`);
-      yData.push(data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number || 0);
+      yData.push((data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number) || 0);
     }
   } else if (queryParams.value.timeType === 'MONTH') {
     const days = dayjs(queryParams.value.dataTime).daysInMonth();
     for (let i = 0; i < days; i++) {
       xData.push(`${i + 1}日`);
-      yData.push(data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number || 0);
+      yData.push((data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number) || 0);
     }
   } else {
     for (let i = 0; i < 12; i++) {
       xData.push(`${i + 1}月`);
-      yData.push(data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number || 0);
+      yData.push((data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number) || 0);
     }
   }
 
@@ -249,7 +249,7 @@ onMounted(() => {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lg:flex-row">
     <!-- 左侧组织树 -->
-    <ElCard class="card-wrapper w-280px flex-shrink-0 lg:w-280px">
+    <ElCard class="w-280px flex-shrink-0 card-wrapper lg:w-280px">
       <template #header>
         <div class="flex items-center justify-between">
           <span class="font-medium">组织结构</span>
@@ -266,7 +266,7 @@ onMounted(() => {
     </ElCard>
 
     <!-- 右侧分析区域 -->
-    <div class="flex-1 flex-col-stretch gap-16px overflow-hidden">
+    <div class="flex-col-stretch flex-1 gap-16px overflow-hidden">
       <!-- 查询表单 -->
       <ElCard class="card-wrapper">
         <ElForm :model="queryParams" label-width="80px" class="flex flex-wrap gap-16px">
@@ -279,7 +279,9 @@ onMounted(() => {
             <ElDatePicker
               v-model="queryParams.dataTime"
               :type="queryParams.timeType === 'YEAR' ? 'year' : queryParams.timeType === 'MONTH' ? 'month' : 'date'"
-              :format="queryParams.timeType === 'YEAR' ? 'YYYY' : queryParams.timeType === 'MONTH' ? 'YYYY-MM' : 'YYYY-MM-DD'"
+              :format="
+                queryParams.timeType === 'YEAR' ? 'YYYY' : queryParams.timeType === 'MONTH' ? 'YYYY-MM' : 'YYYY-MM-DD'
+              "
               value-format="YYYY-MM-DD"
               placeholder="选择时间"
               @change="loadData"
@@ -287,12 +289,7 @@ onMounted(() => {
           </ElFormItem>
           <ElFormItem label="能源类型" class="w-200px">
             <ElSelect v-model="queryParams.energyType" placeholder="选择能源类型" @change="handleEnergyTypeChange">
-              <ElOption
-                v-for="opt in energyTypeOptions"
-                :key="opt.value"
-                :label="opt.label"
-                :value="opt.value"
-              />
+              <ElOption v-for="opt in energyTypeOptions" :key="opt.value" :label="opt.label" :value="opt.value" />
             </ElSelect>
           </ElFormItem>
           <ElFormItem class="ml-auto">
@@ -312,27 +309,27 @@ onMounted(() => {
           </div>
         </template>
         <div v-if="analysisData" class="grid grid-cols-4 gap-16px">
-          <div class="text-center p-16px border rounded-8px">
+          <div class="border rounded-8px p-16px text-center">
             <div class="text-sm text-gray-500">总用量/{{ queryParams.unit }}</div>
-            <div class="text-2xl font-bold text-blue-500 mt-8px">{{ analysisData.total }}</div>
+            <div class="mt-8px text-2xl text-blue-500 font-bold">{{ analysisData.total }}</div>
           </div>
-          <div class="text-center p-16px border rounded-8px">
+          <div class="border rounded-8px p-16px text-center">
             <div class="text-sm text-gray-500">最大用量/{{ queryParams.unit }}</div>
-            <div class="text-2xl font-bold text-red-500 mt-8px">{{ analysisData.max }}</div>
+            <div class="mt-8px text-2xl text-red-500 font-bold">{{ analysisData.max }}</div>
           </div>
-          <div class="text-center p-16px border rounded-8px">
+          <div class="border rounded-8px p-16px text-center">
             <div class="text-sm text-gray-500">最小用量/{{ queryParams.unit }}</div>
-            <div class="text-2xl font-bold text-green-500 mt-8px">{{ analysisData.min }}</div>
+            <div class="mt-8px text-2xl text-green-500 font-bold">{{ analysisData.min }}</div>
           </div>
-          <div class="text-center p-16px border rounded-8px">
+          <div class="border rounded-8px p-16px text-center">
             <div class="text-sm text-gray-500">平均用量/{{ queryParams.unit }}</div>
-            <div class="text-2xl font-bold text-purple-500 mt-8px">{{ analysisData.avg }}</div>
+            <div class="mt-8px text-2xl text-purple-500 font-bold">{{ analysisData.avg }}</div>
           </div>
         </div>
       </ElCard>
 
       <!-- 趋势图 -->
-      <ElCard class="card-wrapper flex-1">
+      <ElCard class="flex-1 card-wrapper">
         <template #header>
           <div class="flex items-center justify-between">
             <span class="font-medium">{{ queryParams.nodeName }} - 能耗趋势</span>

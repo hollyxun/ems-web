@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import * as echarts from 'echarts';
 import { ElMessage } from 'element-plus';
-import { fetchGetYearList, fetchGetYearListChart, fetchExportYear } from '@/service/api/comprehensive';
 import dayjs from 'dayjs';
+import * as echarts from 'echarts';
+import { fetchExportYear, fetchGetYearList, fetchGetYearListChart } from '@/service/api/comprehensive';
 
 defineOptions({ name: 'YearComprehensive' });
 
@@ -155,15 +155,15 @@ onMounted(() => {
       <template #header>
         <span>年综合指标分析图表</span>
       </template>
-      <div id="yearChart" style="height: 350px" v-loading="loading" />
+      <div id="yearChart" v-loading="loading" style="height: 350px" />
     </ElCard>
 
     <!-- 数据表格 -->
-    <ElCard class="card-wrapper flex-1">
+    <ElCard class="flex-1 card-wrapper">
       <template #header>
         <span>年综合指标分析列表</span>
       </template>
-      <ElTable :data="dataList" v-loading="loading" border height="100%">
+      <ElTable v-loading="loading" :data="dataList" border height="100%">
         <ElTableColumn prop="dataTime" label="月份" align="center" min-width="100">
           <template #default="{ row }">
             {{ dayjs(row.dataTime).format('YYYY-MM') }}

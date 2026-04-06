@@ -2,7 +2,11 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreateEnergyIndicators, fetchUpdateEnergyIndicators, fetchEnergyIndicatorsById } from '@/service/api/energy-indicators';
+import {
+  fetchCreateEnergyIndicators,
+  fetchEnergyIndicatorsById,
+  fetchUpdateEnergyIndicators
+} from '@/service/api/energy-indicators';
 
 defineOptions({ name: 'EnergyIndicatorsDrawer' });
 
@@ -27,7 +31,7 @@ const drawerVisible = computed({
     emit('update:visible', v);
   }
 });
-const title = computed(() => props.operateType === 'add' ? '新增能源指标' : '编辑能源指标');
+const title = computed(() => (props.operateType === 'add' ? '新增能源指标' : '编辑能源指标'));
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);

@@ -1,7 +1,11 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
-import { fetchEnergyIndicatorsList, fetchDeleteEnergyIndicators, fetchBatchDeleteEnergyIndicators } from '@/service/api/energy-indicators';
+import {
+  fetchBatchDeleteEnergyIndicators,
+  fetchDeleteEnergyIndicators,
+  fetchEnergyIndicatorsList
+} from '@/service/api/energy-indicators';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import EnergyIndicatorsDrawer from './modules/energy-indicators-drawer.vue';
@@ -38,14 +42,22 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       prop: 'timeType',
       label: '时间类型',
       minWidth: 80,
-      formatter: row => <ElTag type={row.timeType === '年' ? 'success' : row.timeType === '月' ? 'warning' : 'info'}>{row.timeType}</ElTag>
+      formatter: row => (
+        <ElTag type={row.timeType === '年' ? 'success' : row.timeType === '月' ? 'warning' : 'info'}>
+          {row.timeType}
+        </ElTag>
+      )
     },
     { prop: 'dataTime', label: '时间', minWidth: 100 },
     {
       prop: 'energyType',
       label: '能源类型',
       minWidth: 80,
-      formatter: row => <ElTag type={row.energyType === '电' ? 'primary' : row.energyType === '水' ? 'info' : 'warning'}>{row.energyType}</ElTag>
+      formatter: row => (
+        <ElTag type={row.energyType === '电' ? 'primary' : row.energyType === '水' ? 'info' : 'warning'}>
+          {row.energyType}
+        </ElTag>
+      )
     },
     {
       prop: 'indicatorsType',
@@ -68,7 +80,9 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               {$t('common.edit')}
             </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
             </ElPopconfirm>
           </div>
         );
@@ -77,7 +91,11 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteEnergyIndicators(id);
@@ -131,7 +149,20 @@ onMounted(() => getData());
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getDataByPage">查询</ElButton>
-          <ElButton @click="() => { searchParams.nodeId = undefined; searchParams.timeType = undefined; searchParams.name = undefined; searchParams.energyType = undefined; searchParams.indicatorsType = undefined; getDataByPage(); }">重置</ElButton>
+          <ElButton
+            @click="
+              () => {
+                searchParams.nodeId = undefined;
+                searchParams.timeType = undefined;
+                searchParams.name = undefined;
+                searchParams.energyType = undefined;
+                searchParams.indicatorsType = undefined;
+                getDataByPage();
+              }
+            "
+          >
+            重置
+          </ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -140,19 +171,43 @@ onMounted(() => getData());
         <div class="flex items-center justify-between">
           <p>能源指标管理</p>
           <div class="flex gap-8px">
-            <ElButton v-if="selectedIds.length > 0" type="danger" @click="handleBatchDelete">批量删除 ({{ selectedIds.length }})</ElButton>
-            <TableHeaderOperation v-model:columns="columnChecks" :loading="loading" @add="handleAdd" @refresh="getData" />
+            <ElButton v-if="selectedIds.length > 0" type="danger" @click="handleBatchDelete">
+              批量删除 ({{ selectedIds.length }})
+            </ElButton>
+            <TableHeaderOperation
+              v-model:columns="columnChecks"
+              :loading="loading"
+              @add="handleAdd"
+              @refresh="getData"
+            />
           </div>
         </div>
       </template>
-      <ElTable v-loading="loading" height="100%" border :data="data" row-key="id" @selection-change="handleSelectionChange">
+      <ElTable
+        v-loading="loading"
+        height="100%"
+        border
+        :data="data"
+        row-key="id"
+        @selection-change="handleSelectionChange"
+      >
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
-      <EnergyIndicatorsDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData" @submitted="getDataByPage" />
+      <EnergyIndicatorsDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getDataByPage"
+      />
     </ElCard>
   </div>
 </template>
