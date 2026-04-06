@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { localStg } from '@/utils/storage';
 import { request } from '../request';
 
 // ============ 支路用能分析 ============
@@ -30,11 +32,14 @@ export function fetchBranchAnalysisList(data: Api.BranchAnalysis.BranchAnalysisL
  * 导出支路用能分析数据
  * @param data 导出参数
  */
-export function fetchExportBranchAnalysis(data: Api.BranchAnalysis.BranchAnalysisExportRequest) {
-  return request<Blob>({
-    url: '/branchanalysis/export',
-    method: 'post',
-    data,
-    responseType: 'blob'
+export async function fetchExportBranchAnalysis(data: Api.BranchAnalysis.BranchAnalysisExportRequest) {
+  const token = localStg.get('token');
+  const response = await axios.post('/branchanalysis/export', data, {
+    responseType: 'blob',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
   });
+
+  return response.data;
 }

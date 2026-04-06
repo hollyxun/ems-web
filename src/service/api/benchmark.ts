@@ -1,61 +1,33 @@
-/** 标杆管理 API */
+import { request } from '../request';
 
-import { request } from '@sa/request';
-
-export namespace Benchmark {
-  export interface Item {
-    id: number;
-    code: string;
-    type: string;
-    grade: string;
-    value: string;
-    nationalNum: string;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  export interface SearchParams {
-    page: number;
-    pageSize: number;
-    code?: string;
-    type?: string;
-    grade?: string;
-  }
-
-  export interface CreateParams {
-    code: string;
-    type: string;
-    grade?: string;
-    value?: string;
-    nationalNum?: string;
-  }
-
-  export interface UpdateParams {
-    id: number;
-    code?: string;
-    type?: string;
-    grade?: string;
-    value?: string;
-    nationalNum?: string;
-  }
-}
-
-export function fetchBenchmarkList(params: Benchmark.SearchParams) {
-  return request<PageResult<Benchmark.Item>>({
+/**
+ * 获取标杆列表
+ * @param params 查询参数
+ */
+export function fetchBenchmarkList(params: Api.Benchmark.SearchParams) {
+  return request<Api.Common.PageResult<Api.Benchmark.Item>>({
     url: '/benchmark/list',
     method: 'get',
     params
   });
 }
 
+/**
+ * 根据ID获取标杆详情
+ * @param id 标杆ID
+ */
 export function fetchBenchmarkById(id: number) {
-  return request<Benchmark.Item>({
+  return request<Api.Benchmark.Item>({
     url: `/benchmark/${id}`,
     method: 'get'
   });
 }
 
-export function fetchCreateBenchmark(data: Benchmark.CreateParams) {
+/**
+ * 创建标杆
+ * @param data 创建参数
+ */
+export function fetchCreateBenchmark(data: Api.Benchmark.CreateParams) {
   return request<void>({
     url: '/benchmark',
     method: 'post',
@@ -63,7 +35,11 @@ export function fetchCreateBenchmark(data: Benchmark.CreateParams) {
   });
 }
 
-export function fetchUpdateBenchmark(data: Benchmark.UpdateParams) {
+/**
+ * 更新标杆
+ * @param data 更新参数
+ */
+export function fetchUpdateBenchmark(data: Api.Benchmark.UpdateParams) {
   return request<void>({
     url: `/benchmark/${data.id}`,
     method: 'put',
@@ -71,6 +47,10 @@ export function fetchUpdateBenchmark(data: Benchmark.UpdateParams) {
   });
 }
 
+/**
+ * 删除标杆
+ * @param id 标杆ID
+ */
 export function fetchDeleteBenchmark(id: number) {
   return request<void>({
     url: `/benchmark/${id}`,

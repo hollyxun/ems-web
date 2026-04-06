@@ -1,153 +1,35 @@
-/** 峰谷分析 API */
-
-import { request } from '@sa/request';
-
-export namespace PeakValley {
-  // 电价时间段
-  export interface PriceDate {
-    id: number;
-    beginDate: string;
-    endDate: string;
-    remark: string;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  // 电价明细
-  export interface Price {
-    id: number;
-    parentId: string;
-    type: string;
-    startTime: string;
-    stopTime: string;
-    effectivityPrice: number;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  // 按小时统计结果
-  export interface HourVO {
-    dataList: HourDataVO[];
-    lineChat: LineChatVO[];
-    pieChat: PieChatVO;
-  }
-
-  // 按天统计结果
-  export interface DayVO {
-    costList: LineChatVO[];
-    powerConsumptionList: LineChatVO[];
-    totalVO: DayTotalVO;
-  }
-
-  // 按小时统计数据
-  export interface HourDataVO {
-    time: string;
-    sharpFee: number;
-    sharpPower: number;
-    peakFee: number;
-    peakPower: number;
-    flatFee: number;
-    flatPower: number;
-    valleyFee: number;
-    valleyPower: number;
-    totalFee: number;
-    totalPower: number;
-  }
-
-  // 折线图数据
-  export interface LineChatVO {
-    xdata: string;
-    ytip: number;
-    ypeak: number;
-    yflat: number;
-    ytrough: number;
-  }
-
-  // 饼图数据
-  export interface PieChatVO {
-    peak: string;
-    flat: string;
-    tip: string;
-    trough: string;
-  }
-
-  // 按天统计汇总数据
-  export interface DayTotalVO {
-    peakPowerCost: number;
-    peakPowerConsumption: number;
-    peakPowerProportion: number;
-    peakPowerCostProportion: number;
-    flatPowerCost: number;
-    flatPowerConsumption: number;
-    flatPowerProportion: number;
-    flatPowerCostProportion: number;
-    tipPowerCost: number;
-    tipPowerConsumption: number;
-    tipPowerProportion: number;
-    tipPowerCostProportion: number;
-    troughPowerCost: number;
-    troughPowerConsumption: number;
-    troughPowerProportion: number;
-    troughPowerCostProportion: number;
-    totalCost: number;
-    totalPowerConsumption: number;
-  }
-
-  // 查询参数
-  export interface QueryParams {
-    modelCode: string;
-    nodeId: string;
-    timeType: string;
-    queryTime: string;
-  }
-
-  // 电价时间段查询参数
-  export interface PriceDateSearchParams {
-    page: number;
-    pageSize: number;
-    remark?: string;
-  }
-
-  // 电价明细查询参数
-  export interface PriceSearchParams {
-    page: number;
-    pageSize: number;
-    parentId: string;
-    type?: string;
-  }
-
-  // 批量保存电价明细
-  export interface PriceSaveParams {
-    parentId: string;
-    list: PriceItem[];
-  }
-
-  export interface PriceItem {
-    type: string;
-    startTime: string;
-    stopTime: string;
-    effectivityPrice: number;
-  }
-}
+import { request } from '../request';
 
 // ==================== 电价时间段 ====================
 
-export function fetchPriceDateList(params: PeakValley.PriceDateSearchParams) {
-  return request<PageResult<PeakValley.PriceDate>>({
+/**
+ * 获取电价时间段列表
+ * @param params 查询参数
+ */
+export function fetchPriceDateList(params: Api.PeakValley.PriceDateSearchParams) {
+  return request<Api.Common.PageResult<Api.PeakValley.PriceDate>>({
     url: '/electricitypricedate/list',
     method: 'get',
     params
   });
 }
 
+/**
+ * 根据ID获取电价时间段
+ * @param id 时间段ID
+ */
 export function fetchPriceDateById(id: number) {
-  return request<PeakValley.PriceDate>({
+  return request<Api.PeakValley.PriceDate>({
     url: `/electricitypricedate/${id}`,
     method: 'get'
   });
 }
 
-export function fetchCreatePriceDate(data: PeakValley.PriceDate) {
+/**
+ * 创建电价时间段
+ * @param data 创建参数
+ */
+export function fetchCreatePriceDate(data: Api.PeakValley.PriceDate) {
   return request<void>({
     url: '/electricitypricedate',
     method: 'post',
@@ -155,7 +37,11 @@ export function fetchCreatePriceDate(data: PeakValley.PriceDate) {
   });
 }
 
-export function fetchUpdatePriceDate(data: PeakValley.PriceDate) {
+/**
+ * 更新电价时间段
+ * @param data 更新参数
+ */
+export function fetchUpdatePriceDate(data: Api.PeakValley.PriceDate) {
   return request<void>({
     url: `/electricitypricedate/${data.id}`,
     method: 'put',
@@ -163,6 +49,10 @@ export function fetchUpdatePriceDate(data: PeakValley.PriceDate) {
   });
 }
 
+/**
+ * 删除电价时间段
+ * @param id 时间段ID
+ */
 export function fetchDeletePriceDate(id: number) {
   return request<void>({
     url: `/electricitypricedate/${id}`,
@@ -172,22 +62,34 @@ export function fetchDeletePriceDate(id: number) {
 
 // ==================== 电价明细 ====================
 
-export function fetchPriceList(params: PeakValley.PriceSearchParams) {
-  return request<PageResult<PeakValley.Price>>({
+/**
+ * 获取电价明细列表
+ * @param params 查询参数
+ */
+export function fetchPriceList(params: Api.PeakValley.PriceSearchParams) {
+  return request<Api.Common.PageResult<Api.PeakValley.Price>>({
     url: '/electricityprice/list',
     method: 'get',
     params
   });
 }
 
+/**
+ * 根据ID获取电价明细
+ * @param id 电价ID
+ */
 export function fetchPriceById(id: number) {
-  return request<PeakValley.Price>({
+  return request<Api.PeakValley.Price>({
     url: `/electricityprice/${id}`,
     method: 'get'
   });
 }
 
-export function fetchCreatePrice(data: PeakValley.Price) {
+/**
+ * 创建电价明细
+ * @param data 创建参数
+ */
+export function fetchCreatePrice(data: Api.PeakValley.Price) {
   return request<void>({
     url: '/electricityprice',
     method: 'post',
@@ -195,7 +97,11 @@ export function fetchCreatePrice(data: PeakValley.Price) {
   });
 }
 
-export function fetchUpdatePrice(data: PeakValley.Price) {
+/**
+ * 更新电价明细
+ * @param data 更新参数
+ */
+export function fetchUpdatePrice(data: Api.PeakValley.Price) {
   return request<void>({
     url: `/electricityprice/${data.id}`,
     method: 'put',
@@ -203,6 +109,10 @@ export function fetchUpdatePrice(data: PeakValley.Price) {
   });
 }
 
+/**
+ * 删除电价明细
+ * @param id 电价ID
+ */
 export function fetchDeletePrice(id: number) {
   return request<void>({
     url: `/electricityprice/${id}`,
@@ -210,7 +120,11 @@ export function fetchDeletePrice(id: number) {
   });
 }
 
-export function fetchSavePriceList(data: PeakValley.PriceSaveParams) {
+/**
+ * 批量保存电价明细
+ * @param data 保存参数
+ */
+export function fetchSavePriceList(data: Api.PeakValley.PriceSaveParams) {
   return request<void>({
     url: '/electricityprice/save',
     method: 'put',
@@ -220,16 +134,24 @@ export function fetchSavePriceList(data: PeakValley.PriceSaveParams) {
 
 // ==================== 峰谷分析 ====================
 
-export function fetchSegmentAnalysisHour(params: PeakValley.QueryParams) {
-  return request<PeakValley.HourVO>({
+/**
+ * 按小时统计峰谷分析
+ * @param params 查询参数
+ */
+export function fetchSegmentAnalysisHour(params: Api.PeakValley.QueryParams) {
+  return request<Api.PeakValley.HourVO>({
     url: '/peakValley/segmentAnalysis/hour',
     method: 'get',
     params
   });
 }
 
-export function fetchSegmentAnalysisDay(params: PeakValley.QueryParams) {
-  return request<PeakValley.DayVO>({
+/**
+ * 按天统计峰谷分析
+ * @param params 查询参数
+ */
+export function fetchSegmentAnalysisDay(params: Api.PeakValley.QueryParams) {
+  return request<Api.PeakValley.DayVO>({
     url: '/peakValley/segmentAnalysis/day',
     method: 'get',
     params

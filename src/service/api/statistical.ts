@@ -1,11 +1,17 @@
 import { request } from '../request';
 
+// ============ 统计分析列表 ============
+
+export function fetchStatisticalList(params: Api.Statistical.SearchParams) {
+  return request<Api.Statistical.ListResponse>({
+    url: '/statistical/list',
+    method: 'get',
+    params
+  });
+}
+
 // ============ 能流图分析 ============
 
-/**
- * 获取能流图分析数据
- * @param data 查询参数
- */
 export function fetchFlowCharts(data: Api.Statistical.FlowCharts.FlowChartsParams) {
   return request<Api.Statistical.FlowCharts.FlowChartsResponse>({
     url: '/api/v1/statisticsAnalysis/getFlowCharts',
@@ -16,10 +22,6 @@ export function fetchFlowCharts(data: Api.Statistical.FlowCharts.FlowChartsParam
 
 // ============ 同比环比分析 ============
 
-/**
- * 获取电能耗同比数据
- * @param data 查询参数
- */
 export function fetchElectricYoY(data: Api.Statistical.Comparison.CompareParams) {
   return request<Api.Statistical.Comparison.YoYResponse[]>({
     url: '/api/v1/statistical/getElectricDataComparisonYoY',
@@ -28,10 +30,6 @@ export function fetchElectricYoY(data: Api.Statistical.Comparison.CompareParams)
   });
 }
 
-/**
- * 获取电能耗环比数据
- * @param data 查询参数
- */
 export function fetchElectricMoM(data: Api.Statistical.Comparison.CompareParams) {
   return request<Api.Statistical.Comparison.MoMResponse[]>({
     url: '/api/v1/statistical/getElectricDataComparisonMoM',
@@ -40,10 +38,6 @@ export function fetchElectricMoM(data: Api.Statistical.Comparison.CompareParams)
   });
 }
 
-/**
- * 获取水能耗同比数据
- * @param data 查询参数
- */
 export function fetchWaterYoY(data: Api.Statistical.Comparison.CompareParams) {
   return request<Api.Statistical.Comparison.YoYResponse[]>({
     url: '/api/v1/statistical/getWaterDataComparisonYoY',
@@ -52,10 +46,6 @@ export function fetchWaterYoY(data: Api.Statistical.Comparison.CompareParams) {
   });
 }
 
-/**
- * 获取水能耗环比数据
- * @param data 查询参数
- */
 export function fetchWaterMoM(data: Api.Statistical.Comparison.CompareParams) {
   return request<Api.Statistical.Comparison.MoMResponse[]>({
     url: '/api/v1/statistical/getWaterDataComparisonMoM',
@@ -64,10 +54,6 @@ export function fetchWaterMoM(data: Api.Statistical.Comparison.CompareParams) {
   });
 }
 
-/**
- * 获取同比分析列表数据
- * @param data 查询参数
- */
 export function fetchSameCompareList(data: Api.Statistical.Comparison.QueryCompareParams) {
   return request<Api.Statistical.Comparison.EnergyTypeContrastedResponse[]>({
     url: '/api/v1/statistical/querySameCompareList',
@@ -76,10 +62,6 @@ export function fetchSameCompareList(data: Api.Statistical.Comparison.QueryCompa
   });
 }
 
-/**
- * 获取环比分析列表数据
- * @param data 查询参数
- */
 export function fetchLoopCompareList(data: Api.Statistical.Comparison.QueryCompareParams) {
   return request<Api.Statistical.Comparison.EnergyTypeContrastedResponse[]>({
     url: '/api/v1/statistical/queryLoopCompareList',
@@ -90,10 +72,6 @@ export function fetchLoopCompareList(data: Api.Statistical.Comparison.QueryCompa
 
 // ============ 成本趋势分析 ============
 
-/**
- * 获取成本趋势分析列表
- * @param params 查询参数
- */
 export function fetchEnergyCostTrendList(params: Api.Statistical.CostTrend.CostTrendParams) {
   return request<Api.Statistical.CostTrend.CostTrendResponse>({
     url: '/api/v1/energyTypeAnalysis/listEnergyCostTrend',
@@ -102,10 +80,6 @@ export function fetchEnergyCostTrendList(params: Api.Statistical.CostTrend.CostT
   });
 }
 
-/**
- * 获取成本趋势分析详情
- * @param params 查询参数
- */
 export function fetchEnergyCostTrendDetail(params: Api.Statistical.CostTrend.CostTrendDetailParams) {
   return request<Api.Statistical.CostTrend.CostTrendItem[]>({
     url: '/api/v1/energyTypeAnalysis/listEnergyCostTrendDetail',

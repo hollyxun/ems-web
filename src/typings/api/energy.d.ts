@@ -153,7 +153,6 @@ declare namespace Api.Energy {
     status: 1 | 2 | 3;
     lastHeartbeat?: string;
     description: string;
-    organization?: Organization;
     medium?: Medium;
     createdAt?: string;
     updatedAt?: string;
@@ -758,5 +757,89 @@ declare namespace Api.Energy {
       energyType?: string;
       dimensions?: string[];
     }
+  }
+
+  /** 虚拟计量点 */
+  interface VirtualMeter {
+    id: number;
+    code: string;
+    name: string;
+    organizationId: number;
+    mediumId: number;
+    formula: string;
+    description: string;
+    status: number;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  /** 虚拟计量点创建参数 */
+  interface VirtualMeterCreate {
+    code: string;
+    name: string;
+    organizationId: number;
+    mediumId: number;
+    formula: string;
+    description?: string;
+    status?: number;
+  }
+
+  /** 虚拟计量点更新参数 */
+  interface VirtualMeterUpdate {
+    id: number;
+    code?: string;
+    name?: string;
+    organizationId?: number;
+    mediumId?: number;
+    formula?: string;
+    description?: string;
+    status?: number;
+  }
+
+  /** 虚拟计量点查询参数 */
+  interface VirtualMeterSearchParams {
+    page?: number;
+    pageSize?: number;
+    code?: string;
+    name?: string;
+    organizationId?: number;
+    mediumId?: number;
+    status?: number;
+  }
+
+  /** 虚拟计量点列表响应 */
+  interface VirtualMeterList {
+    list: VirtualMeter[];
+    total: number;
+    page: number;
+    pageSize: number;
+  }
+
+  /** 公式验证请求 */
+  interface ValidateFormulaRequest {
+    formula: string;
+    sourceMeterIds: number[];
+  }
+
+  /** 公式验证结果 */
+  interface FormulaValidationResult {
+    isValid: boolean;
+    errors: string[];
+    previewValue?: number;
+  }
+
+  /** 虚拟计量点计算请求 */
+  interface CalculateVirtualMeterRequest {
+    virtualMeterId: number;
+    startTime: string;
+    endTime: string;
+  }
+
+  /** 虚拟计量点计算结果 */
+  interface VirtualMeterCalculateResult {
+    virtualMeterId: number;
+    values: { timestamp: string; value: number }[];
+    totalValue: number;
+    avgValue: number;
   }
 }

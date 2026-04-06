@@ -1,4 +1,26 @@
 declare namespace Api.Statistical {
+  /** 统计分析列表 */
+  interface SearchParams {
+    page: number;
+    pageSize: number;
+    indicatorName?: string;
+  }
+
+  interface Item {
+    id: string;
+    nodeName: string;
+    indicatorName: string;
+    indicatorValue: number;
+    unit: string;
+    timeType: string;
+    dataTime: string;
+  }
+
+  interface ListResponse {
+    list: Item[];
+    total: number;
+  }
+
   /** 能流图分析 */
   namespace FlowCharts {
     /** 时间类型 */

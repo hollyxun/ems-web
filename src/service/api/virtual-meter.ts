@@ -88,7 +88,7 @@ export function fetchCalculateVirtualMeter(data: Api.Energy.CalculateVirtualMete
 
 /**
  * 获取可用的源计量点列表
- * @param mediumId 能源介质ID（可选）
+ * @param mediumId 能源介质ID
  */
 export function fetchGetAvailableSourceMeters(mediumId?: number) {
   return request<Api.Energy.MeteringPoint[]>({

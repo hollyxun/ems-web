@@ -1,85 +1,44 @@
-/** 能源指标 API */
+import { request } from '../request';
 
-import { request } from '@sa/request';
-
-export namespace EnergyIndicators {
-  export interface Item {
-    id: number;
-    nodeId: string;
-    timeType: string;
-    dataTime: string;
-    name: string;
-    number: number;
-    unit: string;
-    energyType: string;
-    indicatorsType: string;
-    nodeName: string;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  export interface SearchParams {
-    page: number;
-    pageSize: number;
-    nodeId?: string;
-    timeType?: string;
-    dataTime?: string;
-    name?: string;
-    energyType?: string;
-    indicatorsType?: string;
-    beginTime?: string;
-    endTime?: string;
-  }
-
-  export interface CreateParams {
-    nodeId: string;
-    timeType: string;
-    dataTime: string;
-    name: string;
-    number?: number;
-    unit?: string;
-    energyType?: string;
-    indicatorsType?: string;
-    nodeName?: string;
-  }
-
-  export interface UpdateParams {
-    id: number;
-    nodeId?: string;
-    timeType?: string;
-    dataTime?: string;
-    name?: string;
-    number?: number;
-    unit?: string;
-    energyType?: string;
-    indicatorsType?: string;
-    nodeName?: string;
-  }
-}
-
-export function fetchEnergyIndicatorsList(params: EnergyIndicators.SearchParams) {
-  return request<PageResult<EnergyIndicators.Item>>({
+/**
+ * 获取能源指标列表
+ * @param params 查询参数
+ */
+export function fetchEnergyIndicatorsList(params: Api.EnergyIndicators.SearchParams) {
+  return request<Api.Common.PageResult<Api.EnergyIndicators.Item>>({
     url: '/energyIndicators/list',
     method: 'get',
     params
   });
 }
 
+/**
+ * 根据ID获取能源指标详情
+ * @param id 指标ID
+ */
 export function fetchEnergyIndicatorsById(id: number) {
-  return request<EnergyIndicators.Item>({
+  return request<Api.EnergyIndicators.Item>({
     url: `/energyIndicators/${id}`,
     method: 'get'
   });
 }
 
+/**
+ * 根据节点ID获取能源指标
+ * @param nodeId 节点ID
+ */
 export function fetchEnergyIndicatorsByNodeId(nodeId: string) {
-  return request<EnergyIndicators.Item>({
+  return request<Api.EnergyIndicators.Item>({
     url: `/energyIndicators/node/${nodeId}`,
     method: 'get'
   });
 }
 
-export function fetchCreateEnergyIndicators(data: EnergyIndicators.CreateParams) {
+/**
+ * 创建能源指标
+ * @param data 创建参数
+ */
+export function fetchCreateEnergyIndicators(data: Api.EnergyIndicators.CreateParams) {
   return request<void>({
     url: '/energyIndicators',
     method: 'post',
@@ -87,7 +46,11 @@ export function fetchCreateEnergyIndicators(data: EnergyIndicators.CreateParams)
   });
 }
 
-export function fetchUpdateEnergyIndicators(data: EnergyIndicators.UpdateParams) {
+/**
+ * 更新能源指标
+ * @param data 更新参数
+ */
+export function fetchUpdateEnergyIndicators(data: Api.EnergyIndicators.UpdateParams) {
   return request<void>({
     url: `/energyIndicators/${data.id}`,
     method: 'put',
@@ -95,6 +58,10 @@ export function fetchUpdateEnergyIndicators(data: EnergyIndicators.UpdateParams)
   });
 }
 
+/**
+ * 删除能源指标
+ * @param id 指标ID
+ */
 export function fetchDeleteEnergyIndicators(id: number) {
   return request<void>({
     url: `/energyIndicators/${id}`,
@@ -102,6 +69,10 @@ export function fetchDeleteEnergyIndicators(id: number) {
   });
 }
 
+/**
+ * 批量删除能源指标
+ * @param ids 指标ID数组
+ */
 export function fetchBatchDeleteEnergyIndicators(ids: number[]) {
   return request<void>({
     url: '/energyIndicators/batch',

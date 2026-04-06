@@ -1,92 +1,46 @@
-/** 产品产量 API */
+import { request } from '../request';
 
-import { request } from '@sa/request';
-
-export namespace ProductOutput {
-  export interface Item {
-    id: number;
-    nodeId: string;
-    nodeName: string;
-    timeType: string;
-    dataTime: string;
-    name: string;
-    number: number;
-    unit: string;
-    dataType: string;
-    productType: string;
-    createdAt: string;
-    updatedAt: string;
-    createdBy: string;
-    updatedBy: string;
-  }
-
-  export interface SearchParams {
-    page: number;
-    pageSize: number;
-    nodeId?: string;
-    name?: string;
-    timeType?: string;
-    dataTime?: string;
-    dataType?: string;
-    productType?: string;
-    beginTime?: string;
-    endTime?: string;
-  }
-
-  export interface CreateParams {
-    nodeId: string;
-    nodeName?: string;
-    timeType: string;
-    dataTime: string;
-    name: string;
-    number: number;
-    unit?: string;
-    dataType: string;
-    productType?: string;
-  }
-
-  export interface UpdateParams {
-    id: number;
-    nodeId?: string;
-    nodeName?: string;
-    timeType?: string;
-    dataTime?: string;
-    name?: string;
-    number?: number;
-    unit?: string;
-    dataType?: string;
-    productType?: string;
-  }
-
-  export interface BatchDeleteParams {
-    ids: number[];
-  }
-}
-
-export function fetchProductOutputList(params: ProductOutput.SearchParams) {
-  return request<PageResult<ProductOutput.Item>>({
+/**
+ * 获取产品产量列表
+ * @param params 查询参数
+ */
+export function fetchProductOutputList(params: Api.ProductOutput.SearchParams) {
+  return request<Api.Common.PageResult<Api.ProductOutput.Item>>({
     url: '/productoutput/list',
     method: 'get',
     params
   });
 }
 
+/**
+ * 获取所有产品产量
+ * @param nodeId 节点ID
+ * @param dataType 数据类型
+ */
 export function fetchProductOutputAll(nodeId?: string, dataType?: string) {
-  return request<ProductOutput.Item[]>({
+  return request<Api.ProductOutput.Item[]>({
     url: '/productoutput/all',
     method: 'get',
     params: { nodeId, dataType }
   });
 }
 
+/**
+ * 根据ID获取产品产量详情
+ * @param id 产品产量ID
+ */
 export function fetchProductOutputById(id: number) {
-  return request<ProductOutput.Item>({
+  return request<Api.ProductOutput.Item>({
     url: `/productoutput/${id}`,
     method: 'get'
   });
 }
 
-export function fetchCreateProductOutput(data: ProductOutput.CreateParams) {
+/**
+ * 创建产品产量
+ * @param data 创建参数
+ */
+export function fetchCreateProductOutput(data: Api.ProductOutput.CreateParams) {
   return request<void>({
     url: '/productoutput',
     method: 'post',
@@ -94,7 +48,11 @@ export function fetchCreateProductOutput(data: ProductOutput.CreateParams) {
   });
 }
 
-export function fetchUpdateProductOutput(data: ProductOutput.UpdateParams) {
+/**
+ * 更新产品产量
+ * @param data 更新参数
+ */
+export function fetchUpdateProductOutput(data: Api.ProductOutput.UpdateParams) {
   return request<void>({
     url: `/productoutput/${data.id}`,
     method: 'put',
@@ -102,6 +60,10 @@ export function fetchUpdateProductOutput(data: ProductOutput.UpdateParams) {
   });
 }
 
+/**
+ * 删除产品产量
+ * @param id 产品产量ID
+ */
 export function fetchDeleteProductOutput(id: number) {
   return request<void>({
     url: `/productoutput/${id}`,
@@ -109,6 +71,10 @@ export function fetchDeleteProductOutput(id: number) {
   });
 }
 
+/**
+ * 批量删除产品产量
+ * @param ids 产品产量ID数组
+ */
 export function fetchBatchDeleteProductOutput(ids: number[]) {
   return request<void>({
     url: '/productoutput/batch',

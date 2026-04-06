@@ -1,36 +1,10 @@
 import { request } from '../request';
 
-// Types
-export interface CrossFactoryPermission {
-  roleId: number;
-  allowed: boolean;
-  factoryIds: number[];
-}
-
-export interface ShiftPermission {
-  roleId: number;
-  scope: 'own' | 'all';
-}
-
-export interface OperationPermission {
-  roleId: number;
-  module: string;
-  operation: 'view' | 'enter' | 'modify' | 'delete' | 'export';
-  allowed: boolean;
-}
-
-export interface RolePermissionConfig {
-  roleId: number;
-  roleName: string;
-  crossFactory: CrossFactoryPermission;
-  shift: ShiftPermission;
-  operations: OperationPermission[];
-}
-
-// API Functions
-
-/** Set cross-factory permission for a role */
-export function fetchSetCrossFactoryPermission(data: CrossFactoryPermission) {
+/**
+ * 设置跨工厂权限
+ * @param data 跨工厂权限配置
+ */
+export function fetchSetCrossFactoryPermission(data: Api.AdvancedPermission.CrossFactoryPermission) {
   return request<boolean>({
     url: '/advancedPermission/setCrossFactoryPermission',
     method: 'post',
@@ -38,17 +12,23 @@ export function fetchSetCrossFactoryPermission(data: CrossFactoryPermission) {
   });
 }
 
-/** Get cross-factory permission for a role */
+/**
+ * 获取跨工厂权限
+ * @param roleId 角色ID
+ */
 export function fetchGetCrossFactoryPermission(roleId: number) {
-  return request<CrossFactoryPermission>({
+  return request<Api.AdvancedPermission.CrossFactoryPermission>({
     url: '/advancedPermission/getCrossFactoryPermission',
     method: 'get',
     params: { roleId }
   });
 }
 
-/** Set shift permission for a role */
-export function fetchSetShiftPermission(data: ShiftPermission) {
+/**
+ * 设置班次权限
+ * @param data 班次权限配置
+ */
+export function fetchSetShiftPermission(data: Api.AdvancedPermission.ShiftPermission) {
   return request<boolean>({
     url: '/advancedPermission/setShiftPermission',
     method: 'post',
@@ -56,17 +36,23 @@ export function fetchSetShiftPermission(data: ShiftPermission) {
   });
 }
 
-/** Get shift permission for a role */
+/**
+ * 获取班次权限
+ * @param roleId 角色ID
+ */
 export function fetchGetShiftPermission(roleId: number) {
-  return request<ShiftPermission>({
+  return request<Api.AdvancedPermission.ShiftPermission>({
     url: '/advancedPermission/getShiftPermission',
     method: 'get',
     params: { roleId }
   });
 }
 
-/** Set operation permission for a role */
-export function fetchSetOperationPermission(data: OperationPermission) {
+/**
+ * 设置操作权限
+ * @param data 操作权限配置
+ */
+export function fetchSetOperationPermission(data: Api.AdvancedPermission.OperationPermission) {
   return request<boolean>({
     url: '/advancedPermission/setOperationPermission',
     method: 'post',
@@ -74,9 +60,12 @@ export function fetchSetOperationPermission(data: OperationPermission) {
   });
 }
 
-/** Get operation permissions for a role */
+/**
+ * 获取操作权限列表
+ * @param roleId 角色ID
+ */
 export function fetchGetOperationPermissions(roleId: number) {
-  return request<OperationPermission[]>({
+  return request<Api.AdvancedPermission.OperationPermission[]>({
     url: '/advancedPermission/getOperationPermissions',
     method: 'get',
     params: { roleId }

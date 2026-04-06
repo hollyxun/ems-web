@@ -1,78 +1,4 @@
-/** 尖峰平谷方案管理 API */
-
-import { request } from '@sa/request';
-
-export namespace SpikesAndValleys {
-  /** 方案 */
-  export interface Scheme {
-    id: number;
-    schemeName: string;
-    executeTime: string;
-    type: string;
-    remark: string;
-    createdAt: string;
-    updatedAt: string;
-    createdBy: string;
-    updatedBy: string;
-  }
-
-  /** 时段明细 */
-  export interface Item {
-    id: number;
-    schemeId: number;
-    time: string;
-    electrovalency: number;
-    startTime: string;
-    endTime: string;
-    createdAt: string;
-    updatedAt: string;
-  }
-
-  /** 方案VO（包含时段明细） */
-  export interface SchemeVO {
-    id: number;
-    schemeName: string;
-    executeTime: string;
-    type: string;
-    remark: string;
-    createdAt: string;
-    updatedAt: string;
-    createdBy: string;
-    updatedBy: string;
-    itemList: Item[];
-  }
-
-  export interface SearchParams {
-    page: number;
-    pageSize: number;
-    schemeName?: string;
-    type?: string;
-  }
-
-  export interface ItemCreate {
-    time: string;
-    electrovalency: number;
-    startTime: string;
-    endTime: string;
-  }
-
-  export interface CreateParams {
-    schemeName: string;
-    executeTime: string;
-    type: string;
-    remark?: string;
-    itemList: ItemCreate[];
-  }
-
-  export interface UpdateParams {
-    id: number;
-    schemeName: string;
-    executeTime: string;
-    type: string;
-    remark?: string;
-    itemList: ItemCreate[];
-  }
-}
+import { request } from '../request';
 
 /** 时段类型选项 */
 export const timeTypeOptions = [
@@ -89,22 +15,34 @@ export const schemeTypeOptions = [
   { label: '外部', value: '3' }
 ];
 
-export function fetchSpikesAndValleysList(params: SpikesAndValleys.SearchParams) {
-  return request<PageResult<SpikesAndValleys.SchemeVO>>({
+/**
+ * 获取尖峰平谷方案列表
+ * @param params 查询参数
+ */
+export function fetchSpikesAndValleysList(params: Api.SpikesAndValleys.SearchParams) {
+  return request<Api.Common.PageResult<Api.SpikesAndValleys.SchemeVO>>({
     url: '/spikesandvalleys/list',
     method: 'get',
     params
   });
 }
 
+/**
+ * 根据ID获取尖峰平谷方案详情
+ * @param id 方案ID
+ */
 export function fetchSpikesAndValleysById(id: number) {
-  return request<SpikesAndValleys.SchemeVO>({
+  return request<Api.SpikesAndValleys.SchemeVO>({
     url: `/spikesandvalleys/${id}`,
     method: 'get'
   });
 }
 
-export function fetchCreateSpikesAndValleys(data: SpikesAndValleys.CreateParams) {
+/**
+ * 创建尖峰平谷方案
+ * @param data 创建参数
+ */
+export function fetchCreateSpikesAndValleys(data: Api.SpikesAndValleys.CreateParams) {
   return request<void>({
     url: '/spikesandvalleys',
     method: 'post',
@@ -112,7 +50,11 @@ export function fetchCreateSpikesAndValleys(data: SpikesAndValleys.CreateParams)
   });
 }
 
-export function fetchUpdateSpikesAndValleys(data: SpikesAndValleys.UpdateParams) {
+/**
+ * 更新尖峰平谷方案
+ * @param data 更新参数
+ */
+export function fetchUpdateSpikesAndValleys(data: Api.SpikesAndValleys.UpdateParams) {
   return request<void>({
     url: `/spikesandvalleys/${data.id}`,
     method: 'put',
@@ -120,6 +62,10 @@ export function fetchUpdateSpikesAndValleys(data: SpikesAndValleys.UpdateParams)
   });
 }
 
+/**
+ * 删除尖峰平谷方案
+ * @param id 方案ID
+ */
 export function fetchDeleteSpikesAndValleys(id: number) {
   return request<void>({
     url: `/spikesandvalleys/${id}`,
@@ -127,6 +73,10 @@ export function fetchDeleteSpikesAndValleys(id: number) {
   });
 }
 
+/**
+ * 批量删除尖峰平谷方案
+ * @param ids 方案ID数组
+ */
 export function fetchBatchDeleteSpikesAndValleys(ids: number[]) {
   return request<void>({
     url: '/spikesandvalleys/batch',
