@@ -39,7 +39,7 @@ export function fetchEnergyIndicatorsByNodeId(nodeId: string) {
  * @param data 创建参数
  */
 export function fetchCreateEnergyIndicators(data: Api.EnergyIndicators.CreateParams) {
-  return request<void>({
+  return request({
     url: '/energyIndicators',
     method: 'post',
     data
@@ -51,7 +51,7 @@ export function fetchCreateEnergyIndicators(data: Api.EnergyIndicators.CreatePar
  * @param data 更新参数
  */
 export function fetchUpdateEnergyIndicators(data: Api.EnergyIndicators.UpdateParams) {
-  return request<void>({
+  return request({
     url: `/energyIndicators/${data.id}`,
     method: 'put',
     data
@@ -63,7 +63,7 @@ export function fetchUpdateEnergyIndicators(data: Api.EnergyIndicators.UpdatePar
  * @param id 指标ID
  */
 export function fetchDeleteEnergyIndicators(id: number) {
-  return request<void>({
+  return request({
     url: `/energyIndicators/${id}`,
     method: 'delete'
   });
@@ -74,7 +74,7 @@ export function fetchDeleteEnergyIndicators(id: number) {
  * @param ids 指标ID数组
  */
 export function fetchBatchDeleteEnergyIndicators(ids: number[]) {
-  return request<void>({
+  return request({
     url: '/energyIndicators/batch',
     method: 'delete',
     data: ids

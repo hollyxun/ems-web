@@ -41,7 +41,7 @@ export function fetchProductOutputById(id: number) {
  * @param data 创建参数
  */
 export function fetchCreateProductOutput(data: Api.ProductOutput.CreateParams) {
-  return request<void>({
+  return request({
     url: '/productoutput',
     method: 'post',
     data
@@ -53,7 +53,7 @@ export function fetchCreateProductOutput(data: Api.ProductOutput.CreateParams) {
  * @param data 更新参数
  */
 export function fetchUpdateProductOutput(data: Api.ProductOutput.UpdateParams) {
-  return request<void>({
+  return request({
     url: `/productoutput/${data.id}`,
     method: 'put',
     data
@@ -65,7 +65,7 @@ export function fetchUpdateProductOutput(data: Api.ProductOutput.UpdateParams) {
  * @param id 产品产量ID
  */
 export function fetchDeleteProductOutput(id: number) {
-  return request<void>({
+  return request({
     url: `/productoutput/${id}`,
     method: 'delete'
   });
@@ -76,7 +76,7 @@ export function fetchDeleteProductOutput(id: number) {
  * @param ids 产品产量ID数组
  */
 export function fetchBatchDeleteProductOutput(ids: number[]) {
-  return request<void>({
+  return request({
     url: '/productoutput/batch',
     method: 'delete',
     data: { ids }

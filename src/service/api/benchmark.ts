@@ -28,7 +28,7 @@ export function fetchBenchmarkById(id: number) {
  * @param data 创建参数
  */
 export function fetchCreateBenchmark(data: Api.Benchmark.CreateParams) {
-  return request<void>({
+  return request({
     url: '/benchmark',
     method: 'post',
     data
@@ -40,7 +40,7 @@ export function fetchCreateBenchmark(data: Api.Benchmark.CreateParams) {
  * @param data 更新参数
  */
 export function fetchUpdateBenchmark(data: Api.Benchmark.UpdateParams) {
-  return request<void>({
+  return request({
     url: `/benchmark/${data.id}`,
     method: 'put',
     data
@@ -52,7 +52,7 @@ export function fetchUpdateBenchmark(data: Api.Benchmark.UpdateParams) {
  * @param id 标杆ID
  */
 export function fetchDeleteBenchmark(id: number) {
-  return request<void>({
+  return request({
     url: `/benchmark/${id}`,
     method: 'delete'
   });

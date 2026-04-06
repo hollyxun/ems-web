@@ -43,7 +43,7 @@ export function fetchSpikesAndValleysById(id: number) {
  * @param data 创建参数
  */
 export function fetchCreateSpikesAndValleys(data: Api.SpikesAndValleys.CreateParams) {
-  return request<void>({
+  return request({
     url: '/spikesandvalleys',
     method: 'post',
     data
@@ -55,7 +55,7 @@ export function fetchCreateSpikesAndValleys(data: Api.SpikesAndValleys.CreatePar
  * @param data 更新参数
  */
 export function fetchUpdateSpikesAndValleys(data: Api.SpikesAndValleys.UpdateParams) {
-  return request<void>({
+  return request({
     url: `/spikesandvalleys/${data.id}`,
     method: 'put',
     data
@@ -67,7 +67,7 @@ export function fetchUpdateSpikesAndValleys(data: Api.SpikesAndValleys.UpdatePar
  * @param id 方案ID
  */
 export function fetchDeleteSpikesAndValleys(id: number) {
-  return request<void>({
+  return request({
     url: `/spikesandvalleys/${id}`,
     method: 'delete'
   });
@@ -78,7 +78,7 @@ export function fetchDeleteSpikesAndValleys(id: number) {
  * @param ids 方案ID数组
  */
 export function fetchBatchDeleteSpikesAndValleys(ids: number[]) {
-  return request<void>({
+  return request({
     url: '/spikesandvalleys/batch',
     method: 'delete',
     data: ids

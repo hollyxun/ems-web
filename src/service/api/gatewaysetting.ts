@@ -38,7 +38,7 @@ export function fetchGatewaySettingById(id: number) {
  * @param data 创建参数
  */
 export function fetchCreateGatewaySetting(data: Api.GatewaySetting.CreateParams) {
-  return request<void>({
+  return request({
     url: '/gatewaySetting',
     method: 'post',
     data
@@ -50,7 +50,7 @@ export function fetchCreateGatewaySetting(data: Api.GatewaySetting.CreateParams)
  * @param data 更新参数
  */
 export function fetchUpdateGatewaySetting(data: Api.GatewaySetting.UpdateParams) {
-  return request<void>({
+  return request({
     url: `/gatewaySetting/${data.id}`,
     method: 'put',
     data
@@ -62,7 +62,7 @@ export function fetchUpdateGatewaySetting(data: Api.GatewaySetting.UpdateParams)
  * @param id 网关ID
  */
 export function fetchDeleteGatewaySetting(id: number) {
-  return request<void>({
+  return request({
     url: `/gatewaySetting/${id}`,
     method: 'delete'
   });
@@ -73,7 +73,7 @@ export function fetchDeleteGatewaySetting(id: number) {
  * @param ids 网关ID数组
  */
 export function fetchBatchDeleteGatewaySetting(ids: number[]) {
-  return request<void>({
+  return request({
     url: '/gatewaySetting/batch',
     method: 'delete',
     data: ids

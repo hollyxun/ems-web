@@ -30,7 +30,7 @@ export function fetchPriceDateById(id: number) {
  * @param data 创建参数
  */
 export function fetchCreatePriceDate(data: Api.PeakValley.PriceDate) {
-  return request<void>({
+  return request({
     url: '/electricitypricedate',
     method: 'post',
     data
@@ -42,7 +42,7 @@ export function fetchCreatePriceDate(data: Api.PeakValley.PriceDate) {
  * @param data 更新参数
  */
 export function fetchUpdatePriceDate(data: Api.PeakValley.PriceDate) {
-  return request<void>({
+  return request({
     url: `/electricitypricedate/${data.id}`,
     method: 'put',
     data
@@ -54,7 +54,7 @@ export function fetchUpdatePriceDate(data: Api.PeakValley.PriceDate) {
  * @param id 时间段ID
  */
 export function fetchDeletePriceDate(id: number) {
-  return request<void>({
+  return request({
     url: `/electricitypricedate/${id}`,
     method: 'delete'
   });
@@ -90,7 +90,7 @@ export function fetchPriceById(id: number) {
  * @param data 创建参数
  */
 export function fetchCreatePrice(data: Api.PeakValley.Price) {
-  return request<void>({
+  return request({
     url: '/electricityprice',
     method: 'post',
     data
@@ -102,7 +102,7 @@ export function fetchCreatePrice(data: Api.PeakValley.Price) {
  * @param data 更新参数
  */
 export function fetchUpdatePrice(data: Api.PeakValley.Price) {
-  return request<void>({
+  return request({
     url: `/electricityprice/${data.id}`,
     method: 'put',
     data
@@ -114,7 +114,7 @@ export function fetchUpdatePrice(data: Api.PeakValley.Price) {
  * @param id 电价ID
  */
 export function fetchDeletePrice(id: number) {
-  return request<void>({
+  return request({
     url: `/electricityprice/${id}`,
     method: 'delete'
   });
@@ -125,7 +125,7 @@ export function fetchDeletePrice(id: number) {
  * @param data 保存参数
  */
 export function fetchSavePriceList(data: Api.PeakValley.PriceSaveParams) {
-  return request<void>({
+  return request({
     url: '/electricityprice/save',
     method: 'put',
     data
