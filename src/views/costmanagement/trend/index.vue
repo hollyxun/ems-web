@@ -101,15 +101,18 @@ function updateChart() {
   chart.setOption(option);
 }
 
-watch(() => queryParams.value.timeType, () => {
-  if (queryParams.value.timeType === 'DAY') {
-    queryParams.value.dataTime = new Date().toISOString().slice(0, 10);
-  } else if (queryParams.value.timeType === 'MONTH') {
-    queryParams.value.dataTime = new Date().toISOString().slice(0, 7);
-  } else {
-    queryParams.value.dataTime = new Date().toISOString().slice(0, 4);
+watch(
+  () => queryParams.value.timeType,
+  () => {
+    if (queryParams.value.timeType === 'DAY') {
+      queryParams.value.dataTime = new Date().toISOString().slice(0, 10);
+    } else if (queryParams.value.timeType === 'MONTH') {
+      queryParams.value.dataTime = new Date().toISOString().slice(0, 7);
+    } else {
+      queryParams.value.dataTime = new Date().toISOString().slice(0, 4);
+    }
   }
-});
+);
 
 onMounted(() => {
   getData();
@@ -131,7 +134,9 @@ onMounted(() => {
             v-model="queryParams.dataTime"
             :type="queryParams.timeType === 'DAY' ? 'date' : queryParams.timeType === 'MONTH' ? 'month' : 'year'"
             placeholder="选择数据时间"
-            :value-format="queryParams.timeType === 'DAY' ? 'YYYY-MM-DD' : queryParams.timeType === 'MONTH' ? 'YYYY-MM' : 'YYYY'"
+            :value-format="
+              queryParams.timeType === 'DAY' ? 'YYYY-MM-DD' : queryParams.timeType === 'MONTH' ? 'YYYY-MM' : 'YYYY'
+            "
             class="w-full"
           />
         </ElFormItem>
@@ -141,7 +146,7 @@ onMounted(() => {
       </ElForm>
     </ElCard>
     <ElCard class="card-wrapper sm:flex-1-hidden">
-      <div ref="chartRef" class="h-500px" v-loading="loading" />
+      <div ref="chartRef" v-loading="loading" class="h-500px" />
     </ElCard>
   </div>
 </template>

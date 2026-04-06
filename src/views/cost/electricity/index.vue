@@ -1,14 +1,24 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElMessage, ElPopconfirm } from 'element-plus';
-import { fetchElectricityCostList, fetchCreateElectricityCost, fetchUpdateElectricityCost, fetchDeleteElectricityCost } from '@/service/api/costmanagement';
+import {
+  fetchCreateElectricityCost,
+  fetchDeleteElectricityCost,
+  fetchElectricityCostList,
+  fetchUpdateElectricityCost
+} from '@/service/api/costmanagement';
 import type { CostManagement } from '@/service/api/costmanagement';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ElectricityCostManage' });
 
-const searchParams = ref({ page: 1, pageSize: 10, organizationId: undefined as number | undefined, timeType: undefined as string | undefined });
+const searchParams = ref({
+  page: 1,
+  pageSize: 10,
+  organizationId: undefined as number | undefined,
+  timeType: undefined as string | undefined
+});
 
 const timeTypes = [
   { label: '日', value: 'DAY' },
@@ -31,14 +41,21 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'flatElectricity', label: '平时段电量', minWidth: 120 },
     { prop: 'valleyElectricity', label: '谷时段电量', minWidth: 120 },
     {
-      prop: 'operate', label: $t('common.operate'), align: 'center', width: 160,
+      prop: 'operate',
+      label: $t('common.operate'),
+      align: 'center',
+      width: 160,
       formatter: row => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
-            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
             </ElPopconfirm>
           </div>
         );
@@ -47,7 +64,11 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 const formData = ref({
   organizationId: 1,
@@ -110,7 +131,16 @@ onMounted(() => getData());
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getDataByPage">查询</ElButton>
-          <ElButton @click="() => { searchParams.timeType = undefined; getDataByPage(); }">重置</ElButton>
+          <ElButton
+            @click="
+              () => {
+                searchParams.timeType = undefined;
+                getDataByPage();
+              }
+            "
+          >
+            重置
+          </ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -125,8 +155,13 @@ onMounted(() => getData());
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
     </ElCard>
 

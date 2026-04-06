@@ -88,12 +88,7 @@ onMounted(() => {
     <ElCard class="card-wrapper">
       <ElForm :model="queryParams" label-width="80px" class="flex flex-wrap gap-16px">
         <ElFormItem label="时间" class="w-280px">
-          <ElDatePicker
-            v-model="queryParams.dataTime"
-            type="year"
-            value-format="YYYY-MM-DD"
-            placeholder="选择年份"
-          />
+          <ElDatePicker v-model="queryParams.dataTime" type="year" value-format="YYYY-MM-DD" placeholder="选择年份" />
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getData">搜索</ElButton>
@@ -102,18 +97,18 @@ onMounted(() => {
     </ElCard>
 
     <!-- 成本趋势图 -->
-    <ElCard class="card-wrapper" title="成本趋势（元）" v-loading="loading">
+    <ElCard v-loading="loading" class="card-wrapper" title="成本趋势（元）">
       <div id="costChart" class="h-400px w-full"></div>
     </ElCard>
 
     <!-- 能耗趋势图 -->
-    <ElCard class="card-wrapper" title="能耗趋势" v-loading="loading">
+    <ElCard v-loading="loading" class="card-wrapper" title="能耗趋势">
       <div id="amountChart" class="h-400px w-full"></div>
     </ElCard>
 
     <!-- 数据表格 -->
     <ElCard class="card-wrapper" title="成本明细">
-      <ElTable :data="trendData" v-loading="loading" border>
+      <ElTable v-loading="loading" :data="trendData" border>
         <ElTableColumn prop="timeLabel" label="时间" align="center" width="100" />
         <ElTableColumn label="费用（元）" align="center">
           <ElTableColumn prop="totalFee" label="总费用" align="center">

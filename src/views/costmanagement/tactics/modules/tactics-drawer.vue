@@ -2,18 +2,32 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreatePriceTactics, fetchUpdatePriceTactics, fetchPriceTacticsById } from '@/service/api/costmanagement';
+import { fetchCreatePriceTactics, fetchPriceTacticsById, fetchUpdatePriceTactics } from '@/service/api/costmanagement';
 
 defineOptions({ name: 'TacticsDrawer' });
 
-interface Props { visible: boolean; operateType: 'add' | 'edit'; rowData?: { id: number } | null; }
-interface Emits { (e: 'update:visible', visible: boolean): void; (e: 'submitted'): void; }
+interface Props {
+  visible: boolean;
+  operateType: 'add' | 'edit';
+  rowData?: { id: number } | null;
+}
+interface Emits {
+  (e: 'update:visible', visible: boolean): void;
+  (e: 'submitted'): void;
+}
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const drawerVisible = computed({ get() { return props.visible; }, set(v) { emit('update:visible', v); } });
-const title = computed(() => props.operateType === 'add' ? '新增成本策略' : '编辑成本策略');
+const drawerVisible = computed({
+  get() {
+    return props.visible;
+  },
+  set(v) {
+    emit('update:visible', v);
+  }
+});
+const title = computed(() => (props.operateType === 'add' ? '新增成本策略' : '编辑成本策略'));
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);
@@ -38,15 +52,25 @@ const energyTypes = [
   { label: '热', value: 4 }
 ];
 
-watch(() => props.visible, async (visible) => {
-  if (visible && props.operateType === 'edit' && props.rowData?.id) {
-    const { data, error } = await fetchPriceTacticsById(props.rowData.id);
-    if (!error && data) formData.value = { ...formData.value, ...data };
-  } else if (visible && props.operateType === 'add') {
-    formData.value = { tacticsNumber: '', tacticsName: '', energyType: 1, isLadder: false, description: '', status: 1 };
-    formRef.value?.clearValidate();
+watch(
+  () => props.visible,
+  async visible => {
+    if (visible && props.operateType === 'edit' && props.rowData?.id) {
+      const { data, error } = await fetchPriceTacticsById(props.rowData.id);
+      if (!error && data) formData.value = { ...formData.value, ...data };
+    } else if (visible && props.operateType === 'add') {
+      formData.value = {
+        tacticsNumber: '',
+        tacticsName: '',
+        energyType: 1,
+        isLadder: false,
+        description: '',
+        status: 1
+      };
+      formRef.value?.clearValidate();
+    }
   }
-});
+);
 
 async function handleSubmit() {
   await formRef.value?.validate();
@@ -54,12 +78,22 @@ async function handleSubmit() {
   try {
     if (props.operateType === 'edit' && props.rowData?.id) {
       const { error } = await fetchUpdatePriceTactics(props.rowData.id, formData.value as any);
-      if (!error) { ElMessage.success('更新成功'); drawerVisible.value = false; emit('submitted'); }
+      if (!error) {
+        ElMessage.success('更新成功');
+        drawerVisible.value = false;
+        emit('submitted');
+      }
     } else {
       const { error } = await fetchCreatePriceTactics(formData.value as any);
-      if (!error) { ElMessage.success('创建成功'); drawerVisible.value = false; emit('submitted'); }
+      if (!error) {
+        ElMessage.success('创建成功');
+        drawerVisible.value = false;
+        emit('submitted');
+      }
     }
-  } finally { loading.value = false; }
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 

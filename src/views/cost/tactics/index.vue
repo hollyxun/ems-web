@@ -1,7 +1,12 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElMessage, ElPopconfirm } from 'element-plus';
-import { fetchPriceTacticsList, fetchCreatePriceTactics, fetchUpdatePriceTactics, fetchDeletePriceTactics } from '@/service/api/costmanagement';
+import {
+  fetchCreatePriceTactics,
+  fetchDeletePriceTactics,
+  fetchPriceTacticsList,
+  fetchUpdatePriceTactics
+} from '@/service/api/costmanagement';
 import type { CostManagement } from '@/service/api/costmanagement';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -25,18 +30,30 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
     { prop: 'tacticsNumber', label: '策略编码', minWidth: 120 },
     { prop: 'tacticsName', label: '策略名称', minWidth: 150 },
-    { prop: 'energyType', label: '能源类型', minWidth: 100, formatter: row => energyTypes.find(e => e.value === row.energyType)?.label || '-' },
-    { prop: 'isLadder', label: '阶梯价格', minWidth: 100, formatter: row => row.isLadder ? '是' : '否' },
+    {
+      prop: 'energyType',
+      label: '能源类型',
+      minWidth: 100,
+      formatter: row => energyTypes.find(e => e.value === row.energyType)?.label || '-'
+    },
+    { prop: 'isLadder', label: '阶梯价格', minWidth: 100, formatter: row => (row.isLadder ? '是' : '否') },
     { prop: 'description', label: '描述', minWidth: 200 },
     {
-      prop: 'operate', label: $t('common.operate'), align: 'center', width: 160,
+      prop: 'operate',
+      label: $t('common.operate'),
+      align: 'center',
+      width: 160,
       formatter: row => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
-            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
             </ElPopconfirm>
           </div>
         );
@@ -45,7 +62,11 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 const formData = ref({
   tacticsNumber: '',
@@ -121,11 +142,25 @@ onMounted(() => getData());
     <ElCard class="card-wrapper">
       <ElForm :model="searchParams" label-width="80px" class="flex flex-wrap gap-16px">
         <ElFormItem label="策略名称" class="w-280px">
-          <ElInput v-model="searchParams.tacticsName" placeholder="搜索策略名称" clearable @keyup.enter="getDataByPage" />
+          <ElInput
+            v-model="searchParams.tacticsName"
+            placeholder="搜索策略名称"
+            clearable
+            @keyup.enter="getDataByPage"
+          />
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getDataByPage">查询</ElButton>
-          <ElButton @click="() => { searchParams.tacticsName = undefined; getDataByPage(); }">重置</ElButton>
+          <ElButton
+            @click="
+              () => {
+                searchParams.tacticsName = undefined;
+                getDataByPage();
+              }
+            "
+          >
+            重置
+          </ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -140,8 +175,13 @@ onMounted(() => getData());
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
     </ElCard>
 
@@ -169,7 +209,7 @@ onMounted(() => getData());
         <div class="mb-16px">
           <ElButton type="primary" size="small" @click="addItem">添加价格项</ElButton>
         </div>
-        <div v-for="(item, index) in formData.items" :key="index" class="flex gap-8px mb-8px items-center">
+        <div v-for="(item, index) in formData.items" :key="index" class="mb-8px flex items-center gap-8px">
           <ElSelect v-model="item.electricType" placeholder="电价类型" class="w-120px">
             <ElOption v-for="e in electricTypes" :key="e.value" :label="e.label" :value="e.value" />
           </ElSelect>
