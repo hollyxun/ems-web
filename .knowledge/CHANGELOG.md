@@ -48,6 +48,22 @@
 
 ### 更新
 
+- **[AGENTS.md]** - 新增核心原则第 6 条：代码修改后必检规范
+  - 每次编写或修改文件后必须执行 TypeScript 和 ESLint 检查
+  - 包含检查时机、检查命令、验证标准
+
+- **[principles/typescript-constraints.md]** - 新增第 11 节：代码修改后必检规范
+  - 强制要求：每次编写或修改文件后执行 TS + ESLint 检查
+  - 检查流程：`npx tsc --noEmit` + `pnpm lint`
+  - 验证标准：源码文件无错误输出
+
+- **[skills/api-type-architecture.md]** - 补充 JSDoc 注释规范和检查清单
+  - 新增 JSDoc 注释规范
+  - 新增分页响应 `Api.Common.PageResult<T>` 使用说明
+  - 新增无返回值请求处理方式（禁止 `request<void>`）
+  - 新增函数重名冲突解决方案
+  - 重构检查清单新增 TypeScript + ESLint 检查步骤
+
 - **[AGENTS.md]** - 更新知识索引和常见陷阱速查表
   - 新增 experience/echarts-shallowref-fix-2026-04-06.md 索引
   - 新增 insights/third-party-instance-storage.md 索引
