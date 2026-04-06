@@ -139,6 +139,27 @@ const emit = defineEmits<{
 </script>
 ```
 
+### 6. 代码修改后必检规范（CRITICAL）
+
+**每次编写或修改文件后，必须执行 TypeScript 和 ESLint 检查：**
+
+```bash
+# TypeScript 类型检查
+npx tsc --noEmit
+
+# ESLint 检查
+pnpm lint
+```
+
+| 场景 | 必须检查 |
+|------|---------|
+| 新建文件 | ✅ TypeScript + ESLint |
+| 修改现有文件 | ✅ TypeScript + ESLint |
+| 重构代码 | ✅ TypeScript + ESLint |
+| 提交代码前 | ✅ TypeScript + ESLint |
+
+**详细规范**：`principles/typescript-constraints.md` 第 11 节
+
 ---
 
 ## 开发工作流

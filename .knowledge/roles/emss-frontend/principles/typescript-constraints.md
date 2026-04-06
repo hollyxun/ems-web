@@ -337,4 +337,55 @@ pnpm run typecheck -- --noEmit src/views/energy/dashboard/index.vue
 
 ---
 
-**最后更新**: 2026-04-01
+## 11. 代码修改后必检规范（CRITICAL）
+
+### 强制要求
+
+**每次编写或修改文件后，必须执行 TypeScript 和 ESLint 检查。**
+
+### 检查流程
+
+```bash
+# 1. TypeScript 类型检查
+npx tsc --noEmit
+
+# 2. ESLint 检查（自动修复）
+pnpm lint
+
+# 3. 检查源码文件错误（过滤 node_modules）
+npx tsc --noEmit 2>&1 | grep -E "src/"
+pnpm lint 2>&1 | grep -E "src/"
+```
+
+### 检查时机
+
+| 场景 | 必须检查 |
+|------|---------|
+| 新建文件 | ✅ TypeScript + ESLint |
+| 修改现有文件 | ✅ TypeScript + ESLint |
+| 重构代码 | ✅ TypeScript + ESLint |
+| 提交代码前 | ✅ TypeScript + ESLint |
+
+### 常见错误修复
+
+| 检查工具 | 错误示例 | 修复方案 |
+|---------|---------|---------|
+| TypeScript | `TS2304: Cannot find name 'PageResult'` | 使用 `Api.Common.PageResult<T>` |
+| TypeScript | `TS2741: missing properties` | 补充缺失的类型属性 |
+| ESLint | `@typescript-eslint/no-invalid-void-type` | `request<void>` → `request({...})` |
+| ESLint | `@typescript-eslint/no-empty-object-type` | `interface X extends Y {}` → `type X = Y` |
+
+### 验证标准
+
+```bash
+# 通过标准：源码文件无错误输出
+npx tsc --noEmit 2>&1 | grep -E "src/(service|typings|views|hooks|store|components)" | wc -l
+# 期望输出：0
+
+pnpm lint 2>&1 | grep -E "src/(service|typings|views|hooks|store|components)" | grep -v "no-console" | wc -l
+# 期望输出：0（忽略 no-console 警告）
+```
+
+---
+
+**最后更新**: 2026-04-06

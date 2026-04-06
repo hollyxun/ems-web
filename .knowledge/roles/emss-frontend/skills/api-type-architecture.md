@@ -298,7 +298,10 @@ declare namespace Api.Energy {
 - [ ] 在 `service/api/` 创建对应的 `.ts` 文件
 - [ ] 直接引用 `Api.*` 类型，不定义本地 namespace
 - [ ] 分页使用 `Api.Common.PageResult<T>`
+- [ ] 无返回值请求不使用 `request<void>`
 - [ ] 导出函数添加 JSDoc `@param` 注释
+- [ ] **运行 TypeScript 检查**：`npx tsc --noEmit`
+- [ ] **运行 ESLint 检查**：`pnpm lint`
 
 ### 重构现有模块时
 
@@ -316,11 +319,13 @@ declare namespace Api.Energy {
    - 删除所有 `export namespace` 和 `export interface`
    - 将类型引用改为 `Api.ModuleName.TypeName`
    - 分页响应使用 `Api.Common.PageResult<T>`
+   - 无返回值请求不使用 `request<void>`
    - 文件导出改用 axios 直接请求
    - 添加 JSDoc 注释
 
-4. **验证**
+4. **验证（CRITICAL）**
    - `npx tsc --noEmit` 无源码类型错误
+   - `pnpm lint` 无 ESLint 错误
    - `pnpm build` 构建通过
 
 ## 命名空间层级规范
