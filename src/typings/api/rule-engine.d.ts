@@ -220,17 +220,6 @@ declare namespace Api.Scheduling {
   // ==================== Rule Type Constants ====================
 
   type RuleType = 1 | 2 | 3;
-  const RuleType = {
-    SchedulingPattern: 1 as const,
-    CalendarMapping: 2 as const,
-    RotationAlgorithm: 3 as const
-  };
 
   type ChangeType = 1 | 2 | 3 | 4;
-  const ChangeType = {
-    Create: 1 as const,
-    Modify: 2 as const,
-    Derive: 3 as const,
-    Rollback: 4 as const
-  };
 }
