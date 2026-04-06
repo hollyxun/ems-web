@@ -77,12 +77,7 @@ function handleClose() {
         </ElRadioGroup>
       </ElFormItem>
       <ElFormItem label="处理备注" prop="handleRemark">
-        <ElInput
-          v-model="formData.handleRemark"
-          type="textarea"
-          :rows="3"
-          placeholder="请输入处理备注"
-        />
+        <ElInput v-model="formData.handleRemark" type="textarea" :rows="3" placeholder="请输入处理备注" />
       </ElFormItem>
     </ElForm>
     <template #footer>

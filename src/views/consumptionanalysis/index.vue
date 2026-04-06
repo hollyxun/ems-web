@@ -14,7 +14,11 @@ const queryParams = ref({
   dataTime: new Date().toISOString().slice(0, 7)
 });
 
-const timeTypes = [{ label: '日', value: 'DAY' }, { label: '月', value: 'MONTH' }, { label: '年', value: 'YEAR' }];
+const timeTypes = [
+  { label: '日', value: 'DAY' },
+  { label: '月', value: 'MONTH' },
+  { label: '年', value: 'YEAR' }
+];
 
 async function getData() {
   loading.value = true;
@@ -54,9 +58,9 @@ onMounted(() => getData());
       </template>
       <ElTable v-loading="loading" height="100%" border :data="data" row-key="currentTime">
         <ElTableColumn type="index" :label="$t('common.index')" width="64" />
-        <ElTableColumn prop="currentTime" label="本期时间" minWidth="120" />
+        <ElTableColumn prop="currentTime" label="本期时间" min-width="120" />
         <ElTableColumn prop="currentValue" label="本期值" width="120" />
-        <ElTableColumn prop="compareTime" label="同期时间" minWidth="120" />
+        <ElTableColumn prop="compareTime" label="同期时间" min-width="120" />
         <ElTableColumn prop="compareValue" label="同期值" width="120" />
         <ElTableColumn prop="ratio" label="同比(%)" width="100" />
       </ElTable>

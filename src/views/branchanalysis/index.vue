@@ -38,8 +38,13 @@ onMounted(() => getData());
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
     </ElCard>
   </div>

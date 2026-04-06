@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreateAlarmItem, fetchUpdateAlarmItem, fetchAlarmItemById } from '@/service/api/alarm';
+import { fetchAlarmItemById, fetchCreateAlarmItem, fetchUpdateAlarmItem } from '@/service/api/alarm';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'AlarmItemDrawer' });

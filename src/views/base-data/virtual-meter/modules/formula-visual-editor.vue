@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref, watch, computed, onUnmounted } from 'vue';
-import { Graph } from '@antv/g6';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
+import { Graph } from '@antv/g6';
 
 defineOptions({ name: 'FormulaVisualEditor' });
 
@@ -276,9 +276,7 @@ onUnmounted(() => {
       <span class="formula-text">{{ formula || '暂无公式' }}</span>
     </div>
     <div ref="containerRef" class="graph-container" />
-    <div v-if="sourceConfig.length === 0" class="empty-hint">
-      请先添加源计量点以生成公式图
-    </div>
+    <div v-if="sourceConfig.length === 0" class="empty-hint">请先添加源计量点以生成公式图</div>
   </div>
 </template>
 

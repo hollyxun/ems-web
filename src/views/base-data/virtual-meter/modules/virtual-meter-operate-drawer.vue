@@ -1,8 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { ElMessage, ElButton, ElIcon, ElTabs, ElTabPane } from 'element-plus';
-import { Plus, Delete } from '@element-plus/icons-vue';
-import { fetchCreateVirtualMeter, fetchUpdateVirtualMeter, fetchValidateFormula, fetchGetAvailableSourceMeters } from '@/service/api/virtual-meter';
+import { ElButton, ElIcon, ElMessage, ElTabPane, ElTabs } from 'element-plus';
+import { Delete, Plus } from '@element-plus/icons-vue';
+import {
+  fetchCreateVirtualMeter,
+  fetchGetAvailableSourceMeters,
+  fetchUpdateVirtualMeter,
+  fetchValidateFormula
+} from '@/service/api/virtual-meter';
 import { $t } from '@/locales';
 import FormulaVisualEditor from './formula-visual-editor.vue';
 
@@ -96,7 +101,7 @@ function generateFormula() {
       formData.value.formula = sourceConfig.map((s, i) => `M${i + 1}`).join(' + ');
       break;
     case 'difference':
-      formData.value.formula = sourceConfig.map((s, i) => i === 0 ? `M${i + 1}` : `- M${i + 1}`).join(' ');
+      formData.value.formula = sourceConfig.map((s, i) => (i === 0 ? `M${i + 1}` : `- M${i + 1}`)).join(' ');
       break;
     case 'average':
       formData.value.formula = `(${sourceConfig.map((s, i) => `M${i + 1}`).join(' + ')}) / ${sourceConfig.length}`;
@@ -246,9 +251,12 @@ watch(visible, val => {
 });
 
 // 计算类型变化时重新生成公式
-watch(() => formData.value.calculateType, () => {
-  generateFormula();
-});
+watch(
+  () => formData.value.calculateType,
+  () => {
+    generateFormula();
+  }
+);
 </script>
 
 <template>
@@ -262,12 +270,7 @@ watch(() => formData.value.calculateType, () => {
       </ElFormItem>
       <ElFormItem label="计算类型" prop="calculateType">
         <ElSelect v-model="formData.calculateType" placeholder="请选择计算类型" style="width: 100%">
-          <ElOption
-            v-for="item in calculateTypeOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          >
+          <ElOption v-for="item in calculateTypeOptions" :key="item.value" :label="item.label" :value="item.value">
             <div class="flex flex-col">
               <span>{{ item.label }}</span>
               <small class="text-gray-400">{{ item.desc }}</small>
@@ -286,12 +289,10 @@ watch(() => formData.value.calculateType, () => {
             </ElButton>
           </div>
 
-          <div v-if="formData.sourceConfig.length === 0" class="text-gray-400 text-sm">
-            请添加源计量点
-          </div>
+          <div v-if="formData.sourceConfig.length === 0" class="text-sm text-gray-400">请添加源计量点</div>
 
           <div v-for="(source, index) in formData.sourceConfig" :key="index" class="source-item">
-            <div class="flex gap-8px items-center">
+            <div class="flex items-center gap-8px">
               <span class="source-order">M{{ index + 1 }}</span>
               <ElSelect
                 v-model="source.meterId"
@@ -299,12 +300,7 @@ watch(() => formData.value.calculateType, () => {
                 style="width: 200px"
                 @change="handleSourceMeterChange(index, $event)"
               >
-                <ElOption
-                  v-for="meter in sourceMeters"
-                  :key="meter.id"
-                  :label="meter.name"
-                  :value="meter.id"
-                />
+                <ElOption v-for="meter in sourceMeters" :key="meter.id" :label="meter.name" :value="meter.id" />
               </ElSelect>
               <ElInputNumber
                 v-model="source.coefficient"
@@ -334,17 +330,10 @@ watch(() => formData.value.calculateType, () => {
                 :disabled="formData.calculateType !== 'custom'"
               />
               <div class="mt-8px flex gap-8px">
-                <ElButton size="small" @click="generateFormula" :disabled="formData.sourceConfig.length === 0">
+                <ElButton size="small" :disabled="formData.sourceConfig.length === 0" @click="generateFormula">
                   重新生成
                 </ElButton>
-                <ElButton
-                  size="small"
-                  type="primary"
-                  :loading="validating"
-                  @click="validateFormula"
-                >
-                  验证公式
-                </ElButton>
+                <ElButton size="small" type="primary" :loading="validating" @click="validateFormula">验证公式</ElButton>
               </div>
               <div v-if="formulaValid !== null" class="mt-4px">
                 <span :class="formulaValid ? 'text-success' : 'text-danger'">
