@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreateKnowledge, fetchUpdateKnowledge, fetchKnowledgeById } from '@/service/api/knowledge';
+import { fetchCreateKnowledge, fetchKnowledgeById, fetchUpdateKnowledge } from '@/service/api/knowledge';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'KnowledgeDrawer' });
@@ -133,22 +133,13 @@ function handleClose() {
       <ElFormItem label="内容" prop="content">
         <div class="w-full">
           <!-- 简化版富文本编辑器，可替换为实际组件 -->
-          <ElInput
-            v-model="formData.content"
-            type="textarea"
-            :rows="10"
-            placeholder="请输入内容（支持富文本）"
-          />
+          <ElInput v-model="formData.content" type="textarea" :rows="10" placeholder="请输入内容（支持富文本）" />
         </div>
       </ElFormItem>
       <ElFormItem label="附件" prop="urls">
         <div class="w-full">
           <!-- 简化版附件上传，可替换为实际组件 -->
-          <ElInput
-            v-model="formData.urls[0]"
-            placeholder="请输入附件URL（多个用逗号分隔）"
-            clearable
-          />
+          <ElInput v-model="formData.urls[0]" placeholder="请输入附件URL（多个用逗号分隔）" clearable />
           <div class="mt-8px text-12px text-gray-400">支持多个附件，每行一个URL</div>
         </div>
       </ElFormItem>

@@ -2,18 +2,32 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreateBenchmark, fetchUpdateBenchmark, fetchBenchmarkById } from '@/service/api/benchmark';
+import { fetchBenchmarkById, fetchCreateBenchmark, fetchUpdateBenchmark } from '@/service/api/benchmark';
 
 defineOptions({ name: 'BenchmarkDrawer' });
 
-interface Props { visible: boolean; operateType: 'add' | 'edit'; rowData?: { id: number } | null; }
-interface Emits { (e: 'update:visible', visible: boolean): void; (e: 'submitted'): void; }
+interface Props {
+  visible: boolean;
+  operateType: 'add' | 'edit';
+  rowData?: { id: number } | null;
+}
+interface Emits {
+  (e: 'update:visible', visible: boolean): void;
+  (e: 'submitted'): void;
+}
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const drawerVisible = computed({ get() { return props.visible; }, set(v) { emit('update:visible', v); } });
-const title = computed(() => props.operateType === 'add' ? '新增标杆' : '编辑标杆');
+const drawerVisible = computed({
+  get() {
+    return props.visible;
+  },
+  set(v) {
+    emit('update:visible', v);
+  }
+});
+const title = computed(() => (props.operateType === 'add' ? '新增标杆' : '编辑标杆'));
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);
@@ -24,15 +38,18 @@ const rules: FormRules = { code: [{ required: true, message: '请输入标杆编
 const benchmarkTypes = ['国家标杆', '行业标杆', '企业标杆'];
 const benchmarkGrades = ['一级', '二级', '三级'];
 
-watch(() => props.visible, async (visible) => {
-  if (visible && props.operateType === 'edit' && props.rowData?.id) {
-    const { data, error } = await fetchBenchmarkById(props.rowData.id);
-    if (!error && data) formData.value = { ...formData.value, ...data };
-  } else if (visible && props.operateType === 'add') {
-    formData.value = { code: '', type: '', grade: '', value: '', nationalNum: '' };
-    formRef.value?.clearValidate();
+watch(
+  () => props.visible,
+  async visible => {
+    if (visible && props.operateType === 'edit' && props.rowData?.id) {
+      const { data, error } = await fetchBenchmarkById(props.rowData.id);
+      if (!error && data) formData.value = { ...formData.value, ...data };
+    } else if (visible && props.operateType === 'add') {
+      formData.value = { code: '', type: '', grade: '', value: '', nationalNum: '' };
+      formRef.value?.clearValidate();
+    }
   }
-});
+);
 
 async function handleSubmit() {
   await formRef.value?.validate();
@@ -40,12 +57,22 @@ async function handleSubmit() {
   try {
     if (props.operateType === 'edit' && props.rowData?.id) {
       const { error } = await fetchUpdateBenchmark({ id: props.rowData.id, ...formData.value });
-      if (!error) { ElMessage.success('更新成功'); drawerVisible.value = false; emit('submitted'); }
+      if (!error) {
+        ElMessage.success('更新成功');
+        drawerVisible.value = false;
+        emit('submitted');
+      }
     } else {
       const { error } = await fetchCreateBenchmark(formData.value);
-      if (!error) { ElMessage.success('创建成功'); drawerVisible.value = false; emit('submitted'); }
+      if (!error) {
+        ElMessage.success('创建成功');
+        drawerVisible.value = false;
+        emit('submitted');
+      }
     }
-  } finally { loading.value = false; }
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 

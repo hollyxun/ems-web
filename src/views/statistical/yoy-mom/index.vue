@@ -1,7 +1,23 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { ElCard, ElForm, ElFormItem, ElSelect, ElOption, ElDatePicker, ElButton, ElTable, ElTableColumn, ElTag, ElTabs, ElTabPane, ElRow, ElCol, ElStatistic } from 'element-plus';
-import { fetchElectricYoY, fetchElectricMoM, fetchWaterYoY, fetchWaterMoM } from '@/service/api/statistical';
+import {
+  ElButton,
+  ElCard,
+  ElCol,
+  ElDatePicker,
+  ElForm,
+  ElFormItem,
+  ElOption,
+  ElRow,
+  ElSelect,
+  ElStatistic,
+  ElTabPane,
+  ElTable,
+  ElTableColumn,
+  ElTabs,
+  ElTag
+} from 'element-plus';
+import { fetchElectricMoM, fetchElectricYoY, fetchWaterMoM, fetchWaterYoY } from '@/service/api/statistical';
 import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'StatisticalYoyMom' });
@@ -49,7 +65,7 @@ const summary = computed(() => {
 
   const totalCurrent = dataList.value.reduce((sum, item) => sum + (item.currentValue || 0), 0);
   const totalOld = dataList.value.reduce((sum, item) => sum + (item.oldValue || 0), 0);
-  const avgRatio = totalOld > 0 ? ((totalCurrent - totalOld) / totalOld * 100) : 0;
+  const avgRatio = totalOld > 0 ? ((totalCurrent - totalOld) / totalOld) * 100 : 0;
 
   return {
     totalCurrent: totalCurrent.toFixed(2),
@@ -101,13 +117,9 @@ async function loadData() {
     let result: Api.Statistical.Comparison.YoYResponse[] = [];
 
     if (isElectric) {
-      result = isYoy
-        ? await fetchElectricYoY(queryParams.value)
-        : await fetchElectricMoM(queryParams.value);
+      result = isYoy ? await fetchElectricYoY(queryParams.value) : await fetchElectricMoM(queryParams.value);
     } else {
-      result = isYoy
-        ? await fetchWaterYoY(queryParams.value)
-        : await fetchWaterMoM(queryParams.value);
+      result = isYoy ? await fetchWaterYoY(queryParams.value) : await fetchWaterMoM(queryParams.value);
     }
 
     dataList.value = result;
@@ -121,7 +133,7 @@ async function loadData() {
 // 获取比率标签类型
 function getRatioTagType(ratio: number): 'success' | 'danger' | 'info' {
   if (ratio < 0) return 'success'; // 下降是好事
-  if (ratio > 0) return 'danger';  // 上升需要关注
+  if (ratio > 0) return 'danger'; // 上升需要关注
   return 'info';
 }
 
@@ -167,22 +179,12 @@ onMounted(() => {
         </ElFormItem>
         <ElFormItem label="时间类型">
           <ElSelect v-model="queryParams.timeType" style="width: 100px">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="能源类型">
           <ElSelect v-model="selectedEnergyType" style="width: 100px">
-            <ElOption
-              v-for="item in energyTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in energyTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
       </ElForm>
@@ -206,7 +208,9 @@ onMounted(() => {
             title="变化率"
             :value="summary.avgRatio"
             suffix="%"
-            :value-style="{ color: summary.trend === 'down' ? '#67c23a' : summary.trend === 'up' ? '#f56c6c' : '#909399' }"
+            :value-style="{
+              color: summary.trend === 'down' ? '#67c23a' : summary.trend === 'up' ? '#f56c6c' : '#909399'
+            }"
           />
         </ElCard>
       </ElCol>

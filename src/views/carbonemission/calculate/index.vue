@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { Top, Bottom } from '@element-plus/icons-vue';
+import { Bottom, Top } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
-import { fetchUpCarbonEmission, fetchMiddleCarbonEmission } from '@/service/api/carbonemission';
+import { fetchMiddleCarbonEmission, fetchUpCarbonEmission } from '@/service/api/carbonemission';
 import type { CarbonEmission } from '@/service/api/carbonemission';
 
 defineOptions({ name: 'CarbonEmissionCalculate' });
@@ -170,20 +170,20 @@ onMounted(() => {
     </ElCard>
 
     <!-- 顶部汇总卡片 -->
-    <ElCard class="card-wrapper" v-loading="loading">
+    <ElCard v-loading="loading" class="card-wrapper">
       <div class="flex flex-wrap gap-16px">
         <template v-for="(item, index) in upData?.details" :key="item.mediumCode">
-          <div class="w-19% min-w-200px p-16px rd-8px border-1px border-solid border-gray-200">
+          <div class="min-w-200px w-19% border-1px border-gray-200 rd-8px border-solid p-16px">
             <div class="flex items-center gap-16px">
               <div class="text-16px font-bold">{{ item.mediumName }}</div>
             </div>
-            <div class="flex justify-between mt-18px">
+            <div class="mt-18px flex justify-between">
               <div class="text-gray-500">碳排放量/tCO2e</div>
               <div :style="{ color: iconColors[index % 5] }" class="font-bold">{{ item.value.toFixed(2) }}</div>
             </div>
-            <div class="flex justify-between mt-8px">
+            <div class="mt-8px flex justify-between">
               <div class="text-gray-500">同比</div>
-              <div :style="{ color: iconColors[index % 5] }" class="font-bold flex items-center gap-4px">
+              <div :style="{ color: iconColors[index % 5] }" class="flex items-center gap-4px font-bold">
                 {{ Math.abs(item.yoy).toFixed(2) }}%
                 <ElIcon v-if="item.yoy > 0" color="green"><Top /></ElIcon>
                 <ElIcon v-else-if="item.yoy < 0" color="red"><Bottom /></ElIcon>
@@ -201,7 +201,7 @@ onMounted(() => {
 
     <!-- 表格 -->
     <ElCard class="card-wrapper" :title="`${queryParams.nodeName}-碳排放量统计分析表(${queryParams.dataTime})`">
-      <ElTable :data="tableData" v-loading="loading" border>
+      <ElTable v-loading="loading" :data="tableData" border>
         <ElTableColumn prop="timeLabel" label="时间" align="center" />
         <ElTableColumn prop="value" label="碳排放量(tCO2e)" align="center">
           <template #default="{ row }">{{ row.value?.toFixed(2) || 0 }}</template>
@@ -217,5 +217,4 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -2,34 +2,67 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreateProgram, fetchUpdateProgram, fetchProgramById } from '@/service/api/saving';
+import { fetchCreateProgram, fetchProgramById, fetchUpdateProgram } from '@/service/api/saving';
 
 defineOptions({ name: 'ProgramDrawer' });
 
-interface Props { visible: boolean; operateType: 'add' | 'edit'; rowData?: Api.Saving.Program.Item | null; }
-interface Emits { (e: 'update:visible', visible: boolean): void; (e: 'submitted'): void; }
+interface Props {
+  visible: boolean;
+  operateType: 'add' | 'edit';
+  rowData?: Api.Saving.Program.Item | null;
+}
+interface Emits {
+  (e: 'update:visible', visible: boolean): void;
+  (e: 'submitted'): void;
+}
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const drawerVisible = computed({ get() { return props.visible; }, set(v) { emit('update:visible', v); } });
-const title = computed(() => props.operateType === 'add' ? '新增节能项目' : '编辑节能项目');
+const drawerVisible = computed({
+  get() {
+    return props.visible;
+  },
+  set(v) {
+    emit('update:visible', v);
+  }
+});
+const title = computed(() => (props.operateType === 'add' ? '新增节能项目' : '编辑节能项目'));
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);
-const formData = ref({ plan: '', completionTime: '', liablePerson: '', implementationPlan: '', currentWork: '', savingAmount: '', remark: '' });
+const formData = ref({
+  plan: '',
+  completionTime: '',
+  liablePerson: '',
+  implementationPlan: '',
+  currentWork: '',
+  savingAmount: '',
+  remark: ''
+});
 
 const rules: FormRules = {};
 
-watch(() => props.visible, async (visible) => {
-  if (visible && props.operateType === 'edit' && props.rowData?.id) {
-    const { data, error } = await fetchProgramById(props.rowData.id);
-    if (!error && data) formData.value = { ...formData.value, ...data };
-  } else if (visible && props.operateType === 'add') {
-    formData.value = { plan: '', completionTime: '', liablePerson: '', implementationPlan: '', currentWork: '', savingAmount: '', remark: '' };
-    formRef.value?.clearValidate();
+watch(
+  () => props.visible,
+  async visible => {
+    if (visible && props.operateType === 'edit' && props.rowData?.id) {
+      const { data, error } = await fetchProgramById(props.rowData.id);
+      if (!error && data) formData.value = { ...formData.value, ...data };
+    } else if (visible && props.operateType === 'add') {
+      formData.value = {
+        plan: '',
+        completionTime: '',
+        liablePerson: '',
+        implementationPlan: '',
+        currentWork: '',
+        savingAmount: '',
+        remark: ''
+      };
+      formRef.value?.clearValidate();
+    }
   }
-});
+);
 
 async function handleSubmit() {
   await formRef.value?.validate();
@@ -38,8 +71,14 @@ async function handleSubmit() {
     const api = props.operateType === 'add' ? fetchCreateProgram : fetchUpdateProgram;
     const params = props.operateType === 'edit' ? { id: props.rowData!.id, ...formData.value } : formData.value;
     const { error } = await api(params as any);
-    if (!error) { ElMessage.success('操作成功'); drawerVisible.value = false; emit('submitted'); }
-  } finally { loading.value = false; }
+    if (!error) {
+      ElMessage.success('操作成功');
+      drawerVisible.value = false;
+      emit('submitted');
+    }
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 
@@ -50,7 +89,12 @@ async function handleSubmit() {
         <ElInput v-model="formData.plan" type="textarea" :rows="3" placeholder="请输入总体计划" />
       </ElFormItem>
       <ElFormItem label="完成时间" prop="completionTime">
-        <ElDatePicker v-model="formData.completionTime" type="date" placeholder="选择完成时间" value-format="YYYY-MM-DD" />
+        <ElDatePicker
+          v-model="formData.completionTime"
+          type="date"
+          placeholder="选择完成时间"
+          value-format="YYYY-MM-DD"
+        />
       </ElFormItem>
       <ElFormItem label="项目组长" prop="liablePerson">
         <ElInput v-model="formData.liablePerson" placeholder="请输入项目组长" />

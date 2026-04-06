@@ -1,7 +1,21 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { ElCard, ElForm, ElFormItem, ElSelect, ElOption, ElDatePicker, ElTable, ElTableColumn, ElPagination, ElRow, ElCol, ElStatistic, ElEmpty } from 'element-plus';
-import { fetchEnergyCostTrendList, fetchEnergyCostTrendDetail } from '@/service/api/statistical';
+import {
+  ElCard,
+  ElCol,
+  ElDatePicker,
+  ElEmpty,
+  ElForm,
+  ElFormItem,
+  ElOption,
+  ElPagination,
+  ElRow,
+  ElSelect,
+  ElStatistic,
+  ElTable,
+  ElTableColumn
+} from 'element-plus';
+import { fetchEnergyCostTrendDetail, fetchEnergyCostTrendList } from '@/service/api/statistical';
 import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'StatisticalCost' });
@@ -110,10 +124,13 @@ function handleSizeChange(size: number) {
 }
 
 // 监听时间类型变化
-watch(() => queryParams.value.timeType, () => {
-  queryParams.value.pageNo = 1;
-  loadData();
-});
+watch(
+  () => queryParams.value.timeType,
+  () => {
+    queryParams.value.pageNo = 1;
+    loadData();
+  }
+);
 
 // 格式化金额
 function formatMoney(value: number): string {
@@ -142,22 +159,12 @@ onMounted(() => {
         </ElFormItem>
         <ElFormItem label="时间类型">
           <ElSelect v-model="queryParams.timeType" style="width: 100px" @change="handleDateChange">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="能源类型">
           <ElSelect v-model="queryParams.energyType" style="width: 100px" @change="loadData">
-            <ElOption
-              v-for="item in energyTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in energyTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
       </ElForm>
@@ -192,18 +199,12 @@ onMounted(() => {
         <ElTableColumn prop="energyUnitName" label="用能单元" min-width="150" />
         <ElTableColumn prop="dateCode" label="时间" width="120" align="center" />
         <ElTableColumn prop="total" label="总费用" width="120" align="right">
-          <template #default="{ row }">
-            ¥{{ formatMoney(row.total) }}
-          </template>
+          <template #default="{ row }">¥{{ formatMoney(row.total) }}</template>
         </ElTableColumn>
         <ElTableColumn label="能源类型明细" min-width="300">
           <template #default="{ row }">
             <div v-if="row.itemList && row.itemList.length > 0" class="energy-type-list">
-              <span
-                v-for="item in row.itemList"
-                :key="item.energyType"
-                class="energy-type-item"
-              >
+              <span v-for="item in row.itemList" :key="item.energyType" class="energy-type-item">
                 {{ item.energyTypeName }}: ¥{{ formatMoney(item.cost) }} ({{ item.percentage.toFixed(1) }}%)
               </span>
             </div>

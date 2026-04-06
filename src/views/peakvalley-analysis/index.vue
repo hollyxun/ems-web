@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue';
-import { fetchSegmentAnalysisHour, fetchSegmentAnalysisDay } from '@/service/api/peakvalley';
-import type { PeakValley } from '@/service/api/peakvalley';
+import { computed, onMounted, ref } from 'vue';
 import dayjs from 'dayjs';
+import { fetchSegmentAnalysisDay, fetchSegmentAnalysisHour } from '@/service/api/peakvalley';
+import type { PeakValley } from '@/service/api/peakvalley';
 
 defineOptions({ name: 'PeakValleyAnalysis' });
 
@@ -41,7 +41,9 @@ async function getAnalysis() {
       });
       if (!error && data) dayData.value = data;
     }
-  } finally { loading.value = false; }
+  } finally {
+    loading.value = false;
+  }
 }
 
 // 时间类型变化时自动切换分析类型
@@ -56,10 +58,10 @@ const pieChartData = computed(() => {
   if (!hourData.value?.pieChat) return [];
   const { peak, flat, tip, trough } = hourData.value.pieChat;
   return [
-    { name: '尖', value: parseFloat(tip) || 0 },
-    { name: '峰', value: parseFloat(peak) || 0 },
-    { name: '平', value: parseFloat(flat) || 0 },
-    { name: '谷', value: parseFloat(trough) || 0 }
+    { name: '尖', value: Number.parseFloat(tip) || 0 },
+    { name: '峰', value: Number.parseFloat(peak) || 0 },
+    { name: '平', value: Number.parseFloat(flat) || 0 },
+    { name: '谷', value: Number.parseFloat(trough) || 0 }
   ];
 });
 
@@ -110,7 +112,7 @@ onMounted(() => getAnalysis());
     </ElCard>
 
     <!-- 图表区域 -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16px">
+    <div class="grid grid-cols-1 gap-16px lg:grid-cols-2">
       <!-- 折线图 -->
       <ElCard class="card-wrapper">
         <template #header>
@@ -129,19 +131,19 @@ onMounted(() => getAnalysis());
         <div v-loading="loading" class="h-300px flex-center">
           <div class="grid grid-cols-4 gap-16px text-center">
             <div>
-              <div class="text-red-500 font-bold text-24px">{{ pieChartData[0]?.value || 0 }}%</div>
+              <div class="text-24px text-red-500 font-bold">{{ pieChartData[0]?.value || 0 }}%</div>
               <div class="text-gray-500">尖</div>
             </div>
             <div>
-              <div class="text-orange-500 font-bold text-24px">{{ pieChartData[1]?.value || 0 }}%</div>
+              <div class="text-24px text-orange-500 font-bold">{{ pieChartData[1]?.value || 0 }}%</div>
               <div class="text-gray-500">峰</div>
             </div>
             <div>
-              <div class="text-blue-500 font-bold text-24px">{{ pieChartData[2]?.value || 0 }}%</div>
+              <div class="text-24px text-blue-500 font-bold">{{ pieChartData[2]?.value || 0 }}%</div>
               <div class="text-gray-500">平</div>
             </div>
             <div>
-              <div class="text-green-500 font-bold text-24px">{{ pieChartData[3]?.value || 0 }}%</div>
+              <div class="text-24px text-green-500 font-bold">{{ pieChartData[3]?.value || 0 }}%</div>
               <div class="text-gray-500">谷</div>
             </div>
           </div>
@@ -154,44 +156,50 @@ onMounted(() => getAnalysis());
       <template #header>
         <p>汇总统计</p>
       </template>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-16px">
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">总电量</div>
-          <div class="font-bold text-20px">{{ summaryData.totalPowerConsumption?.toFixed(2) || 0 }} kWh</div>
+      <div class="grid grid-cols-2 gap-16px lg:grid-cols-4">
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">总电量</div>
+          <div class="text-20px font-bold">{{ summaryData.totalPowerConsumption?.toFixed(2) || 0 }} kWh</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">总费用</div>
-          <div class="font-bold text-20px">{{ summaryData.totalCost?.toFixed(2) || 0 }} 元</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">总费用</div>
+          <div class="text-20px font-bold">{{ summaryData.totalCost?.toFixed(2) || 0 }} 元</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">尖电量</div>
-          <div class="font-bold text-20px text-red-500">{{ summaryData.tipPowerConsumption?.toFixed(2) || 0 }} kWh</div>
-          <div class="text-gray-400 text-12px">占比 {{ summaryData.tipPowerProportion?.toFixed(1) || 0 }}%</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">尖电量</div>
+          <div class="text-20px text-red-500 font-bold">{{ summaryData.tipPowerConsumption?.toFixed(2) || 0 }} kWh</div>
+          <div class="text-12px text-gray-400">占比 {{ summaryData.tipPowerProportion?.toFixed(1) || 0 }}%</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">峰电量</div>
-          <div class="font-bold text-20px text-orange-500">{{ summaryData.peakPowerConsumption?.toFixed(2) || 0 }} kWh</div>
-          <div class="text-gray-400 text-12px">占比 {{ summaryData.peakPowerProportion?.toFixed(1) || 0 }}%</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">峰电量</div>
+          <div class="text-20px text-orange-500 font-bold">
+            {{ summaryData.peakPowerConsumption?.toFixed(2) || 0 }} kWh
+          </div>
+          <div class="text-12px text-gray-400">占比 {{ summaryData.peakPowerProportion?.toFixed(1) || 0 }}%</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">平电量</div>
-          <div class="font-bold text-20px text-blue-500">{{ summaryData.flatPowerConsumption?.toFixed(2) || 0 }} kWh</div>
-          <div class="text-gray-400 text-12px">占比 {{ summaryData.flatPowerProportion?.toFixed(1) || 0 }}%</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">平电量</div>
+          <div class="text-20px text-blue-500 font-bold">
+            {{ summaryData.flatPowerConsumption?.toFixed(2) || 0 }} kWh
+          </div>
+          <div class="text-12px text-gray-400">占比 {{ summaryData.flatPowerProportion?.toFixed(1) || 0 }}%</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">谷电量</div>
-          <div class="font-bold text-20px text-green-500">{{ summaryData.troughPowerConsumption?.toFixed(2) || 0 }} kWh</div>
-          <div class="text-gray-400 text-12px">占比 {{ summaryData.troughPowerProportion?.toFixed(1) || 0 }}%</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">谷电量</div>
+          <div class="text-20px text-green-500 font-bold">
+            {{ summaryData.troughPowerConsumption?.toFixed(2) || 0 }} kWh
+          </div>
+          <div class="text-12px text-gray-400">占比 {{ summaryData.troughPowerProportion?.toFixed(1) || 0 }}%</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">尖费用</div>
-          <div class="font-bold text-20px text-red-500">{{ summaryData.tipPowerCost?.toFixed(2) || 0 }} 元</div>
-          <div class="text-gray-400 text-12px">占比 {{ summaryData.tipPowerCostProportion?.toFixed(1) || 0 }}%</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">尖费用</div>
+          <div class="text-20px text-red-500 font-bold">{{ summaryData.tipPowerCost?.toFixed(2) || 0 }} 元</div>
+          <div class="text-12px text-gray-400">占比 {{ summaryData.tipPowerCostProportion?.toFixed(1) || 0 }}%</div>
         </div>
-        <div class="p-4 bg-gray-50 rounded">
-          <div class="text-gray-500 text-14px">谷费用</div>
-          <div class="font-bold text-20px text-green-500">{{ summaryData.troughPowerCost?.toFixed(2) || 0 }} 元</div>
-          <div class="text-gray-400 text-12px">占比 {{ summaryData.troughPowerCostProportion?.toFixed(1) || 0 }}%</div>
+        <div class="rounded bg-gray-50 p-4">
+          <div class="text-14px text-gray-500">谷费用</div>
+          <div class="text-20px text-green-500 font-bold">{{ summaryData.troughPowerCost?.toFixed(2) || 0 }} 元</div>
+          <div class="text-12px text-gray-400">占比 {{ summaryData.troughPowerCostProportion?.toFixed(1) || 0 }}%</div>
         </div>
       </div>
     </ElCard>
@@ -201,7 +209,13 @@ onMounted(() => getAnalysis());
       <template #header>
         <p>{{ analysisType === 'hour' ? '小时明细数据' : '日明细数据' }}</p>
       </template>
-      <ElTable v-loading="loading" height="300" border :data="analysisType === 'hour' ? hourData?.dataList : []" row-key="time">
+      <ElTable
+        v-loading="loading"
+        height="300"
+        border
+        :data="analysisType === 'hour' ? hourData?.dataList : []"
+        row-key="time"
+      >
         <ElTableColumn prop="time" label="时间" width="160" />
         <ElTableColumn prop="sharpPower" label="尖电量(kWh)" width="120" />
         <ElTableColumn prop="sharpFee" label="尖费用(元)" width="120" />

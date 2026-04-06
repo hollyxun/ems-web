@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
-import { fetchMonthlyProcessEnergyList, fetchMonthlyProcessEnergyChart } from '@/service/api/process-energy';
+import { fetchMonthlyProcessEnergyChart, fetchMonthlyProcessEnergyList } from '@/service/api/process-energy';
 
 defineOptions({ name: 'MonthlyProcessEnergy' });
 
@@ -40,7 +40,8 @@ const tableColumns = computed(() => {
       label: `${i}日`,
       width: 70,
       align: 'center' as const,
-      formatter: (row: Api.ProcessEnergy.MonthlyList) => formatValue(row[`value${i}` as keyof Api.ProcessEnergy.MonthlyList])
+      formatter: (row: Api.ProcessEnergy.MonthlyList) =>
+        formatValue(row[`value${i}` as keyof Api.ProcessEnergy.MonthlyList])
     });
   }
 
@@ -211,14 +212,7 @@ onMounted(() => {
           <span class="text-sm text-gray-500">点击行查看趋势图</span>
         </div>
       </template>
-      <ElTable
-        v-loading="loading"
-        :data="tableData"
-        border
-        stripe
-        highlight-current-row
-        @row-click="handleRowClick"
-      >
+      <ElTable v-loading="loading" :data="tableData" border stripe highlight-current-row @row-click="handleRowClick">
         <ElTableColumn
           v-for="col in tableColumns"
           :key="col.prop"
@@ -241,7 +235,7 @@ onMounted(() => {
         <span class="font-bold">月度能耗趋势图</span>
       </template>
       <div v-loading="chartLoading" class="chart-container" style="height: 400px">
-        <div ref="chartRef" class="w-full h-full" />
+        <div ref="chartRef" class="h-full w-full" />
       </div>
     </ElCard>
   </div>

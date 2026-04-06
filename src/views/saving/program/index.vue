@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm } from 'element-plus';
-import { fetchProgramList, fetchDeleteProgram } from '@/service/api/saving';
+import { fetchDeleteProgram, fetchProgramList } from '@/service/api/saving';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import ProgramDrawer from './modules/program-drawer.vue';
@@ -22,14 +22,21 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'savingAmount', label: '节约量', minWidth: 120 },
     { prop: 'currentWork', label: '当前工作', minWidth: 200 },
     {
-      prop: 'operate', label: $t('common.operate'), align: 'center', width: 160,
+      prop: 'operate',
+      label: $t('common.operate'),
+      align: 'center',
+      width: 160,
       formatter: row => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
-            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
             </ElPopconfirm>
           </div>
         );
@@ -38,14 +45,20 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteProgram(id);
   if (!error) onDeleted();
 }
 
-function edit(id: number) { handleEdit(id); }
+function edit(id: number) {
+  handleEdit(id);
+}
 
 onMounted(() => getData());
 </script>
@@ -59,7 +72,16 @@ onMounted(() => getData());
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getDataByPage">查询</ElButton>
-          <ElButton @click="() => { searchParams.plan = undefined; getDataByPage(); }">重置</ElButton>
+          <ElButton
+            @click="
+              () => {
+                searchParams.plan = undefined;
+                getDataByPage();
+              }
+            "
+          >
+            重置
+          </ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -74,10 +96,20 @@ onMounted(() => getData());
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
-      <ProgramDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData" @submitted="getDataByPage" />
+      <ProgramDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getDataByPage"
+      />
     </ElCard>
   </div>
 </template>

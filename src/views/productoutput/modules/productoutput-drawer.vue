@@ -2,18 +2,36 @@
 import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import { fetchCreateProductOutput, fetchUpdateProductOutput, fetchProductOutputById } from '@/service/api/productoutput';
+import {
+  fetchCreateProductOutput,
+  fetchProductOutputById,
+  fetchUpdateProductOutput
+} from '@/service/api/productoutput';
 
 defineOptions({ name: 'ProductOutputDrawer' });
 
-interface Props { visible: boolean; operateType: 'add' | 'edit'; rowData?: { id: number } | null; }
-interface Emits { (e: 'update:visible', visible: boolean): void; (e: 'submitted'): void; }
+interface Props {
+  visible: boolean;
+  operateType: 'add' | 'edit';
+  rowData?: { id: number } | null;
+}
+interface Emits {
+  (e: 'update:visible', visible: boolean): void;
+  (e: 'submitted'): void;
+}
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const drawerVisible = computed({ get() { return props.visible; }, set(v) { emit('update:visible', v); } });
-const title = computed(() => props.operateType === 'add' ? '新增产品产量' : '编辑产品产量');
+const drawerVisible = computed({
+  get() {
+    return props.visible;
+  },
+  set(v) {
+    emit('update:visible', v);
+  }
+});
+const title = computed(() => (props.operateType === 'add' ? '新增产品产量' : '编辑产品产量'));
 
 const formRef = ref<FormInstance>();
 const loading = ref(false);
@@ -42,37 +60,40 @@ const timeTypes = ['年', '月', '日'];
 const dataTypes = ['产量', '仪表', '指标'];
 const productTypes = ['主要产品', '副产品', '中间产品'];
 
-watch(() => props.visible, async (visible) => {
-  if (visible && props.operateType === 'edit' && props.rowData?.id) {
-    const { data, error } = await fetchProductOutputById(props.rowData.id);
-    if (!error && data) {
+watch(
+  () => props.visible,
+  async visible => {
+    if (visible && props.operateType === 'edit' && props.rowData?.id) {
+      const { data, error } = await fetchProductOutputById(props.rowData.id);
+      if (!error && data) {
+        formData.value = {
+          nodeId: data.nodeId || '',
+          nodeName: data.nodeName || '',
+          timeType: data.timeType || '',
+          dataTime: data.dataTime || '',
+          name: data.name || '',
+          number: data.number || 0,
+          unit: data.unit || '',
+          dataType: data.dataType || '',
+          productType: data.productType || ''
+        };
+      }
+    } else if (visible && props.operateType === 'add') {
       formData.value = {
-        nodeId: data.nodeId || '',
-        nodeName: data.nodeName || '',
-        timeType: data.timeType || '',
-        dataTime: data.dataTime || '',
-        name: data.name || '',
-        number: data.number || 0,
-        unit: data.unit || '',
-        dataType: data.dataType || '',
-        productType: data.productType || ''
+        nodeId: '',
+        nodeName: '',
+        timeType: '',
+        dataTime: '',
+        name: '',
+        number: 0,
+        unit: '',
+        dataType: '',
+        productType: ''
       };
+      formRef.value?.clearValidate();
     }
-  } else if (visible && props.operateType === 'add') {
-    formData.value = {
-      nodeId: '',
-      nodeName: '',
-      timeType: '',
-      dataTime: '',
-      name: '',
-      number: 0,
-      unit: '',
-      dataType: '',
-      productType: ''
-    };
-    formRef.value?.clearValidate();
   }
-});
+);
 
 async function handleSubmit() {
   await formRef.value?.validate();
@@ -80,12 +101,22 @@ async function handleSubmit() {
   try {
     if (props.operateType === 'edit' && props.rowData?.id) {
       const { error } = await fetchUpdateProductOutput({ id: props.rowData.id, ...formData.value });
-      if (!error) { ElMessage.success('更新成功'); drawerVisible.value = false; emit('submitted'); }
+      if (!error) {
+        ElMessage.success('更新成功');
+        drawerVisible.value = false;
+        emit('submitted');
+      }
     } else {
       const { error } = await fetchCreateProductOutput(formData.value);
-      if (!error) { ElMessage.success('创建成功'); drawerVisible.value = false; emit('submitted'); }
+      if (!error) {
+        ElMessage.success('创建成功');
+        drawerVisible.value = false;
+        emit('submitted');
+      }
     }
-  } finally { loading.value = false; }
+  } finally {
+    loading.value = false;
+  }
 }
 </script>
 

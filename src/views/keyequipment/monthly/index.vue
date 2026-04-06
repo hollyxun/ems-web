@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { onMounted, ref, computed, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
+import { useECharts } from '@sa/hooks';
 import {
-  fetchMonthlyKeyEquipmentList,
   fetchMonthlyKeyEquipmentChart,
+  fetchMonthlyKeyEquipmentList,
   fetchPointFacility
 } from '@/service/api/keyequipment';
 import type { KeyEquipment } from '@/service/api/keyequipment';
-import { useECharts } from '@sa/hooks';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'KeyEquipmentMonthly' });
@@ -44,11 +44,13 @@ const { domRef: chartDomRef, updateOptions: updateChart } = useECharts(() => ({
     data: Array.from({ length: 31 }, (_, i) => `${i + 1}日`)
   },
   yAxis: { type: 'value', name: '能耗' },
-  series: [{
-    name: '能耗值',
-    type: 'bar',
-    data: []
-  }]
+  series: [
+    {
+      name: '能耗值',
+      type: 'bar',
+      data: []
+    }
+  ]
 }));
 
 // 表格列 - 当月天数
@@ -79,7 +81,7 @@ async function loadData() {
   try {
     const params = {
       indexId: selectedDevice.value,
-      dataTime: selectedMonth.value + '-01'
+      dataTime: `${selectedMonth.value}-01`
     };
     const { data, error } = await fetchMonthlyKeyEquipmentList(params);
     if (!error && data) {
@@ -101,7 +103,7 @@ async function selectRow(index: number) {
 
   const params = {
     indexId: row.indexId,
-    dataTime: selectedMonth.value + '-01'
+    dataTime: `${selectedMonth.value}-01`
   };
   const { data, error } = await fetchMonthlyKeyEquipmentChart(params);
   if (!error && data && data.length > 0) {
@@ -117,7 +119,7 @@ function updateChartData() {
 
   const values = Array.from({ length: daysInMonth.value }, (_, i) => {
     const key = `value${i + 1}` as keyof KeyEquipment.MonthlyData;
-    return row[key] as number || 0;
+    return (row[key] as number) || 0;
   });
 
   updateChart({
@@ -125,9 +127,11 @@ function updateChartData() {
     xAxis: {
       data: Array.from({ length: daysInMonth.value }, (_, i) => `${i + 1}日`)
     },
-    series: [{
-      data: values
-    }]
+    series: [
+      {
+        data: values
+      }
+    ]
   });
 }
 
@@ -156,7 +160,13 @@ onMounted(() => {
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="选择月份" class="w-280px">
-          <ElDatePicker v-model="selectedMonth" type="month" placeholder="选择月份" value-format="YYYY-MM" class="w-full" />
+          <ElDatePicker
+            v-model="selectedMonth"
+            type="month"
+            placeholder="选择月份"
+            value-format="YYYY-MM"
+            class="w-full"
+          />
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="loadData">查询</ElButton>
@@ -168,9 +178,15 @@ onMounted(() => {
       <template #header>
         <p>重点设备月能耗分析</p>
       </template>
-      <div ref="chartDomRef" class="h-300px mb-16px" />
-      <ElTable v-loading="loading" :data="dataList" border stripe highlight-current-row
-        @current-change="(row: any) => selectRow(dataList.indexOf(row))">
+      <div ref="chartDomRef" class="mb-16px h-300px" />
+      <ElTable
+        v-loading="loading"
+        :data="dataList"
+        border
+        stripe
+        highlight-current-row
+        @current-change="(row: any) => selectRow(dataList.indexOf(row))"
+      >
         <ElTableColumn type="index" label="序号" width="60" />
         <ElTableColumn prop="indexName" label="指标名称" min-width="120" />
         <ElTableColumn v-for="col in dayColumns" :key="col.prop" :prop="col.prop" :label="col.label" :width="col.width">

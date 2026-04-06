@@ -1,7 +1,11 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm } from 'element-plus';
-import { fetchProductOutputList, fetchDeleteProductOutput, fetchBatchDeleteProductOutput } from '@/service/api/productoutput';
+import {
+  fetchBatchDeleteProductOutput,
+  fetchDeleteProductOutput,
+  fetchProductOutputList
+} from '@/service/api/productoutput';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import ProductOutputDrawer from './modules/productoutput-drawer.vue';
@@ -39,14 +43,21 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'dataType', label: '数据类型', minWidth: 80 },
     { prop: 'productType', label: '产品类型', minWidth: 100 },
     {
-      prop: 'operate', label: $t('common.operate'), align: 'center', width: 160,
+      prop: 'operate',
+      label: $t('common.operate'),
+      align: 'center',
+      width: 160,
       formatter: row => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
-            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>{$t('common.edit')}</ElButton>
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
             </ElPopconfirm>
           </div>
         );
@@ -55,7 +66,11 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteProductOutput(id);
@@ -71,7 +86,9 @@ async function handleBatchDelete() {
   }
 }
 
-function edit(id: number) { handleEdit(id); }
+function edit(id: number) {
+  handleEdit(id);
+}
 
 function handleSelectionChange(selection: any[]) {
   selectedIds.value = selection.map(item => item.id);
@@ -99,7 +116,18 @@ onMounted(() => getData());
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getDataByPage">查询</ElButton>
-          <ElButton @click="() => { searchParams.name = undefined; searchParams.timeType = undefined; searchParams.dataType = undefined; getDataByPage(); }">重置</ElButton>
+          <ElButton
+            @click="
+              () => {
+                searchParams.name = undefined;
+                searchParams.timeType = undefined;
+                searchParams.dataType = undefined;
+                getDataByPage();
+              }
+            "
+          >
+            重置
+          </ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -114,14 +142,31 @@ onMounted(() => getData());
           </TableHeaderOperation>
         </div>
       </template>
-      <ElTable v-loading="loading" height="100%" border :data="data" row-key="id" @selection-change="handleSelectionChange">
+      <ElTable
+        v-loading="loading"
+        height="100%"
+        border
+        :data="data"
+        row-key="id"
+        @selection-change="handleSelectionChange"
+      >
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
-      <ProductOutputDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData" @submitted="getDataByPage" />
+      <ProductOutputDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getDataByPage"
+      />
     </ElCard>
   </div>
 </template>

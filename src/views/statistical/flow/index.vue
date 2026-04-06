@@ -1,6 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { ElCard, ElForm, ElFormItem, ElSelect, ElOption, ElDatePicker, ElRow, ElCol, ElStatistic, ElEmpty } from 'element-plus';
+import {
+  ElCard,
+  ElCol,
+  ElDatePicker,
+  ElEmpty,
+  ElForm,
+  ElFormItem,
+  ElOption,
+  ElRow,
+  ElSelect,
+  ElStatistic
+} from 'element-plus';
 import { fetchFlowCharts } from '@/service/api/statistical';
 import type { Api } from '@/typings/api';
 
@@ -92,7 +103,7 @@ function transformToSankey(data: Api.Statistical.FlowCharts.FlowChartsResponse) 
 }
 
 // 监听数据变化
-watch(flowData, (newData) => {
+watch(flowData, newData => {
   if (newData) {
     transformToSankey(newData);
   }
@@ -120,22 +131,12 @@ onMounted(() => {
         </ElFormItem>
         <ElFormItem label="时间类型">
           <ElSelect v-model="queryParams.timeType" style="width: 100px" @change="loadData">
-            <ElOption
-              v-for="item in timeTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in timeTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
         <ElFormItem label="能源类型">
           <ElSelect v-model="queryParams.energyType" style="width: 100px" @change="loadData">
-            <ElOption
-              v-for="item in energyTypeOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
+            <ElOption v-for="item in energyTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </ElSelect>
         </ElFormItem>
       </ElForm>

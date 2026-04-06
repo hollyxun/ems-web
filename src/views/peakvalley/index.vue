@@ -1,7 +1,7 @@
 <script setup lang="tsx">
-import { onMounted, ref, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm } from 'element-plus';
-import { fetchPriceDateList, fetchDeletePriceDate } from '@/service/api/peakvalley';
+import { fetchDeletePriceDate, fetchPriceDateList } from '@/service/api/peakvalley';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import PriceDateDrawer from './modules/price-date-drawer.vue';
@@ -21,15 +21,24 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     { prop: 'remark', label: '备注', minWidth: 150 },
     { prop: 'createdAt', label: '创建时间', minWidth: 160 },
     {
-      prop: 'operate', label: $t('common.operate'), align: 'center', width: 200,
+      prop: 'operate',
+      label: $t('common.operate'),
+      align: 'center',
+      width: 200,
       formatter: row => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
-            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>编辑</ElButton>
-            <ElButton type="success" plain size="small" onClick={() => configPrice(row.id)}>配置电价</ElButton>
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              编辑
+            </ElButton>
+            <ElButton type="success" plain size="small" onClick={() => configPrice(row.id)}>
+              配置电价
+            </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">{$t('common.delete')}</ElButton>
+              <ElButton type="danger" plain size="small">
+                {$t('common.delete')}
+              </ElButton>
             </ElPopconfirm>
           </div>
         );
@@ -38,7 +47,11 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   ]
 });
 
-const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 const showPriceConfig = ref(false);
 const currentParentId = ref<number | null>(null);
@@ -48,7 +61,9 @@ async function handleDelete(id: number) {
   if (!error) onDeleted();
 }
 
-function edit(id: number) { handleEdit(id); }
+function edit(id: number) {
+  handleEdit(id);
+}
 
 function configPrice(id: number) {
   currentParentId.value = id;
@@ -67,7 +82,16 @@ onMounted(() => getData());
         </ElFormItem>
         <ElFormItem class="ml-auto">
           <ElButton type="primary" @click="getDataByPage">查询</ElButton>
-          <ElButton @click="() => { searchParams.remark = undefined; getDataByPage(); }">重置</ElButton>
+          <ElButton
+            @click="
+              () => {
+                searchParams.remark = undefined;
+                getDataByPage();
+              }
+            "
+          >
+            重置
+          </ElButton>
         </ElFormItem>
       </ElForm>
     </ElCard>
@@ -82,10 +106,20 @@ onMounted(() => getData());
         <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
       </ElTable>
       <div class="mt-20px flex justify-end">
-        <ElPagination v-if="mobilePagination.total" layout="total,prev,pager,next,sizes" v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']" @size-change="mobilePagination['size-change']" />
+        <ElPagination
+          v-if="mobilePagination.total"
+          layout="total,prev,pager,next,sizes"
+          v-bind="mobilePagination"
+          @current-change="mobilePagination['current-change']"
+          @size-change="mobilePagination['size-change']"
+        />
       </div>
-      <PriceDateDrawer v-model:visible="drawerVisible" :operate-type="operateType" :row-data="editingData" @submitted="getDataByPage" />
+      <PriceDateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getDataByPage"
+      />
     </ElCard>
 
     <!-- 电价配置弹窗 -->

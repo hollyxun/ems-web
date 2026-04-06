@@ -1,18 +1,30 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { fetchPriceList, fetchSavePriceList } from '@/service/api/peakvalley';
 import type { PeakValley } from '@/service/api/peakvalley';
 
 defineOptions({ name: 'PriceConfigDrawer' });
 
-interface Props { visible: boolean; parentId: number | null; }
-interface Emits { (e: 'update:visible', visible: boolean): void; }
+interface Props {
+  visible: boolean;
+  parentId: number | null;
+}
+interface Emits {
+  (e: 'update:visible', visible: boolean): void;
+}
 
 const props = defineProps<Props>();
 const emit = defineEmits<Emits>();
 
-const drawerVisible = computed({ get() { return props.visible; }, set(v) { emit('update:visible', v); } });
+const drawerVisible = computed({
+  get() {
+    return props.visible;
+  },
+  set(v) {
+    emit('update:visible', v);
+  }
+});
 const loading = ref(false);
 const saving = ref(false);
 
@@ -46,7 +58,9 @@ async function loadPriceList() {
     if (priceList.value.length === 0) {
       priceList.value = [{ type: 'SHARP', startTime: '00:00:00', stopTime: '06:00:00', effectivityPrice: 0 }];
     }
-  } finally { loading.value = false; }
+  } finally {
+    loading.value = false;
+  }
 }
 
 // 添加一行
@@ -88,14 +102,19 @@ async function handleSave() {
       ElMessage.success('保存成功');
       drawerVisible.value = false;
     }
-  } finally { saving.value = false; }
+  } finally {
+    saving.value = false;
+  }
 }
 
-watch(() => props.visible, (visible) => {
-  if (visible && props.parentId) {
-    loadPriceList();
+watch(
+  () => props.visible,
+  visible => {
+    if (visible && props.parentId) {
+      loadPriceList();
+    }
   }
-});
+);
 
 onMounted(() => {
   if (props.visible && props.parentId) {
@@ -122,12 +141,26 @@ onMounted(() => {
         </ElTableColumn>
         <ElTableColumn label="开始时间" width="140">
           <template #default="{ row }">
-            <ElTimePicker v-model="row.startTime" format="HH:mm:ss" value-format="HH:mm:ss" placeholder="选择时间" size="small" class="w-full" />
+            <ElTimePicker
+              v-model="row.startTime"
+              format="HH:mm:ss"
+              value-format="HH:mm:ss"
+              placeholder="选择时间"
+              size="small"
+              class="w-full"
+            />
           </template>
         </ElTableColumn>
         <ElTableColumn label="结束时间" width="140">
           <template #default="{ row }">
-            <ElTimePicker v-model="row.stopTime" format="HH:mm:ss" value-format="HH:mm:ss" placeholder="选择时间" size="small" class="w-full" />
+            <ElTimePicker
+              v-model="row.stopTime"
+              format="HH:mm:ss"
+              value-format="HH:mm:ss"
+              placeholder="选择时间"
+              size="small"
+              class="w-full"
+            />
           </template>
         </ElTableColumn>
         <ElTableColumn label="电价(元/kWh)" width="140">

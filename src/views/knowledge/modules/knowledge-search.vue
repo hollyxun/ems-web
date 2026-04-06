@@ -36,12 +36,7 @@ function search() {
       </ElFormItem>
       <ElFormItem label="能源类型" class="w-280px">
         <ElSelect v-model="model.energyType" placeholder="请选择能源类型" clearable>
-          <ElOption
-            v-for="item in energyTypeOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
+          <ElOption v-for="item in energyTypeOptions" :key="item.value" :label="item.label" :value="item.value" />
         </ElSelect>
       </ElFormItem>
       <ElFormItem class="ml-auto">

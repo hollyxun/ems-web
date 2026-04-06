@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
-import { fetchYearProcessEnergyList, fetchYearProcessEnergyChart } from '@/service/api/process-energy';
+import { fetchYearProcessEnergyChart, fetchYearProcessEnergyList } from '@/service/api/process-energy';
 
 defineOptions({ name: 'YearProcessEnergy' });
 
@@ -168,13 +168,7 @@ onMounted(() => {
     <!-- 筛选条件 -->
     <ElCard class="mb-4" shadow="hover">
       <div class="flex items-center gap-4">
-        <ElDatePicker
-          v-model="selectedYear"
-          type="year"
-          placeholder="选择年份"
-          format="YYYY"
-          value-format="YYYY"
-        />
+        <ElDatePicker v-model="selectedYear" type="year" placeholder="选择年份" format="YYYY" value-format="YYYY" />
         <ElSelect v-model="energyType" placeholder="能源类型" clearable>
           <ElOption label="全部" value="" />
           <ElOption label="电" value="electricity" />
@@ -193,14 +187,7 @@ onMounted(() => {
           <span class="text-sm text-gray-500">点击行查看趋势图</span>
         </div>
       </template>
-      <ElTable
-        v-loading="loading"
-        :data="tableData"
-        border
-        stripe
-        highlight-current-row
-        @row-click="handleRowClick"
-      >
+      <ElTable v-loading="loading" :data="tableData" border stripe highlight-current-row @row-click="handleRowClick">
         <ElTableColumn prop="indexName" label="指标名称" width="150" fixed="left" />
         <ElTableColumn prop="unitId" label="单位" width="80" />
         <ElTableColumn
@@ -224,7 +211,7 @@ onMounted(() => {
         <span class="font-bold">年度能耗趋势图</span>
       </template>
       <div v-loading="chartLoading" class="chart-container" style="height: 400px">
-        <div ref="chartRef" class="w-full h-full" />
+        <div ref="chartRef" class="h-full w-full" />
       </div>
     </ElCard>
   </div>
