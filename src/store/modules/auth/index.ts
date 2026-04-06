@@ -248,7 +248,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (!isDebugMode.value) return false;
 
     // Set mock token
-    const mockToken = 'debug-mock-token-' + Date.now();
+    const mockToken = `debug-mock-token-${Date.now()}`;
     localStg.set('token', mockToken);
     token.value = mockToken;
 
