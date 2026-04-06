@@ -30,7 +30,6 @@ declare module "@elegant-router/types" {
     "document_naive": "/document/naive";
     "document_antd": "/document/antd";
     "document_element-plus": "/document/element-plus";
-    "document_alova": "/document/alova";
     "403": "/403";
     "404": "/404";
     "500": "/500";
@@ -39,10 +38,6 @@ declare module "@elegant-router/types" {
     "alarm_history": "/alarm/history";
     "alarm_item": "/alarm/item";
     "alarm_limit-type": "/alarm/limit-type";
-    "alova": "/alova";
-    "alova_request": "/alova/request";
-    "alova_scenes": "/alova/scenes";
-    "alova_user": "/alova/user";
     "analysis": "/analysis";
     "analysis_consumption": "/analysis/consumption";
     "base-data": "/base-data";
@@ -81,6 +76,7 @@ declare module "@elegant-router/types" {
     "energy_dashboard": "/energy/dashboard";
     "energy_electric-analysis": "/energy/electric-analysis";
     "energy_flow": "/energy/flow";
+    "energy_history-data": "/energy/history-data";
     "energy_ranking": "/energy/ranking";
     "energy_report": "/energy/report";
     "energy-analysis": "/energy-analysis";
@@ -208,7 +204,6 @@ declare module "@elegant-router/types" {
     | "document_naive"
     | "document_antd"
     | "document_element-plus"
-    | "document_alova"
   >;
 
   /**
@@ -226,7 +221,6 @@ declare module "@elegant-router/types" {
     | "500"
     | "about"
     | "alarm"
-    | "alova"
     | "analysis"
     | "base-data"
     | "benchmark"
@@ -287,9 +281,6 @@ declare module "@elegant-router/types" {
     | "alarm_history"
     | "alarm_item"
     | "alarm_limit-type"
-    | "alova_request"
-    | "alova_scenes"
-    | "alova_user"
     | "analysis_consumption"
     | "base-data_coefficient"
     | "base-data_home"
@@ -326,6 +317,7 @@ declare module "@elegant-router/types" {
     | "energy_dashboard"
     | "energy_electric-analysis"
     | "energy_flow"
+    | "energy_history-data"
     | "energy_ranking"
     | "energy_report"
     | "function_hide-child_one"
@@ -396,7 +388,6 @@ declare module "@elegant-router/types" {
     | "spikesandvalleys"
     | "statistical_cost"
     | "statistical_flow"
-    | "statistical"
     | "statistical_yoy-mom"
   >;
 
@@ -418,7 +409,6 @@ declare module "@elegant-router/types" {
     | "document_naive"
     | "document_antd"
     | "document_element-plus"
-    | "document_alova"
   >;
 
   /**

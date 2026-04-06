@@ -1,4 +1,5 @@
 import { computed, onUnmounted, ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
 import { useRealtimeDataStore } from '@/store/modules/energy/realtime-data';
 import { useAuthStore } from '@/store/modules/auth/index';
 
@@ -29,13 +30,13 @@ interface UseSSEConnectionOptions {
  */
 interface UseSSEConnectionReturn {
   /** 连接状态 */
-  connectionStatus: ReturnType<typeof computed<Api.Energy.Realtime.SSEConnectionStatus>>;
+  connectionStatus: ComputedRef<Api.Energy.Realtime.SSEConnectionStatus>;
   /** 是否已连接 */
-  isConnected: ReturnType<typeof computed<boolean>>;
+  isConnected: ComputedRef<boolean>;
   /** 重连次数 */
-  reconnectAttempts: ReturnType<typeof ref<number>>;
+  reconnectAttempts: Ref<number>;
   /** 最后错误 */
-  lastError: ReturnType<typeof ref<string | null>>;
+  lastError: Ref<string | null>;
   /** 手动连接 */
   connect: () => void;
   /** 手动断开 */
