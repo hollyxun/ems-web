@@ -197,14 +197,15 @@ const emit = defineEmits<{
 | `skills/module-removal.md` | 功能模块删除完整流程 | 删除功能模块时 |
 | `skills/route-sync-development.md` | 路由同步开发流程 | 开发路由同步功能时 |
 | `skills/button-permission.md` | 按钮权限使用指南 | 使用按钮权限控制时 |
+| `skills/api-type-architecture.md` | API 类型定义架构规范 | 新增/重构 API 模块时 |
 
 ### Insights（规律性认知）
 
 | 文件 | 描述 | 触发场景 |
 |------|------|----------|
-| `insights/typescript-generic.md` | TypeScript 泛型使用技巧 | 使用泛型时 |
 | `insights/reactive-destructuring.md` | 响应式数据解构陷阱 | 解构响应式数据时 |
 | `insights/boolean-serialization.md` | 布尔值序列化陷阱 | 处理布尔字段时 |
+| `insights/third-party-instance-storage.md` | 第三方库实例存储规范 | 存储第三方库实例时 |
 
 ### Experience（事件复盘）
 
@@ -214,6 +215,12 @@ const emit = defineEmits<{
 | `experience/route-hierarchy-fix-2026-04-01.md` | 路由层级结构与 parentName 同步修复 | 路由层级/parentName 相关问题时 |
 | `experience/route-init-order-fix-2026-04-03.md` | 路由初始化顺序问题修复 | 数据库重置后 404 问题时 |
 | `experience/rule-engine-development-2026-04-03.md` | 规则引擎前端开发问题复盘 | 开发规则引擎相关功能时 |
+| `experience/i18n-type-sync-fix-2026-04-03.md` | i18n 类型同步问题修复 | 国际化类型相关问题时 |
+| `experience/echarts-shallowref-fix-2026-04-06.md` | ECharts 实例 shallowRef 修复 | 存储第三方库实例时 |
+| `experience/vue-returntype-trap-fix.md` | Vue ReturnType 类型陷阱修复 | 定义响应式返回值类型时 |
+| `experience/i18n-routekey-naming-fix.md` | i18n route key 命名规则修复 | 添加 locale route 翻译时 |
+| `experience/elegant-router-parent-child-conflict.md` | elegant-router 父子路由冲突修复 | 创建带子路由的目录时 |
+| `experience/api-type-architecture-refactor.md` | API 类型架构混乱问题复盘 | 遇到类型重复/不一致时 |
 
 ### Questions（待验证问题）
 
@@ -232,6 +239,10 @@ const emit = defineEmits<{
 | 直接在模板中复杂计算 | 重复计算、性能下降 | 使用 computed 缓存计算结果 |
 | API 错误未统一处理 | 用户体验差、错误信息不一致 | 在请求拦截器中统一处理 |
 | 跨组件直接修改状态 | 状态管理混乱、难以追踪 | 通过 Pinia actions 修改状态 |
+| 使用 ref 存储第三方库实例 | 类型错误、性能下降 | 使用 `shallowRef` 存储实例 |
+| 使用 ReturnType<typeof computed/ref> | TypeScript 类型错误（缺少内部 Symbol） | 直接使用 `ComputedRef<T>` 和 `Ref<T>` |
+| 父级路由目录同时有 index.vue 和子目录 | TS2322 组件类型不兼容 | 删除父级 index.vue，子页面放子目录 |
+| service/api 中定义重复类型 | 类型混乱、不一致、难维护 | 类型统一放 typings/api，使用 Api 命名空间 |
 
 ---
 
@@ -243,4 +254,4 @@ const emit = defineEmits<{
 
 ---
 
-**最后更新**: 2026-04-03
+**最后更新**: 2026-04-06

@@ -416,7 +416,66 @@ onUnmounted(() => {
 - [ ] 导出类型供外部使用
 - [ ] 统一的错误处理在拦截器中实现
 - [ ] 组件中捕获特定错误做额外处理
+- [ ] API 路径与后端 Router 路径一致
+- [ ] 类型定义与后端 Model 字段一致
 
 ---
 
-**最后更新**: 2026-03-18
+## 前后端一致性规范
+
+### API 路径一致性
+
+前端 API 路径必须与后端 Router 定义的路径完全一致：
+
+```typescript
+// ❌ 错误 - 前端使用 RESTful 风格，后端使用显式动作
+// 前端
+url: '/alarm/limit-type'          // POST
+url: '/alarm/limit-type/:id'      // PUT
+
+// 后端 Router
+alarmRouter.POST("/limit-type/create", ...)   // 实际路径
+alarmRouter.PUT("/limit-type/update", ...)    // 实际路径
+
+// ✅ 正确 - 前端路径与后端一致
+url: '/alarm/limit-type/create'   // POST
+url: '/alarm/limit-type/update'   // PUT
+```
+
+### 类型定义一致性
+
+前端类型定义必须与后端 Model 字段一致：
+
+```typescript
+// ❌ 错误 - 字段名和类型不一致
+// 前端
+interface AlarmItem {
+  limitType: number
+  limitVal: number
+  status: number
+}
+
+// 后端 Model
+type AlarmItem struct {
+  LimitType  string `json:"limitType"`   // string, 不是 number
+  LimitVal   string `json:"limitVal"`    // string
+  StartStop  string `json:"startStop"`   // 字段名不同
+}
+
+// ✅ 正确 - 前端类型与后端一致
+interface AlarmItem {
+  limitType: string
+  limitVal: string
+  startStop: string
+}
+```
+
+### 一致性检查方法
+
+1. **API 路径检查**：对比前端 `src/service/api/*.ts` 与后端 `plugin/*/router/*.go`
+2. **类型检查**：对比前端 `src/typings/api/*.d.ts` 与后端 `plugin/*/model/*.go`
+3. **构建验证**：`pnpm build` 和 `go build` 都必须通过
+
+---
+
+**最后更新**: 2026-04-06

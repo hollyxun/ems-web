@@ -426,6 +426,8 @@ export default systemRoutes
 开发页面时检查：
 
 - [ ] API 封装完整，类型定义清晰
+- [ ] API 路径与后端 Router 路径一致
+- [ ] 类型定义与后端 Model 字段一致
 - [ ] 使用组合式函数提取可复用逻辑
 - [ ] 页面组件使用 `<script setup lang="ts">`
 - [ ] Props/Emits 使用类型化定义
@@ -436,4 +438,36 @@ export default systemRoutes
 
 ---
 
-**最后更新**: 2026-03-18
+## 前后端一致性验证
+
+### 验证步骤
+
+1. **API 路径验证**
+   - 查看后端 `plugin/[模块]/router/[模块]_router.go`
+   - 确保前端 `src/service/api/[模块].ts` 的 URL 路径一致
+
+2. **类型定义验证**
+   - 查看后端 `plugin/[模块]/model/[模块].go`
+   - 确保前端 `src/typings/api/[模块].d.ts` 的字段名和类型一致
+
+3. **构建验证**
+   ```bash
+   # 前端构建
+   cd web && pnpm build
+
+   # 后端构建
+   cd server && go build
+   ```
+
+### 常见不一致问题
+
+| 问题 | 表现 | 解决 |
+|------|------|------|
+| API 路径不一致 | 404 错误 | 检查后端 Router，修正前端 URL |
+| 字段名不一致 | 数据显示为空 | 对比后端 Model，修正前端类型 |
+| 类型不一致 | TypeScript 报错 | 使用后端实际类型（如 string vs number） |
+| 缺失字段 | 数据缺失 | 补充后端新增字段到前端类型 |
+
+---
+
+**最后更新**: 2026-04-06
