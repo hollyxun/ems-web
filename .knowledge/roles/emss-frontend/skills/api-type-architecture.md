@@ -188,7 +188,39 @@ export function fetchBenchmarkList(params: Api.Benchmark.SearchParams) {
 }
 ```
 
-### 2. 文件导出（Blob 响应）
+### 2. 无返回值请求（create/update/delete）
+
+**禁止使用 `request<void>`**，直接省略泛型参数：
+
+```typescript
+// ✅ 正确：无返回值请求不指定泛型
+export function fetchDeleteBenchmark(id: number) {
+  return request({
+    url: `/benchmark/${id}`,
+    method: 'delete'
+  });
+}
+
+export function fetchCreateBenchmark(data: Api.Benchmark.CreateParams) {
+  return request({
+    url: '/benchmark',
+    method: 'post',
+    data
+  });
+}
+
+// ❌ 错误：ESLint @typescript-eslint/no-invalid-void-type
+export function fetchDeleteBenchmark(id: number) {
+  return request<void>({  // void 只能作为返回类型或泛型参数！
+    url: `/benchmark/${id}`,
+    method: 'delete'
+  });
+}
+```
+
+**原因**：ESLint 规则 `@typescript-eslint/no-invalid-void-type` 禁止将 `void` 作为泛型参数使用。
+
+### 3. 文件导出（Blob 响应）
 
 使用 axios 直接请求，不走封装的 request：
 
@@ -220,7 +252,7 @@ export function exportHistoricalData(params: Api.HistoricalData.Request) {
 }
 ```
 
-### 3. 函数重名冲突
+### 4. 函数重名冲突
 
 同一导出文件中函数名必须唯一：
 
@@ -235,7 +267,7 @@ export function fetchGetEnergyRanking(params: Api.Comprehensive.ComprehensiveQue
 export function fetchConsumptionEnergyRanking(params: Api.ConsumptionAnalysis.GetEnergyRankingParams) { }
 ```
 
-### 4. 已有类型扩展
+### 5. 已有类型扩展
 
 在现有类型文件中扩展，不创建新文件：
 

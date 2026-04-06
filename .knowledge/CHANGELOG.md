@@ -112,6 +112,15 @@
   - 问题：`.d.ts` 中 `const` 初始化必须是字符串/数字字面量
   - 修复：移除 `RuleType` 和 `ChangeType` 的 const 对象，仅保留 type 声明
 
+- **[service/api/*.ts]** - ESLint `@typescript-eslint/no-invalid-void-type` 修复
+  - 问题：`request<void>` 使用 `void` 作为泛型参数，ESLint 报错
+  - 修复：无返回值请求直接使用 `request({...})`，不指定泛型参数
+  - 受影响文件：benchmark.ts, energy-indicators.ts, gatewaysetting.ts, peakvalley.ts, productoutput.ts, spikesandvalleys.ts
+
+- **[typings/api/comprehensive.d.ts]** - ESLint `@typescript-eslint/no-empty-object-type` 修复
+  - 问题：空接口 `MonthlyComprehensiveQuery extends DailyComprehensiveQuery {}` 警告
+  - 修复：改用类型别名 `type MonthlyComprehensiveQuery = DailyComprehensiveQuery`
+
 ---
 
 ## 2026-04-04
