@@ -98,6 +98,33 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'analysis_benchmark',
+        path: '/analysis/benchmark',
+        component: 'view.analysis_benchmark',
+        meta: {
+          title: 'analysis_benchmark',
+          i18nKey: 'route.analysis_benchmark'
+        }
+      },
+      {
+        name: 'analysis_branch',
+        path: '/analysis/branch',
+        component: 'view.analysis_branch',
+        meta: {
+          title: 'analysis_branch',
+          i18nKey: 'route.analysis_branch'
+        }
+      },
+      {
+        name: 'analysis_comprehensive',
+        path: '/analysis/comprehensive',
+        component: 'view.analysis_comprehensive',
+        meta: {
+          title: 'analysis_comprehensive',
+          i18nKey: 'route.analysis_comprehensive'
+        }
+      },
+      {
         name: 'analysis_consumption',
         path: '/analysis/consumption',
         component: 'view.analysis_consumption',
@@ -105,6 +132,255 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'analysis_consumption',
           i18nKey: 'route.analysis_consumption'
         }
+      },
+      {
+        name: 'analysis_consumption-detail',
+        path: '/analysis/consumption-detail',
+        component: 'view.analysis_consumption-detail',
+        meta: {
+          title: 'analysis_consumption-detail',
+          i18nKey: 'route.analysis_consumption-detail'
+        }
+      },
+      {
+        name: 'analysis_energy',
+        path: '/analysis/energy',
+        meta: {
+          title: 'analysis_energy',
+          i18nKey: 'route.analysis_energy'
+        },
+        children: [
+          {
+            name: 'analysis_energy_comprehensive',
+            path: '/analysis/energy/comprehensive',
+            meta: {
+              title: 'analysis_energy_comprehensive',
+              i18nKey: 'route.analysis_energy_comprehensive'
+            },
+            children: [
+              {
+                name: 'analysis_energy_comprehensive_daily',
+                path: '/analysis/energy/comprehensive/daily',
+                component: 'view.analysis_energy_comprehensive_daily',
+                meta: {
+                  title: 'analysis_energy_comprehensive_daily',
+                  i18nKey: 'route.analysis_energy_comprehensive_daily'
+                }
+              },
+              {
+                name: 'analysis_energy_comprehensive_monthly',
+                path: '/analysis/energy/comprehensive/monthly',
+                component: 'view.analysis_energy_comprehensive_monthly',
+                meta: {
+                  title: 'analysis_energy_comprehensive_monthly',
+                  i18nKey: 'route.analysis_energy_comprehensive_monthly'
+                }
+              },
+              {
+                name: 'analysis_energy_comprehensive_statistics',
+                path: '/analysis/energy/comprehensive/statistics',
+                component: 'view.analysis_energy_comprehensive_statistics',
+                meta: {
+                  title: 'analysis_energy_comprehensive_statistics',
+                  i18nKey: 'route.analysis_energy_comprehensive_statistics'
+                }
+              },
+              {
+                name: 'analysis_energy_comprehensive_year',
+                path: '/analysis/energy/comprehensive/year',
+                component: 'view.analysis_energy_comprehensive_year',
+                meta: {
+                  title: 'analysis_energy_comprehensive_year',
+                  i18nKey: 'route.analysis_energy_comprehensive_year'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'analysis_indicators',
+        path: '/analysis/indicators',
+        component: 'view.analysis_indicators',
+        meta: {
+          title: 'analysis_indicators',
+          i18nKey: 'route.analysis_indicators'
+        }
+      },
+      {
+        name: 'analysis_itemized',
+        path: '/analysis/itemized',
+        component: 'view.analysis_itemized',
+        meta: {
+          title: 'analysis_itemized',
+          i18nKey: 'route.analysis_itemized'
+        }
+      },
+      {
+        name: 'analysis_itemized-detail',
+        path: '/analysis/itemized-detail',
+        component: 'view.analysis_itemized-detail',
+        meta: {
+          title: 'analysis_itemized-detail',
+          i18nKey: 'route.analysis_itemized-detail'
+        }
+      },
+      {
+        name: 'analysis_key-equipment',
+        path: '/analysis/key-equipment',
+        meta: {
+          title: 'analysis_key-equipment',
+          i18nKey: 'route.analysis_key-equipment'
+        },
+        children: [
+          {
+            name: 'analysis_key-equipment_daily',
+            path: '/analysis/key-equipment/daily',
+            component: 'view.analysis_key-equipment_daily',
+            meta: {
+              title: 'analysis_key-equipment_daily',
+              i18nKey: 'route.analysis_key-equipment_daily'
+            }
+          },
+          {
+            name: 'analysis_key-equipment_monthly',
+            path: '/analysis/key-equipment/monthly',
+            component: 'view.analysis_key-equipment_monthly',
+            meta: {
+              title: 'analysis_key-equipment_monthly',
+              i18nKey: 'route.analysis_key-equipment_monthly'
+            }
+          },
+          {
+            name: 'analysis_key-equipment_year',
+            path: '/analysis/key-equipment/year',
+            component: 'view.analysis_key-equipment_year',
+            meta: {
+              title: 'analysis_key-equipment_year',
+              i18nKey: 'route.analysis_key-equipment_year'
+            }
+          }
+        ]
+      },
+      {
+        name: 'analysis_peak-valley',
+        path: '/analysis/peak-valley',
+        component: 'view.analysis_peak-valley',
+        meta: {
+          title: 'analysis_peak-valley',
+          i18nKey: 'route.analysis_peak-valley'
+        }
+      },
+      {
+        name: 'analysis_peak-valley-detail',
+        path: '/analysis/peak-valley-detail',
+        component: 'view.analysis_peak-valley-detail',
+        meta: {
+          title: 'analysis_peak-valley-detail',
+          i18nKey: 'route.analysis_peak-valley-detail'
+        }
+      },
+      {
+        name: 'analysis_peak-valley-scheme',
+        path: '/analysis/peak-valley-scheme',
+        component: 'view.analysis_peak-valley-scheme',
+        meta: {
+          title: 'analysis_peak-valley-scheme',
+          i18nKey: 'route.analysis_peak-valley-scheme'
+        }
+      },
+      {
+        name: 'analysis_process-energy',
+        path: '/analysis/process-energy',
+        meta: {
+          title: 'analysis_process-energy',
+          i18nKey: 'route.analysis_process-energy'
+        },
+        children: [
+          {
+            name: 'analysis_process-energy_statistics',
+            path: '/analysis/process-energy/statistics',
+            meta: {
+              title: 'analysis_process-energy_statistics',
+              i18nKey: 'route.analysis_process-energy_statistics'
+            },
+            children: [
+              {
+                name: 'analysis_process-energy_statistics_daily',
+                path: '/analysis/process-energy/statistics/daily',
+                component: 'view.analysis_process-energy_statistics_daily',
+                meta: {
+                  title: 'analysis_process-energy_statistics_daily',
+                  i18nKey: 'route.analysis_process-energy_statistics_daily'
+                }
+              },
+              {
+                name: 'analysis_process-energy_statistics_monthly',
+                path: '/analysis/process-energy/statistics/monthly',
+                component: 'view.analysis_process-energy_statistics_monthly',
+                meta: {
+                  title: 'analysis_process-energy_statistics_monthly',
+                  i18nKey: 'route.analysis_process-energy_statistics_monthly'
+                }
+              },
+              {
+                name: 'analysis_process-energy_statistics_year',
+                path: '/analysis/process-energy/statistics/year',
+                component: 'view.analysis_process-energy_statistics_year',
+                meta: {
+                  title: 'analysis_process-energy_statistics_year',
+                  i18nKey: 'route.analysis_process-energy_statistics_year'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'analysis_product-output',
+        path: '/analysis/product-output',
+        component: 'view.analysis_product-output',
+        meta: {
+          title: 'analysis_product-output',
+          i18nKey: 'route.analysis_product-output'
+        }
+      },
+      {
+        name: 'analysis_statistical',
+        path: '/analysis/statistical',
+        meta: {
+          title: 'analysis_statistical',
+          i18nKey: 'route.analysis_statistical'
+        },
+        children: [
+          {
+            name: 'analysis_statistical_cost',
+            path: '/analysis/statistical/cost',
+            component: 'view.analysis_statistical_cost',
+            meta: {
+              title: 'analysis_statistical_cost',
+              i18nKey: 'route.analysis_statistical_cost'
+            }
+          },
+          {
+            name: 'analysis_statistical_flow',
+            path: '/analysis/statistical/flow',
+            component: 'view.analysis_statistical_flow',
+            meta: {
+              title: 'analysis_statistical_flow',
+              i18nKey: 'route.analysis_statistical_flow'
+            }
+          },
+          {
+            name: 'analysis_statistical_yoy-mom',
+            path: '/analysis/statistical/yoy-mom',
+            component: 'view.analysis_statistical_yoy-mom',
+            meta: {
+              title: 'analysis_statistical_yoy-mom',
+              i18nKey: 'route.analysis_statistical_yoy-mom'
+            }
+          }
+        ]
       }
     ]
   },
@@ -221,62 +497,6 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'benchmark',
-    path: '/benchmark',
-    component: 'layout.base$view.benchmark',
-    meta: {
-      title: 'benchmark',
-      i18nKey: 'route.benchmark'
-    }
-  },
-  {
-    name: 'branchanalysis',
-    path: '/branchanalysis',
-    component: 'layout.base$view.branchanalysis',
-    meta: {
-      title: 'branchanalysis',
-      i18nKey: 'route.branchanalysis'
-    }
-  },
-  {
-    name: 'carbonemission',
-    path: '/carbonemission',
-    component: 'layout.base',
-    meta: {
-      title: 'carbonemission',
-      i18nKey: 'route.carbonemission'
-    },
-    children: [
-      {
-        name: 'carbonemission_calculate',
-        path: '/carbonemission/calculate',
-        component: 'view.carbonemission_calculate',
-        meta: {
-          title: 'carbonemission_calculate',
-          i18nKey: 'route.carbonemission_calculate'
-        }
-      }
-    ]
-  },
-  {
-    name: 'comprehensivestatistics',
-    path: '/comprehensivestatistics',
-    component: 'layout.base$view.comprehensivestatistics',
-    meta: {
-      title: 'comprehensivestatistics',
-      i18nKey: 'route.comprehensivestatistics'
-    }
-  },
-  {
-    name: 'consumptionanalysis',
-    path: '/consumptionanalysis',
-    component: 'layout.base$view.consumptionanalysis',
-    meta: {
-      title: 'consumptionanalysis',
-      i18nKey: 'route.consumptionanalysis'
-    }
-  },
-  {
     name: 'cost',
     path: '/cost',
     component: 'layout.base',
@@ -315,44 +535,6 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'costmanagement',
-    path: '/costmanagement',
-    component: 'layout.base',
-    meta: {
-      title: 'costmanagement',
-      i18nKey: 'route.costmanagement'
-    },
-    children: [
-      {
-        name: 'costmanagement_electricity',
-        path: '/costmanagement/electricity',
-        component: 'view.costmanagement_electricity',
-        meta: {
-          title: 'costmanagement_electricity',
-          i18nKey: 'route.costmanagement_electricity'
-        }
-      },
-      {
-        name: 'costmanagement_tactics',
-        path: '/costmanagement/tactics',
-        component: 'view.costmanagement_tactics',
-        meta: {
-          title: 'costmanagement_tactics',
-          i18nKey: 'route.costmanagement_tactics'
-        }
-      },
-      {
-        name: 'costmanagement_trend',
-        path: '/costmanagement/trend',
-        component: 'view.costmanagement_trend',
-        meta: {
-          title: 'costmanagement_trend',
-          i18nKey: 'route.costmanagement_trend'
-        }
-      }
-    ]
-  },
-  {
     name: 'dashboard',
     path: '/dashboard',
     component: 'layout.base',
@@ -369,6 +551,330 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'dashboard_custom',
           i18nKey: 'route.dashboard_custom'
         }
+      }
+    ]
+  },
+  {
+    name: 'developer',
+    path: '/developer',
+    component: 'layout.base',
+    meta: {
+      title: 'developer',
+      i18nKey: 'route.developer'
+    },
+    children: [
+      {
+        name: 'developer_function',
+        path: '/developer/function',
+        meta: {
+          title: 'developer_function',
+          i18nKey: 'route.developer_function'
+        },
+        children: [
+          {
+            name: 'developer_function_hide-child',
+            path: '/developer/function/hide-child',
+            meta: {
+              title: 'developer_function_hide-child',
+              i18nKey: 'route.developer_function_hide-child'
+            },
+            children: [
+              {
+                name: 'developer_function_hide-child_one',
+                path: '/developer/function/hide-child/one',
+                component: 'view.developer_function_hide-child_one',
+                meta: {
+                  title: 'developer_function_hide-child_one',
+                  i18nKey: 'route.developer_function_hide-child_one'
+                }
+              },
+              {
+                name: 'developer_function_hide-child_three',
+                path: '/developer/function/hide-child/three',
+                component: 'view.developer_function_hide-child_three',
+                meta: {
+                  title: 'developer_function_hide-child_three',
+                  i18nKey: 'route.developer_function_hide-child_three'
+                }
+              },
+              {
+                name: 'developer_function_hide-child_two',
+                path: '/developer/function/hide-child/two',
+                component: 'view.developer_function_hide-child_two',
+                meta: {
+                  title: 'developer_function_hide-child_two',
+                  i18nKey: 'route.developer_function_hide-child_two'
+                }
+              }
+            ]
+          },
+          {
+            name: 'developer_function_multi-tab',
+            path: '/developer/function/multi-tab',
+            component: 'view.developer_function_multi-tab',
+            meta: {
+              title: 'developer_function_multi-tab',
+              i18nKey: 'route.developer_function_multi-tab'
+            }
+          },
+          {
+            name: 'developer_function_request',
+            path: '/developer/function/request',
+            component: 'view.developer_function_request',
+            meta: {
+              title: 'developer_function_request',
+              i18nKey: 'route.developer_function_request'
+            }
+          },
+          {
+            name: 'developer_function_super-page',
+            path: '/developer/function/super-page',
+            component: 'view.developer_function_super-page',
+            meta: {
+              title: 'developer_function_super-page',
+              i18nKey: 'route.developer_function_super-page'
+            }
+          },
+          {
+            name: 'developer_function_tab',
+            path: '/developer/function/tab',
+            component: 'view.developer_function_tab',
+            meta: {
+              title: 'developer_function_tab',
+              i18nKey: 'route.developer_function_tab'
+            }
+          },
+          {
+            name: 'developer_function_toggle-auth',
+            path: '/developer/function/toggle-auth',
+            component: 'view.developer_function_toggle-auth',
+            meta: {
+              title: 'developer_function_toggle-auth',
+              i18nKey: 'route.developer_function_toggle-auth'
+            }
+          }
+        ]
+      },
+      {
+        name: 'developer_plugin',
+        path: '/developer/plugin',
+        meta: {
+          title: 'developer_plugin',
+          i18nKey: 'route.developer_plugin'
+        },
+        children: [
+          {
+            name: 'developer_plugin_barcode',
+            path: '/developer/plugin/barcode',
+            component: 'view.developer_plugin_barcode',
+            meta: {
+              title: 'developer_plugin_barcode',
+              i18nKey: 'route.developer_plugin_barcode'
+            }
+          },
+          {
+            name: 'developer_plugin_charts',
+            path: '/developer/plugin/charts',
+            meta: {
+              title: 'developer_plugin_charts',
+              i18nKey: 'route.developer_plugin_charts'
+            },
+            children: [
+              {
+                name: 'developer_plugin_charts_antv',
+                path: '/developer/plugin/charts/antv',
+                component: 'view.developer_plugin_charts_antv',
+                meta: {
+                  title: 'developer_plugin_charts_antv',
+                  i18nKey: 'route.developer_plugin_charts_antv'
+                }
+              },
+              {
+                name: 'developer_plugin_charts_echarts',
+                path: '/developer/plugin/charts/echarts',
+                component: 'view.developer_plugin_charts_echarts',
+                meta: {
+                  title: 'developer_plugin_charts_echarts',
+                  i18nKey: 'route.developer_plugin_charts_echarts'
+                }
+              },
+              {
+                name: 'developer_plugin_charts_vchart',
+                path: '/developer/plugin/charts/vchart',
+                component: 'view.developer_plugin_charts_vchart',
+                meta: {
+                  title: 'developer_plugin_charts_vchart',
+                  i18nKey: 'route.developer_plugin_charts_vchart'
+                }
+              }
+            ]
+          },
+          {
+            name: 'developer_plugin_copy',
+            path: '/developer/plugin/copy',
+            component: 'view.developer_plugin_copy',
+            meta: {
+              title: 'developer_plugin_copy',
+              i18nKey: 'route.developer_plugin_copy'
+            }
+          },
+          {
+            name: 'developer_plugin_editor',
+            path: '/developer/plugin/editor',
+            meta: {
+              title: 'developer_plugin_editor',
+              i18nKey: 'route.developer_plugin_editor'
+            },
+            children: [
+              {
+                name: 'developer_plugin_editor_markdown',
+                path: '/developer/plugin/editor/markdown',
+                component: 'view.developer_plugin_editor_markdown',
+                meta: {
+                  title: 'developer_plugin_editor_markdown',
+                  i18nKey: 'route.developer_plugin_editor_markdown'
+                }
+              },
+              {
+                name: 'developer_plugin_editor_quill',
+                path: '/developer/plugin/editor/quill',
+                component: 'view.developer_plugin_editor_quill',
+                meta: {
+                  title: 'developer_plugin_editor_quill',
+                  i18nKey: 'route.developer_plugin_editor_quill'
+                }
+              }
+            ]
+          },
+          {
+            name: 'developer_plugin_excel',
+            path: '/developer/plugin/excel',
+            component: 'view.developer_plugin_excel',
+            meta: {
+              title: 'developer_plugin_excel',
+              i18nKey: 'route.developer_plugin_excel'
+            }
+          },
+          {
+            name: 'developer_plugin_gantt',
+            path: '/developer/plugin/gantt',
+            meta: {
+              title: 'developer_plugin_gantt',
+              i18nKey: 'route.developer_plugin_gantt'
+            },
+            children: [
+              {
+                name: 'developer_plugin_gantt_dhtmlx',
+                path: '/developer/plugin/gantt/dhtmlx',
+                component: 'view.developer_plugin_gantt_dhtmlx',
+                meta: {
+                  title: 'developer_plugin_gantt_dhtmlx',
+                  i18nKey: 'route.developer_plugin_gantt_dhtmlx'
+                }
+              },
+              {
+                name: 'developer_plugin_gantt_vtable',
+                path: '/developer/plugin/gantt/vtable',
+                component: 'view.developer_plugin_gantt_vtable',
+                meta: {
+                  title: 'developer_plugin_gantt_vtable',
+                  i18nKey: 'route.developer_plugin_gantt_vtable'
+                }
+              }
+            ]
+          },
+          {
+            name: 'developer_plugin_icon',
+            path: '/developer/plugin/icon',
+            component: 'view.developer_plugin_icon',
+            meta: {
+              title: 'developer_plugin_icon',
+              i18nKey: 'route.developer_plugin_icon'
+            }
+          },
+          {
+            name: 'developer_plugin_map',
+            path: '/developer/plugin/map',
+            component: 'view.developer_plugin_map',
+            meta: {
+              title: 'developer_plugin_map',
+              i18nKey: 'route.developer_plugin_map'
+            }
+          },
+          {
+            name: 'developer_plugin_pdf',
+            path: '/developer/plugin/pdf',
+            component: 'view.developer_plugin_pdf',
+            meta: {
+              title: 'developer_plugin_pdf',
+              i18nKey: 'route.developer_plugin_pdf'
+            }
+          },
+          {
+            name: 'developer_plugin_pinyin',
+            path: '/developer/plugin/pinyin',
+            component: 'view.developer_plugin_pinyin',
+            meta: {
+              title: 'developer_plugin_pinyin',
+              i18nKey: 'route.developer_plugin_pinyin'
+            }
+          },
+          {
+            name: 'developer_plugin_print',
+            path: '/developer/plugin/print',
+            component: 'view.developer_plugin_print',
+            meta: {
+              title: 'developer_plugin_print',
+              i18nKey: 'route.developer_plugin_print'
+            }
+          },
+          {
+            name: 'developer_plugin_swiper',
+            path: '/developer/plugin/swiper',
+            component: 'view.developer_plugin_swiper',
+            meta: {
+              title: 'developer_plugin_swiper',
+              i18nKey: 'route.developer_plugin_swiper'
+            }
+          },
+          {
+            name: 'developer_plugin_tables',
+            path: '/developer/plugin/tables',
+            meta: {
+              title: 'developer_plugin_tables',
+              i18nKey: 'route.developer_plugin_tables'
+            },
+            children: [
+              {
+                name: 'developer_plugin_tables_vtable',
+                path: '/developer/plugin/tables/vtable',
+                component: 'view.developer_plugin_tables_vtable',
+                meta: {
+                  title: 'developer_plugin_tables_vtable',
+                  i18nKey: 'route.developer_plugin_tables_vtable'
+                }
+              }
+            ]
+          },
+          {
+            name: 'developer_plugin_typeit',
+            path: '/developer/plugin/typeit',
+            component: 'view.developer_plugin_typeit',
+            meta: {
+              title: 'developer_plugin_typeit',
+              i18nKey: 'route.developer_plugin_typeit'
+            }
+          },
+          {
+            name: 'developer_plugin_video',
+            path: '/developer/plugin/video',
+            component: 'view.developer_plugin_video',
+            meta: {
+              title: 'developer_plugin_video',
+              i18nKey: 'route.developer_plugin_video'
+            }
+          }
+        ]
       }
     ]
   },
@@ -459,190 +965,6 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'energy-analysis',
-    path: '/energy-analysis',
-    component: 'layout.base',
-    meta: {
-      title: 'energy-analysis',
-      i18nKey: 'route.energy-analysis'
-    },
-    children: [
-      {
-        name: 'energy-analysis_comprehensive',
-        path: '/energy-analysis/comprehensive',
-        meta: {
-          title: 'energy-analysis_comprehensive',
-          i18nKey: 'route.energy-analysis_comprehensive'
-        },
-        children: [
-          {
-            name: 'energy-analysis_comprehensive_daily',
-            path: '/energy-analysis/comprehensive/daily',
-            component: 'view.energy-analysis_comprehensive_daily',
-            meta: {
-              title: 'energy-analysis_comprehensive_daily',
-              i18nKey: 'route.energy-analysis_comprehensive_daily'
-            }
-          },
-          {
-            name: 'energy-analysis_comprehensive_monthly',
-            path: '/energy-analysis/comprehensive/monthly',
-            component: 'view.energy-analysis_comprehensive_monthly',
-            meta: {
-              title: 'energy-analysis_comprehensive_monthly',
-              i18nKey: 'route.energy-analysis_comprehensive_monthly'
-            }
-          },
-          {
-            name: 'energy-analysis_comprehensive_statistics',
-            path: '/energy-analysis/comprehensive/statistics',
-            component: 'view.energy-analysis_comprehensive_statistics',
-            meta: {
-              title: 'energy-analysis_comprehensive_statistics',
-              i18nKey: 'route.energy-analysis_comprehensive_statistics'
-            }
-          },
-          {
-            name: 'energy-analysis_comprehensive_year',
-            path: '/energy-analysis/comprehensive/year',
-            component: 'view.energy-analysis_comprehensive_year',
-            meta: {
-              title: 'energy-analysis_comprehensive_year',
-              i18nKey: 'route.energy-analysis_comprehensive_year'
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'energy-indicators',
-    path: '/energy-indicators',
-    component: 'layout.base$view.energy-indicators',
-    meta: {
-      title: 'energy-indicators',
-      i18nKey: 'route.energy-indicators'
-    }
-  },
-  {
-    name: 'function',
-    path: '/function',
-    component: 'layout.base',
-    meta: {
-      title: 'function',
-      i18nKey: 'route.function',
-      icon: 'icon-park-outline:all-application',
-      order: 6
-    },
-    children: [
-      {
-        name: 'function_hide-child',
-        path: '/function/hide-child',
-        meta: {
-          title: 'function_hide-child',
-          i18nKey: 'route.function_hide-child',
-          icon: 'material-symbols:filter-list-off',
-          order: 2
-        },
-        redirect: '/function/hide-child/one',
-        children: [
-          {
-            name: 'function_hide-child_one',
-            path: '/function/hide-child/one',
-            component: 'view.function_hide-child_one',
-            meta: {
-              title: 'function_hide-child_one',
-              i18nKey: 'route.function_hide-child_one',
-              icon: 'material-symbols:filter-list-off',
-              hideInMenu: true,
-              activeMenu: 'function_hide-child'
-            }
-          },
-          {
-            name: 'function_hide-child_three',
-            path: '/function/hide-child/three',
-            component: 'view.function_hide-child_three',
-            meta: {
-              title: 'function_hide-child_three',
-              i18nKey: 'route.function_hide-child_three',
-              hideInMenu: true,
-              activeMenu: 'function_hide-child'
-            }
-          },
-          {
-            name: 'function_hide-child_two',
-            path: '/function/hide-child/two',
-            component: 'view.function_hide-child_two',
-            meta: {
-              title: 'function_hide-child_two',
-              i18nKey: 'route.function_hide-child_two',
-              hideInMenu: true,
-              activeMenu: 'function_hide-child'
-            }
-          }
-        ]
-      },
-      {
-        name: 'function_multi-tab',
-        path: '/function/multi-tab',
-        component: 'view.function_multi-tab',
-        meta: {
-          title: 'function_multi-tab',
-          i18nKey: 'route.function_multi-tab',
-          icon: 'ic:round-tab',
-          multiTab: true,
-          hideInMenu: true,
-          activeMenu: 'function_tab'
-        }
-      },
-      {
-        name: 'function_request',
-        path: '/function/request',
-        component: 'view.function_request',
-        meta: {
-          title: 'function_request',
-          i18nKey: 'route.function_request',
-          icon: 'carbon:network-overlay',
-          order: 3
-        }
-      },
-      {
-        name: 'function_super-page',
-        path: '/function/super-page',
-        component: 'view.function_super-page',
-        meta: {
-          title: 'function_super-page',
-          i18nKey: 'route.function_super-page',
-          icon: 'ic:round-supervisor-account',
-          order: 5,
-          roles: ['R_SUPER']
-        }
-      },
-      {
-        name: 'function_tab',
-        path: '/function/tab',
-        component: 'view.function_tab',
-        meta: {
-          title: 'function_tab',
-          i18nKey: 'route.function_tab',
-          icon: 'ic:round-tab',
-          order: 1
-        }
-      },
-      {
-        name: 'function_toggle-auth',
-        path: '/function/toggle-auth',
-        component: 'view.function_toggle-auth',
-        meta: {
-          title: 'function_toggle-auth',
-          i18nKey: 'route.function_toggle-auth',
-          icon: 'ic:round-construction',
-          order: 4
-        }
-      }
-    ]
-  },
-  {
     name: 'gatewaysetting',
     path: '/gatewaysetting',
     component: 'layout.base$view.gatewaysetting',
@@ -674,62 +996,6 @@ export const generatedRoutes: GeneratedRoute[] = [
       hideInMenu: true,
       keepAlive: true
     }
-  },
-  {
-    name: 'itemized',
-    path: '/itemized',
-    component: 'layout.base$view.itemized',
-    meta: {
-      title: 'itemized',
-      i18nKey: 'route.itemized'
-    }
-  },
-  {
-    name: 'itemizedenergyanalysis',
-    path: '/itemizedenergyanalysis',
-    component: 'layout.base$view.itemizedenergyanalysis',
-    meta: {
-      title: 'itemizedenergyanalysis',
-      i18nKey: 'route.itemizedenergyanalysis'
-    }
-  },
-  {
-    name: 'keyequipment',
-    path: '/keyequipment',
-    component: 'layout.base',
-    meta: {
-      title: 'keyequipment',
-      i18nKey: 'route.keyequipment'
-    },
-    children: [
-      {
-        name: 'keyequipment_daily',
-        path: '/keyequipment/daily',
-        component: 'view.keyequipment_daily',
-        meta: {
-          title: 'keyequipment_daily',
-          i18nKey: 'route.keyequipment_daily'
-        }
-      },
-      {
-        name: 'keyequipment_monthly',
-        path: '/keyequipment/monthly',
-        component: 'view.keyequipment_monthly',
-        meta: {
-          title: 'keyequipment_monthly',
-          i18nKey: 'route.keyequipment_monthly'
-        }
-      },
-      {
-        name: 'keyequipment_year',
-        path: '/keyequipment/year',
-        component: 'view.keyequipment_year',
-        meta: {
-          title: 'keyequipment_year',
-          i18nKey: 'route.keyequipment_year'
-        }
-      }
-    ]
   },
   {
     name: 'knowledge',
@@ -900,338 +1166,6 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'peakvalley',
-    path: '/peakvalley',
-    component: 'layout.base$view.peakvalley',
-    meta: {
-      title: 'peakvalley',
-      i18nKey: 'route.peakvalley'
-    }
-  },
-  {
-    name: 'peakvalley-analysis',
-    path: '/peakvalley-analysis',
-    component: 'layout.base$view.peakvalley-analysis',
-    meta: {
-      title: 'peakvalley-analysis',
-      i18nKey: 'route.peakvalley-analysis'
-    }
-  },
-  {
-    name: 'plugin',
-    path: '/plugin',
-    component: 'layout.base',
-    meta: {
-      title: '插件示例',
-      i18nKey: 'route.plugin',
-      order: 7,
-      icon: 'clarity:plugin-line'
-    },
-    children: [
-      {
-        name: 'plugin_barcode',
-        path: '/plugin/barcode',
-        component: 'view.plugin_barcode',
-        meta: {
-          title: 'plugin_barcode',
-          i18nKey: 'route.plugin_barcode',
-          icon: 'ic:round-barcode'
-        }
-      },
-      {
-        name: 'plugin_charts',
-        path: '/plugin/charts',
-        meta: {
-          title: 'plugin_charts',
-          i18nKey: 'route.plugin_charts',
-          icon: 'mdi:chart-areaspline'
-        },
-        children: [
-          {
-            name: 'plugin_charts_antv',
-            path: '/plugin/charts/antv',
-            component: 'view.plugin_charts_antv',
-            meta: {
-              title: 'plugin_charts_antv',
-              i18nKey: 'route.plugin_charts_antv',
-              icon: 'hugeicons:flow-square'
-            }
-          },
-          {
-            name: 'plugin_charts_echarts',
-            path: '/plugin/charts/echarts',
-            component: 'view.plugin_charts_echarts',
-            meta: {
-              title: 'plugin_charts_echarts',
-              i18nKey: 'route.plugin_charts_echarts',
-              icon: 'simple-icons:apacheecharts'
-            }
-          },
-          {
-            name: 'plugin_charts_vchart',
-            path: '/plugin/charts/vchart',
-            component: 'view.plugin_charts_vchart',
-            meta: {
-              title: 'plugin_charts_vchart',
-              i18nKey: 'route.plugin_charts_vchart',
-              localIcon: 'visactor'
-            }
-          }
-        ]
-      },
-      {
-        name: 'plugin_copy',
-        path: '/plugin/copy',
-        component: 'view.plugin_copy',
-        meta: {
-          title: 'plugin_copy',
-          i18nKey: 'route.plugin_copy',
-          icon: 'mdi:clipboard-outline'
-        }
-      },
-      {
-        name: 'plugin_editor',
-        path: '/plugin/editor',
-        meta: {
-          title: 'plugin_editor',
-          i18nKey: 'route.plugin_editor',
-          icon: 'icon-park-outline:editor'
-        },
-        children: [
-          {
-            name: 'plugin_editor_markdown',
-            path: '/plugin/editor/markdown',
-            component: 'view.plugin_editor_markdown',
-            meta: {
-              title: 'plugin_editor_markdown',
-              i18nKey: 'route.plugin_editor_markdown',
-              icon: 'ri:markdown-line'
-            }
-          },
-          {
-            name: 'plugin_editor_quill',
-            path: '/plugin/editor/quill',
-            component: 'view.plugin_editor_quill',
-            meta: {
-              title: 'plugin_editor_quill',
-              i18nKey: 'route.plugin_editor_quill',
-              icon: 'mdi:file-document-edit-outline'
-            }
-          }
-        ]
-      },
-      {
-        name: 'plugin_excel',
-        path: '/plugin/excel',
-        component: 'view.plugin_excel',
-        meta: {
-          title: 'plugin_excel',
-          i18nKey: 'route.plugin_excel',
-          icon: 'ri:file-excel-2-line',
-          keepAlive: true
-        }
-      },
-      {
-        name: 'plugin_gantt',
-        path: '/plugin/gantt',
-        meta: {
-          title: 'plugin_gantt',
-          i18nKey: 'route.plugin_gantt',
-          icon: 'ant-design:bar-chart-outlined'
-        },
-        children: [
-          {
-            name: 'plugin_gantt_dhtmlx',
-            path: '/plugin/gantt/dhtmlx',
-            component: 'view.plugin_gantt_dhtmlx',
-            meta: {
-              title: 'plugin_gantt_dhtmlx',
-              i18nKey: 'route.plugin_gantt_dhtmlx',
-              icon: 'gridicons:posts'
-            }
-          },
-          {
-            name: 'plugin_gantt_vtable',
-            path: '/plugin/gantt/vtable',
-            component: 'view.plugin_gantt_vtable',
-            meta: {
-              title: 'plugin_gantt_vtable',
-              i18nKey: 'route.plugin_gantt_vtable',
-              localIcon: 'visactor'
-            }
-          }
-        ]
-      },
-      {
-        name: 'plugin_icon',
-        path: '/plugin/icon',
-        component: 'view.plugin_icon',
-        meta: {
-          title: 'plugin_icon',
-          i18nKey: 'route.plugin_icon',
-          localIcon: 'custom-icon'
-        }
-      },
-      {
-        name: 'plugin_map',
-        path: '/plugin/map',
-        component: 'view.plugin_map',
-        meta: {
-          title: 'plugin_map',
-          i18nKey: 'route.plugin_map',
-          icon: 'mdi:map'
-        }
-      },
-      {
-        name: 'plugin_pdf',
-        path: '/plugin/pdf',
-        component: 'view.plugin_pdf',
-        meta: {
-          title: 'plugin_pdf',
-          i18nKey: 'route.plugin_pdf',
-          icon: 'uiw:file-pdf'
-        }
-      },
-      {
-        name: 'plugin_pinyin',
-        path: '/plugin/pinyin',
-        component: 'view.plugin_pinyin',
-        meta: {
-          title: 'plugin_pinyin',
-          i18nKey: 'route.plugin_pinyin',
-          icon: 'entypo-social:google-hangouts'
-        }
-      },
-      {
-        name: 'plugin_print',
-        path: '/plugin/print',
-        component: 'view.plugin_print',
-        meta: {
-          title: 'plugin_print',
-          i18nKey: 'route.plugin_print',
-          icon: 'mdi:printer'
-        }
-      },
-      {
-        name: 'plugin_swiper',
-        path: '/plugin/swiper',
-        component: 'view.plugin_swiper',
-        meta: {
-          title: 'plugin_swiper',
-          i18nKey: 'route.plugin_swiper',
-          icon: 'simple-icons:swiper'
-        }
-      },
-      {
-        name: 'plugin_tables',
-        path: '/plugin/tables',
-        meta: {
-          title: 'plugin_tables',
-          i18nKey: 'route.plugin_tables',
-          icon: 'icon-park-outline:table'
-        },
-        children: [
-          {
-            name: 'plugin_tables_vtable',
-            path: '/plugin/tables/vtable',
-            component: 'view.plugin_tables_vtable',
-            meta: {
-              title: 'plugin_tables_vtable',
-              i18nKey: 'route.plugin_tables_vtable',
-              localIcon: 'visactor'
-            }
-          }
-        ]
-      },
-      {
-        name: 'plugin_typeit',
-        path: '/plugin/typeit',
-        component: 'view.plugin_typeit',
-        meta: {
-          title: 'plugin_typeit',
-          i18nKey: 'route.plugin_typeit',
-          icon: 'mdi:typewriter'
-        }
-      },
-      {
-        name: 'plugin_video',
-        path: '/plugin/video',
-        component: 'view.plugin_video',
-        meta: {
-          title: 'plugin_video',
-          i18nKey: 'route.plugin_video',
-          icon: 'mdi:video'
-        }
-      }
-    ]
-  },
-  {
-    name: 'process-energy',
-    path: '/process-energy',
-    component: 'layout.base',
-    meta: {
-      title: 'process-energy',
-      i18nKey: 'route.process-energy'
-    },
-    children: [
-      {
-        name: 'process-energy_statistics',
-        path: '/process-energy/statistics',
-        meta: {
-          title: 'process-energy_statistics',
-          i18nKey: 'route.process-energy_statistics'
-        },
-        children: [
-          {
-            name: 'process-energy_statistics_daily',
-            path: '/process-energy/statistics/daily',
-            component: 'view.process-energy_statistics_daily',
-            meta: {
-              title: 'process-energy_statistics_daily',
-              i18nKey: 'route.process-energy_statistics_daily'
-            }
-          },
-          {
-            name: 'process-energy_statistics_monthly',
-            path: '/process-energy/statistics/monthly',
-            component: 'view.process-energy_statistics_monthly',
-            meta: {
-              title: 'process-energy_statistics_monthly',
-              i18nKey: 'route.process-energy_statistics_monthly'
-            }
-          },
-          {
-            name: 'process-energy_statistics_year',
-            path: '/process-energy/statistics/year',
-            component: 'view.process-energy_statistics_year',
-            meta: {
-              title: 'process-energy_statistics_year',
-              i18nKey: 'route.process-energy_statistics_year'
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'processenergy',
-    path: '/processenergy',
-    component: 'layout.base$view.processenergy',
-    meta: {
-      title: 'processenergy',
-      i18nKey: 'route.processenergy'
-    }
-  },
-  {
-    name: 'productoutput',
-    path: '/productoutput',
-    component: 'layout.base$view.productoutput',
-    meta: {
-      title: 'productoutput',
-      i18nKey: 'route.productoutput'
-    }
-  },
-  {
     name: 'profile',
     path: '/profile',
     component: 'layout.base',
@@ -1256,35 +1190,6 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'profile_password',
           i18nKey: 'route.profile_password'
-        }
-      }
-    ]
-  },
-  {
-    name: 'saving',
-    path: '/saving',
-    component: 'layout.base',
-    meta: {
-      title: 'saving',
-      i18nKey: 'route.saving'
-    },
-    children: [
-      {
-        name: 'saving_policy',
-        path: '/saving/policy',
-        component: 'view.saving_policy',
-        meta: {
-          title: 'saving_policy',
-          i18nKey: 'route.saving_policy'
-        }
-      },
-      {
-        name: 'saving_program',
-        path: '/saving/program',
-        component: 'view.saving_program',
-        meta: {
-          title: 'saving_program',
-          i18nKey: 'route.saving_program'
         }
       }
     ]
@@ -1373,48 +1278,39 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
-    name: 'spikesandvalleys',
-    path: '/spikesandvalleys',
-    component: 'layout.base$view.spikesandvalleys',
-    meta: {
-      title: 'spikesandvalleys',
-      i18nKey: 'route.spikesandvalleys'
-    }
-  },
-  {
-    name: 'statistical',
-    path: '/statistical',
+    name: 'sustainability',
+    path: '/sustainability',
     component: 'layout.base',
     meta: {
-      title: 'statistical',
-      i18nKey: 'route.statistical'
+      title: 'sustainability',
+      i18nKey: 'route.sustainability'
     },
     children: [
       {
-        name: 'statistical_cost',
-        path: '/statistical/cost',
-        component: 'view.statistical_cost',
+        name: 'sustainability_carbon-calculate',
+        path: '/sustainability/carbon-calculate',
+        component: 'view.sustainability_carbon-calculate',
         meta: {
-          title: 'statistical_cost',
-          i18nKey: 'route.statistical_cost'
+          title: 'sustainability_carbon-calculate',
+          i18nKey: 'route.sustainability_carbon-calculate'
         }
       },
       {
-        name: 'statistical_flow',
-        path: '/statistical/flow',
-        component: 'view.statistical_flow',
+        name: 'sustainability_policy',
+        path: '/sustainability/policy',
+        component: 'view.sustainability_policy',
         meta: {
-          title: 'statistical_flow',
-          i18nKey: 'route.statistical_flow'
+          title: 'sustainability_policy',
+          i18nKey: 'route.sustainability_policy'
         }
       },
       {
-        name: 'statistical_yoy-mom',
-        path: '/statistical/yoy-mom',
-        component: 'view.statistical_yoy-mom',
+        name: 'sustainability_program',
+        path: '/sustainability/program',
+        component: 'view.sustainability_program',
         meta: {
-          title: 'statistical_yoy-mom',
-          i18nKey: 'route.statistical_yoy-mom'
+          title: 'sustainability_program',
+          i18nKey: 'route.sustainability_program'
         }
       }
     ]

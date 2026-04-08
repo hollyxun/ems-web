@@ -39,7 +39,37 @@ declare module "@elegant-router/types" {
     "alarm_item": "/alarm/item";
     "alarm_limit-type": "/alarm/limit-type";
     "analysis": "/analysis";
+    "analysis_benchmark": "/analysis/benchmark";
+    "analysis_branch": "/analysis/branch";
+    "analysis_comprehensive": "/analysis/comprehensive";
     "analysis_consumption": "/analysis/consumption";
+    "analysis_consumption-detail": "/analysis/consumption-detail";
+    "analysis_energy": "/analysis/energy";
+    "analysis_energy_comprehensive": "/analysis/energy/comprehensive";
+    "analysis_energy_comprehensive_daily": "/analysis/energy/comprehensive/daily";
+    "analysis_energy_comprehensive_monthly": "/analysis/energy/comprehensive/monthly";
+    "analysis_energy_comprehensive_statistics": "/analysis/energy/comprehensive/statistics";
+    "analysis_energy_comprehensive_year": "/analysis/energy/comprehensive/year";
+    "analysis_indicators": "/analysis/indicators";
+    "analysis_itemized": "/analysis/itemized";
+    "analysis_itemized-detail": "/analysis/itemized-detail";
+    "analysis_key-equipment": "/analysis/key-equipment";
+    "analysis_key-equipment_daily": "/analysis/key-equipment/daily";
+    "analysis_key-equipment_monthly": "/analysis/key-equipment/monthly";
+    "analysis_key-equipment_year": "/analysis/key-equipment/year";
+    "analysis_peak-valley": "/analysis/peak-valley";
+    "analysis_peak-valley-detail": "/analysis/peak-valley-detail";
+    "analysis_peak-valley-scheme": "/analysis/peak-valley-scheme";
+    "analysis_process-energy": "/analysis/process-energy";
+    "analysis_process-energy_statistics": "/analysis/process-energy/statistics";
+    "analysis_process-energy_statistics_daily": "/analysis/process-energy/statistics/daily";
+    "analysis_process-energy_statistics_monthly": "/analysis/process-energy/statistics/monthly";
+    "analysis_process-energy_statistics_year": "/analysis/process-energy/statistics/year";
+    "analysis_product-output": "/analysis/product-output";
+    "analysis_statistical": "/analysis/statistical";
+    "analysis_statistical_cost": "/analysis/statistical/cost";
+    "analysis_statistical_flow": "/analysis/statistical/flow";
+    "analysis_statistical_yoy-mom": "/analysis/statistical/yoy-mom";
     "approval": "/approval";
     "approval_flow-designer": "/approval/flow-designer";
     "approval_workspace": "/approval/workspace";
@@ -52,22 +82,47 @@ declare module "@elegant-router/types" {
     "base-data_tou": "/base-data/tou";
     "base-data_unit": "/base-data/unit";
     "base-data_virtual-meter": "/base-data/virtual-meter";
-    "benchmark": "/benchmark";
-    "branchanalysis": "/branchanalysis";
-    "carbonemission": "/carbonemission";
-    "carbonemission_calculate": "/carbonemission/calculate";
-    "comprehensivestatistics": "/comprehensivestatistics";
-    "consumptionanalysis": "/consumptionanalysis";
     "cost": "/cost";
     "cost_electricity": "/cost/electricity";
     "cost_tactics": "/cost/tactics";
     "cost_trend": "/cost/trend";
-    "costmanagement": "/costmanagement";
-    "costmanagement_electricity": "/costmanagement/electricity";
-    "costmanagement_tactics": "/costmanagement/tactics";
-    "costmanagement_trend": "/costmanagement/trend";
     "dashboard": "/dashboard";
     "dashboard_custom": "/dashboard/custom";
+    "developer": "/developer";
+    "developer_function": "/developer/function";
+    "developer_function_hide-child": "/developer/function/hide-child";
+    "developer_function_hide-child_one": "/developer/function/hide-child/one";
+    "developer_function_hide-child_three": "/developer/function/hide-child/three";
+    "developer_function_hide-child_two": "/developer/function/hide-child/two";
+    "developer_function_multi-tab": "/developer/function/multi-tab";
+    "developer_function_request": "/developer/function/request";
+    "developer_function_super-page": "/developer/function/super-page";
+    "developer_function_tab": "/developer/function/tab";
+    "developer_function_toggle-auth": "/developer/function/toggle-auth";
+    "developer_plugin": "/developer/plugin";
+    "developer_plugin_barcode": "/developer/plugin/barcode";
+    "developer_plugin_charts": "/developer/plugin/charts";
+    "developer_plugin_charts_antv": "/developer/plugin/charts/antv";
+    "developer_plugin_charts_echarts": "/developer/plugin/charts/echarts";
+    "developer_plugin_charts_vchart": "/developer/plugin/charts/vchart";
+    "developer_plugin_copy": "/developer/plugin/copy";
+    "developer_plugin_editor": "/developer/plugin/editor";
+    "developer_plugin_editor_markdown": "/developer/plugin/editor/markdown";
+    "developer_plugin_editor_quill": "/developer/plugin/editor/quill";
+    "developer_plugin_excel": "/developer/plugin/excel";
+    "developer_plugin_gantt": "/developer/plugin/gantt";
+    "developer_plugin_gantt_dhtmlx": "/developer/plugin/gantt/dhtmlx";
+    "developer_plugin_gantt_vtable": "/developer/plugin/gantt/vtable";
+    "developer_plugin_icon": "/developer/plugin/icon";
+    "developer_plugin_map": "/developer/plugin/map";
+    "developer_plugin_pdf": "/developer/plugin/pdf";
+    "developer_plugin_pinyin": "/developer/plugin/pinyin";
+    "developer_plugin_print": "/developer/plugin/print";
+    "developer_plugin_swiper": "/developer/plugin/swiper";
+    "developer_plugin_tables": "/developer/plugin/tables";
+    "developer_plugin_tables_vtable": "/developer/plugin/tables/vtable";
+    "developer_plugin_typeit": "/developer/plugin/typeit";
+    "developer_plugin_video": "/developer/plugin/video";
     "energy": "/energy";
     "energy_branch-analysis": "/energy/branch-analysis";
     "energy_comparison": "/energy/comparison";
@@ -77,32 +132,9 @@ declare module "@elegant-router/types" {
     "energy_history-data": "/energy/history-data";
     "energy_ranking": "/energy/ranking";
     "energy_report": "/energy/report";
-    "energy-analysis": "/energy-analysis";
-    "energy-analysis_comprehensive": "/energy-analysis/comprehensive";
-    "energy-analysis_comprehensive_daily": "/energy-analysis/comprehensive/daily";
-    "energy-analysis_comprehensive_monthly": "/energy-analysis/comprehensive/monthly";
-    "energy-analysis_comprehensive_statistics": "/energy-analysis/comprehensive/statistics";
-    "energy-analysis_comprehensive_year": "/energy-analysis/comprehensive/year";
-    "energy-indicators": "/energy-indicators";
-    "function": "/function";
-    "function_hide-child": "/function/hide-child";
-    "function_hide-child_one": "/function/hide-child/one";
-    "function_hide-child_three": "/function/hide-child/three";
-    "function_hide-child_two": "/function/hide-child/two";
-    "function_multi-tab": "/function/multi-tab";
-    "function_request": "/function/request";
-    "function_super-page": "/function/super-page";
-    "function_tab": "/function/tab";
-    "function_toggle-auth": "/function/toggle-auth";
     "gatewaysetting": "/gatewaysetting";
     "home": "/home";
     "iframe-page": "/iframe-page/:url";
-    "itemized": "/itemized";
-    "itemizedenergyanalysis": "/itemizedenergyanalysis";
-    "keyequipment": "/keyequipment";
-    "keyequipment_daily": "/keyequipment/daily";
-    "keyequipment_monthly": "/keyequipment/monthly";
-    "keyequipment_year": "/keyequipment/year";
     "knowledge": "/knowledge";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "manage": "/manage";
@@ -119,45 +151,9 @@ declare module "@elegant-router/types" {
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
     "manage_user-lock": "/manage/user-lock";
-    "peakvalley": "/peakvalley";
-    "peakvalley-analysis": "/peakvalley-analysis";
-    "plugin": "/plugin";
-    "plugin_barcode": "/plugin/barcode";
-    "plugin_charts": "/plugin/charts";
-    "plugin_charts_antv": "/plugin/charts/antv";
-    "plugin_charts_echarts": "/plugin/charts/echarts";
-    "plugin_charts_vchart": "/plugin/charts/vchart";
-    "plugin_copy": "/plugin/copy";
-    "plugin_editor": "/plugin/editor";
-    "plugin_editor_markdown": "/plugin/editor/markdown";
-    "plugin_editor_quill": "/plugin/editor/quill";
-    "plugin_excel": "/plugin/excel";
-    "plugin_gantt": "/plugin/gantt";
-    "plugin_gantt_dhtmlx": "/plugin/gantt/dhtmlx";
-    "plugin_gantt_vtable": "/plugin/gantt/vtable";
-    "plugin_icon": "/plugin/icon";
-    "plugin_map": "/plugin/map";
-    "plugin_pdf": "/plugin/pdf";
-    "plugin_pinyin": "/plugin/pinyin";
-    "plugin_print": "/plugin/print";
-    "plugin_swiper": "/plugin/swiper";
-    "plugin_tables": "/plugin/tables";
-    "plugin_tables_vtable": "/plugin/tables/vtable";
-    "plugin_typeit": "/plugin/typeit";
-    "plugin_video": "/plugin/video";
-    "process-energy": "/process-energy";
-    "process-energy_statistics": "/process-energy/statistics";
-    "process-energy_statistics_daily": "/process-energy/statistics/daily";
-    "process-energy_statistics_monthly": "/process-energy/statistics/monthly";
-    "process-energy_statistics_year": "/process-energy/statistics/year";
-    "processenergy": "/processenergy";
-    "productoutput": "/productoutput";
     "profile": "/profile";
     "profile_info": "/profile/info";
     "profile_password": "/profile/password";
-    "saving": "/saving";
-    "saving_policy": "/saving/policy";
-    "saving_program": "/saving/program";
     "scheduling": "/scheduling";
     "scheduling_calendar": "/scheduling/calendar";
     "scheduling_factory-calendar": "/scheduling/factory-calendar";
@@ -167,11 +163,10 @@ declare module "@elegant-router/types" {
     "scheduling_shift": "/scheduling/shift";
     "scheduling_shift-pattern": "/scheduling/shift-pattern";
     "scheduling_team": "/scheduling/team";
-    "spikesandvalleys": "/spikesandvalleys";
-    "statistical": "/statistical";
-    "statistical_cost": "/statistical/cost";
-    "statistical_flow": "/statistical/flow";
-    "statistical_yoy-mom": "/statistical/yoy-mom";
+    "sustainability": "/sustainability";
+    "sustainability_carbon-calculate": "/sustainability/carbon-calculate";
+    "sustainability_policy": "/sustainability/policy";
+    "sustainability_program": "/sustainability/program";
   };
 
   /**
@@ -224,38 +219,19 @@ declare module "@elegant-router/types" {
     | "analysis"
     | "approval"
     | "base-data"
-    | "benchmark"
-    | "branchanalysis"
-    | "carbonemission"
-    | "comprehensivestatistics"
-    | "consumptionanalysis"
     | "cost"
-    | "costmanagement"
     | "dashboard"
+    | "developer"
     | "energy"
-    | "energy-analysis"
-    | "energy-indicators"
-    | "function"
     | "gatewaysetting"
     | "home"
     | "iframe-page"
-    | "itemized"
-    | "itemizedenergyanalysis"
-    | "keyequipment"
     | "knowledge"
     | "login"
     | "manage"
-    | "peakvalley"
-    | "peakvalley-analysis"
-    | "plugin"
-    | "process-energy"
-    | "processenergy"
-    | "productoutput"
     | "profile"
-    | "saving"
     | "scheduling"
-    | "spikesandvalleys"
-    | "statistical"
+    | "sustainability"
   >;
 
   /**
@@ -283,7 +259,31 @@ declare module "@elegant-router/types" {
     | "alarm_history"
     | "alarm_item"
     | "alarm_limit-type"
+    | "analysis_benchmark"
+    | "analysis_branch"
+    | "analysis_comprehensive"
+    | "analysis_consumption-detail"
     | "analysis_consumption"
+    | "analysis_energy_comprehensive_daily"
+    | "analysis_energy_comprehensive_monthly"
+    | "analysis_energy_comprehensive_statistics"
+    | "analysis_energy_comprehensive_year"
+    | "analysis_indicators"
+    | "analysis_itemized-detail"
+    | "analysis_itemized"
+    | "analysis_key-equipment_daily"
+    | "analysis_key-equipment_monthly"
+    | "analysis_key-equipment_year"
+    | "analysis_peak-valley-detail"
+    | "analysis_peak-valley-scheme"
+    | "analysis_peak-valley"
+    | "analysis_process-energy_statistics_daily"
+    | "analysis_process-energy_statistics_monthly"
+    | "analysis_process-energy_statistics_year"
+    | "analysis_product-output"
+    | "analysis_statistical_cost"
+    | "analysis_statistical_flow"
+    | "analysis_statistical_yoy-mom"
     | "approval_flow-designer"
     | "approval_workspace"
     | "base-data_coefficient"
@@ -294,23 +294,37 @@ declare module "@elegant-router/types" {
     | "base-data_tou"
     | "base-data_unit"
     | "base-data_virtual-meter"
-    | "benchmark"
-    | "branchanalysis"
-    | "carbonemission_calculate"
-    | "comprehensivestatistics"
-    | "consumptionanalysis"
     | "cost_electricity"
     | "cost_tactics"
     | "cost_trend"
-    | "costmanagement_electricity"
-    | "costmanagement_tactics"
-    | "costmanagement_trend"
     | "dashboard_custom"
-    | "energy-analysis_comprehensive_daily"
-    | "energy-analysis_comprehensive_monthly"
-    | "energy-analysis_comprehensive_statistics"
-    | "energy-analysis_comprehensive_year"
-    | "energy-indicators"
+    | "developer_function_hide-child_one"
+    | "developer_function_hide-child_three"
+    | "developer_function_hide-child_two"
+    | "developer_function_multi-tab"
+    | "developer_function_request"
+    | "developer_function_super-page"
+    | "developer_function_tab"
+    | "developer_function_toggle-auth"
+    | "developer_plugin_barcode"
+    | "developer_plugin_charts_antv"
+    | "developer_plugin_charts_echarts"
+    | "developer_plugin_charts_vchart"
+    | "developer_plugin_copy"
+    | "developer_plugin_editor_markdown"
+    | "developer_plugin_editor_quill"
+    | "developer_plugin_excel"
+    | "developer_plugin_gantt_dhtmlx"
+    | "developer_plugin_gantt_vtable"
+    | "developer_plugin_icon"
+    | "developer_plugin_map"
+    | "developer_plugin_pdf"
+    | "developer_plugin_pinyin"
+    | "developer_plugin_print"
+    | "developer_plugin_swiper"
+    | "developer_plugin_tables_vtable"
+    | "developer_plugin_typeit"
+    | "developer_plugin_video"
     | "energy_branch-analysis"
     | "energy_comparison"
     | "energy_dashboard"
@@ -319,21 +333,8 @@ declare module "@elegant-router/types" {
     | "energy_history-data"
     | "energy_ranking"
     | "energy_report"
-    | "function_hide-child_one"
-    | "function_hide-child_three"
-    | "function_hide-child_two"
-    | "function_multi-tab"
-    | "function_request"
-    | "function_super-page"
-    | "function_tab"
-    | "function_toggle-auth"
     | "gatewaysetting"
     | "home"
-    | "itemized"
-    | "itemizedenergyanalysis"
-    | "keyequipment_daily"
-    | "keyequipment_monthly"
-    | "keyequipment_year"
     | "knowledge"
     | "manage_advanced-permission"
     | "manage_api"
@@ -348,36 +349,8 @@ declare module "@elegant-router/types" {
     | "manage_user-detail"
     | "manage_user-lock"
     | "manage_user"
-    | "peakvalley-analysis"
-    | "peakvalley"
-    | "plugin_barcode"
-    | "plugin_charts_antv"
-    | "plugin_charts_echarts"
-    | "plugin_charts_vchart"
-    | "plugin_copy"
-    | "plugin_editor_markdown"
-    | "plugin_editor_quill"
-    | "plugin_excel"
-    | "plugin_gantt_dhtmlx"
-    | "plugin_gantt_vtable"
-    | "plugin_icon"
-    | "plugin_map"
-    | "plugin_pdf"
-    | "plugin_pinyin"
-    | "plugin_print"
-    | "plugin_swiper"
-    | "plugin_tables_vtable"
-    | "plugin_typeit"
-    | "plugin_video"
-    | "process-energy_statistics_daily"
-    | "process-energy_statistics_monthly"
-    | "process-energy_statistics_year"
-    | "processenergy"
-    | "productoutput"
     | "profile_info"
     | "profile_password"
-    | "saving_policy"
-    | "saving_program"
     | "scheduling_calendar"
     | "scheduling_factory-calendar"
     | "scheduling_rule-config"
@@ -386,10 +359,9 @@ declare module "@elegant-router/types" {
     | "scheduling_shift-pattern"
     | "scheduling_shift"
     | "scheduling_team"
-    | "spikesandvalleys"
-    | "statistical_cost"
-    | "statistical_flow"
-    | "statistical_yoy-mom"
+    | "sustainability_carbon-calculate"
+    | "sustainability_policy"
+    | "sustainability_program"
   >;
 
   /**

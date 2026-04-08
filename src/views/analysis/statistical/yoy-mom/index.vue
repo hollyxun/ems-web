@@ -119,9 +119,7 @@ async function loadData() {
         : await fetchElectricMoM(queryParams.value);
       dataList.value = result || [];
     } else {
-      const { data: result } = isYoy
-        ? await fetchWaterYoY(queryParams.value)
-        : await fetchWaterMoM(queryParams.value);
+      const { data: result } = isYoy ? await fetchWaterYoY(queryParams.value) : await fetchWaterMoM(queryParams.value);
       dataList.value = result || [];
     }
   } catch {
