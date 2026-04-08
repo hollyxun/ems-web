@@ -3,7 +3,6 @@ import { computed, onMounted, ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import { Icon } from '@iconify/vue';
 import { fetchItemizedEnergyAnalysis } from '@/service/api/itemized-energy-analysis';
-import type { ItemizedEnergyAnalysis } from '@/service/api/itemized-energy-analysis';
 import { useEcharts } from '@/hooks/common/echarts';
 
 defineOptions({ name: 'ItemizedEnergyAnalysis' });
@@ -36,7 +35,7 @@ const queryParams = ref({
 
 // 状态
 const loading = ref(false);
-const analysisData = ref<ItemizedEnergyAnalysis.Response | null>(null);
+const analysisData = ref<Api.ItemizedEnergyAnalysis.Response | null>(null);
 
 // 组织树（模拟数据）
 const orgTree = ref([
@@ -174,25 +173,25 @@ async function loadData() {
 }
 
 // 更新图表数据
-function updateChartData(data: ItemizedEnergyAnalysis.Response) {
+function updateChartData(data: Api.ItemizedEnergyAnalysis.Response) {
   const xData: string[] = [];
   const yData: number[] = [];
 
   if (queryParams.value.timeType === 'DAY') {
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 24; i += 1) {
       xData.push(`${i}时`);
-      yData.push((data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number) || 0);
+      yData.push((data.dataList[0]?.[`value${i}` as keyof Api.ItemizedEnergyAnalysis.Item] as number) || 0);
     }
   } else if (queryParams.value.timeType === 'MONTH') {
     const days = dayjs(queryParams.value.dataTime).daysInMonth();
-    for (let i = 0; i < days; i++) {
+    for (let i = 0; i < days; i += 1) {
       xData.push(`${i + 1}日`);
-      yData.push((data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number) || 0);
+      yData.push((data.dataList[0]?.[`value${i}` as keyof Api.ItemizedEnergyAnalysis.Item] as number) || 0);
     }
   } else {
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 12; i += 1) {
       xData.push(`${i + 1}月`);
-      yData.push((data.dataList[0]?.[`value${i}` as keyof ItemizedEnergyAnalysis.Item] as number) || 0);
+      yData.push((data.dataList[0]?.[`value${i}` as keyof Api.ItemizedEnergyAnalysis.Item] as number) || 0);
     }
   }
 

@@ -57,10 +57,14 @@ declare namespace Api.Energy {
   }
 
   interface UnitSearchParams {
+    page?: number;
+    pageSize?: number;
     mediumId?: number;
     mediumCode?: string;
     status?: number;
   }
+
+  type UnitList = Api.Common.PageResult<UnitView>;
 
   /** 系数折算 */
   interface Coefficient {
@@ -759,6 +763,18 @@ declare namespace Api.Energy {
     }
   }
 
+  /** 虚拟计量点计算类型 */
+  type VirtualMeterCalculateType = 'sum' | 'difference' | 'average' | 'ratio' | 'custom';
+
+  /** 虚拟计量点源配置 */
+  interface VirtualMeterSourceConfig {
+    meterId: number;
+    meterName: string;
+    meterCode: string;
+    coefficient: number;
+    order: number;
+  }
+
   /** 虚拟计量点 */
   interface VirtualMeter {
     id: number;
@@ -766,7 +782,26 @@ declare namespace Api.Energy {
     name: string;
     organizationId: number;
     mediumId: number;
+    mediumCode: string;
+    calculateType: VirtualMeterCalculateType;
     formula: string;
+    sourceConfig: VirtualMeterSourceConfig[];
+    description: string;
+    status: number;
+    createdAt?: string;
+    updatedAt?: string;
+  }
+
+  /** 虚拟计量点视图（列表返回） */
+  interface VirtualMeterView {
+    id: number;
+    code: string;
+    name: string;
+    mediumId: number;
+    mediumCode: string;
+    calculateType: VirtualMeterCalculateType;
+    formula: string;
+    sourceConfig?: VirtualMeterSourceConfig[];
     description: string;
     status: number;
     createdAt?: string;
@@ -777,9 +812,12 @@ declare namespace Api.Energy {
   interface VirtualMeterCreate {
     code: string;
     name: string;
-    organizationId: number;
+    organizationId?: number;
     mediumId: number;
+    mediumCode?: string;
+    calculateType: VirtualMeterCalculateType;
     formula: string;
+    sourceConfig?: VirtualMeterSourceConfig[];
     description?: string;
     status?: number;
   }
@@ -791,7 +829,10 @@ declare namespace Api.Energy {
     name?: string;
     organizationId?: number;
     mediumId?: number;
+    mediumCode?: string;
+    calculateType?: VirtualMeterCalculateType;
     formula?: string;
+    sourceConfig?: VirtualMeterSourceConfig[];
     description?: string;
     status?: number;
   }
@@ -804,12 +845,13 @@ declare namespace Api.Energy {
     name?: string;
     organizationId?: number;
     mediumId?: number;
+    calculateType?: VirtualMeterCalculateType;
     status?: number;
   }
 
   /** 虚拟计量点列表响应 */
   interface VirtualMeterList {
-    list: VirtualMeter[];
+    list: VirtualMeterView[];
     total: number;
     page: number;
     pageSize: number;
@@ -841,5 +883,9 @@ declare namespace Api.Energy {
     values: { timestamp: string; value: number }[];
     totalValue: number;
     avgValue: number;
+  }
+
+  namespace VirtualMeter {
+    type CalculateType = 'sum' | 'difference' | 'average' | 'ratio' | 'custom';
   }
 }

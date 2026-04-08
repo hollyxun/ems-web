@@ -16,12 +16,11 @@ const searchParams = ref({
 });
 
 const benchmarkTypes = ['国家标杆', '行业标杆', '企业标杆'];
-const benchmarkGrades = ['一级', '二级', '三级'];
 
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchBenchmarkList(searchParams.value),
-  transform: defaultTransform,
+  transform: response => defaultTransform(response),
   columns: () => [
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
     { prop: 'code', label: '标杆编码', minWidth: 120 },
@@ -34,7 +33,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 160,
-      formatter: row => {
+      formatter: (row: Api.Benchmark.Item) => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
@@ -76,7 +75,12 @@ onMounted(() => getData());
     <ElCard class="card-wrapper">
       <ElForm :model="searchParams" label-width="80px" class="flex flex-wrap gap-16px">
         <ElFormItem label="标杆编码" class="w-280px">
-          <ElInput v-model="searchParams.code" placeholder="搜索标杆编码" clearable @keyup.enter="getDataByPage" />
+          <ElInput
+            v-model="searchParams.code"
+            placeholder="搜索标杆编码"
+            clearable
+            @keyup.enter="() => getDataByPage()"
+          />
         </ElFormItem>
         <ElFormItem label="标杆类型" class="w-280px">
           <ElSelect v-model="searchParams.type" placeholder="选择类型" clearable>
@@ -84,7 +88,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {
@@ -122,7 +126,7 @@ onMounted(() => getData());
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        @submitted="getDataByPage"
+        @submitted="() => getDataByPage()"
       />
     </ElCard>
   </div>

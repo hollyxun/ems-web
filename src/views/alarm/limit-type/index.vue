@@ -1,12 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { ElButton, ElMessage, ElPopconfirm } from 'element-plus';
-import {
-  fetchAlarmLimitTypeList,
-  fetchCreateAlarmLimitType,
-  fetchDeleteAlarmLimitType,
-  fetchUpdateAlarmLimitType
-} from '@/service/api/alarm';
+import { ElButton, ElPopconfirm } from 'element-plus';
+import { fetchAlarmLimitTypeList, fetchDeleteAlarmLimitType } from '@/service/api/alarm';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
@@ -32,8 +27,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     return defaultTransform(response);
   },
   onPaginationParamsChange: params => {
-    searchParams.value.page = params.currentPage;
-    searchParams.value.pageSize = params.pageSize;
+    searchParams.value.page = params.currentPage ?? 1;
+    searchParams.value.pageSize = params.pageSize ?? 10;
   },
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
@@ -123,7 +118,7 @@ onMounted(() => {
           <ElInput v-model="searchParams.limitName" placeholder="请输入限值类型名称" clearable />
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">
+          <ElButton type="primary" @click="getDataByPage()">
             <template #icon>
               <SvgIcon icon="ic:baseline-search" />
             </template>

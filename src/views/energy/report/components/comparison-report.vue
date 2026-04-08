@@ -77,7 +77,8 @@ const loadData = async () => {
   loading.value = true;
   try {
     const params = buildParams();
-    reportData.value = await fetchComparisonReportData(params);
+    const { data: res } = await fetchComparisonReportData(params);
+    reportData.value = res || null;
   } catch {
     ElMessage.error('获取对比数据失败');
   } finally {

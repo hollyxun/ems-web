@@ -54,25 +54,25 @@ async function scrollToActiveTab() {
     const child = children[i];
 
     // 防御性检查
-    if (!child || !child.attributes) continue;
+    if (child && child.attributes) {
+      const attr = (child.attributes as TabNamedNodeMap)[TAB_DATA_ID];
+      if (attr) {
+        const { value: tabId } = attr;
 
-    const attr = (child.attributes as TabNamedNodeMap)[TAB_DATA_ID];
-    if (!attr) continue;
+        if (tabId === tabStore.activeTabId) {
+          const { left, width } = child.getBoundingClientRect();
+          const clientX = left + width / 2;
 
-    const { value: tabId } = attr;
+          setTimeout(() => {
+            // 执行前再次检查是否已取消
+            if (!signal.aborted) {
+              scrollByClientX(clientX);
+            }
+          }, 50);
 
-    if (tabId === tabStore.activeTabId) {
-      const { left, width } = child.getBoundingClientRect();
-      const clientX = left + width / 2;
-
-      setTimeout(() => {
-        // 执行前再次检查是否已取消
-        if (!signal.aborted) {
-          scrollByClientX(clientX);
+          break;
         }
-      }, 50);
-
-      break;
+      }
     }
   }
 }

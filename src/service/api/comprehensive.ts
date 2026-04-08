@@ -119,7 +119,7 @@ export function fetchGetDailyListChart(params: Api.Comprehensive.DailyComprehens
  * @param params 查询参数
  */
 export function fetchGetMonthlyList(params: Api.Comprehensive.MonthlyComprehensiveQuery) {
-  return request<Api.Comprehensive.MonthlyComprehensive>({
+  return request<Api.Comprehensive.MonthlyComprehensiveListResponse>({
     url: '/api/v1/comprehensive/monthly/list',
     method: 'get',
     params

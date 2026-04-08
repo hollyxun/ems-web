@@ -25,6 +25,7 @@ declare namespace Api.Scheduling {
     ruleType?: number;
     category?: string;
     status?: number;
+    isActive?: boolean;
   }
 
   interface RuleConfigList {

@@ -4,24 +4,23 @@ import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import { useECharts } from '@sa/hooks';
 import { fetchPointFacility, fetchYearKeyEquipmentChart, fetchYearKeyEquipmentList } from '@/service/api/keyequipment';
-import type { KeyEquipment } from '@/service/api/keyequipment';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'KeyEquipmentYear' });
 
 // 设备列表
-const deviceList = ref<KeyEquipment.Device[]>([]);
+const deviceList = ref<Api.KeyEquipment.Device[]>([]);
 const selectedDevice = ref<string>();
 
 // 时间选择
 const selectedYear = ref(dayjs().format('YYYY'));
 
 // 数据列表
-const dataList = ref<KeyEquipment.YearData[]>([]);
+const dataList = ref<Api.KeyEquipment.YearData[]>([]);
 const loading = ref(false);
 
 // 图表数据
-const chartData = ref<KeyEquipment.YearData[]>([]);
+const chartData = ref<Api.KeyEquipment.YearData[]>([]);
 const selectedRowIndex = ref<number>();
 
 // 图表
@@ -110,7 +109,7 @@ function updateChartData() {
   if (!row) return;
 
   const values = Array.from({ length: 12 }, (_, i) => {
-    const key = `value${i + 1}` as keyof KeyEquipment.YearData;
+    const key = `value${i + 1}` as keyof Api.KeyEquipment.YearData;
     return (row[key] as number) || 0;
   });
 
@@ -180,7 +179,7 @@ onMounted(() => {
           :width="col.width"
         >
           <template #default="{ row }">
-            {{ (row[col.prop as keyof KeyEquipment.YearData] as number)?.toFixed(2) || '-' }}
+            {{ (row[col.prop as keyof Api.KeyEquipment.YearData] as number)?.toFixed(2) || '-' }}
           </template>
         </ElTableColumn>
       </ElTable>

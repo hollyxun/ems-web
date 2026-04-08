@@ -270,7 +270,7 @@ export function fetchGetUnitById(id: number) {
  * @param params 查询参数
  */
 export function fetchGetUnitList(params: Api.Energy.UnitSearchParams) {
-  return request<{ list: Api.Energy.UnitView[]; total: number }>({
+  return request<Api.Energy.UnitList>({
     url: '/api/v1/energy/unit/getUnitList',
     method: 'get',
     params

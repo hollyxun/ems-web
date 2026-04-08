@@ -28,6 +28,47 @@
   - peakvalley.d.ts - 峰谷分析
   - productoutput.d.ts - 产品产量
   - spikesandvalleys.d.ts - 尖峰平谷方案
+
+- **[constants/security-errors.ts]** - 安全错误码常量
+  - 与后端 `constants/security_errors.go` 同步
+  - 登录错误码 (1xxx)、密码错误码 (2xxx)、解锁错误码 (3xxx)
+  - 辅助函数：`isUserLocked()`, `isPasswordIncorrect()`, `isPasswordExpired()`
+
+- **[utils/encryption.ts]** - 前端加密工具
+  - AES-256-GCM 数据加密（Web Crypto API）
+  - RSA-2048 密钥加密
+  - 加密配置初始化
+
+- **[views/manage/password-change/index.vue]** - 密码修改页面
+  - 支持强制修改模式（密码过期）
+  - 密码历史提示
+  - 过期警告显示
+
+- **[views/manage/user-lock/index.vue]** - 用户锁定管理页面
+  - 锁定用户列表
+  - 管理员解锁操作
+
+### 修改
+
+- **[store/modules/auth/index.ts]** - 认证 store 改造
+  - `login()` 返回 `{ code, message, data }` 对象
+  - 密码过期时跳转到修改页面
+  - 密码状态检查集成
+
+- **[views/_builtin/login/modules/pwd-login.vue]** - 登录页面改造
+  - 使用 switch 语句处理错误码
+  - 显示锁定提示、剩余尝试次数
+  - 密码错误/账户锁定 UI 反馈
+
+### 路由
+
+- 自动生成路由 `manage_password-change` → `/manage/password-change`
+- 自动生成路由 `manage_user-lock` → `/manage/user-lock`
+- i18n 翻译已添加到 zh-cn.ts 和 en-us.ts
+
+---
+
+## 2026-04-04
   - energy.d.ts 扩展 - 虚拟计量点类型
 
 - **[experience/vue-returntype-trap-fix.md]** - Vue ReturnType 类型陷阱修复

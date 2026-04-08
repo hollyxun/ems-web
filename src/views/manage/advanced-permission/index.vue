@@ -9,7 +9,6 @@ import {
   fetchSetOperationPermission,
   fetchSetShiftPermission
 } from '@/service/api/advanced-permission';
-import type { OperationPermission } from '@/service/api/advanced-permission';
 
 defineOptions({ name: 'AdvancedPermissionManage' });
 
@@ -44,7 +43,7 @@ const crossFactoryForm = ref({
 const shiftScope = ref<'own' | 'all'>('own');
 
 // Operation permissions
-const operationPermissions = ref<OperationPermission[]>([]);
+const operationPermissions = ref<Api.AdvancedPermission.OperationPermission[]>([]);
 const saving = ref(false);
 
 const modules = ['energy', 'report', 'ranking', 'comparison'];
@@ -160,7 +159,7 @@ async function toggleOperationPermission(module: string, operation: string) {
     await fetchSetOperationPermission({
       roleId: selectedRoleId.value,
       module,
-      operation: operation as OperationPermission['operation'],
+      operation: operation as Api.AdvancedPermission.OperationPermission['operation'],
       allowed: newAllowed
     });
 
@@ -172,7 +171,7 @@ async function toggleOperationPermission(module: string, operation: string) {
       operationPermissions.value.push({
         roleId: selectedRoleId.value,
         module,
-        operation: operation as OperationPermission['operation'],
+        operation: operation as Api.AdvancedPermission.OperationPermission['operation'],
         allowed: newAllowed
       });
     }
@@ -186,7 +185,7 @@ async function toggleOperationPermission(module: string, operation: string) {
 }
 
 // Handle "select all" toggle for factories
-function handleSelectAll(val: boolean) {
+function handleSelectAll(val: string | number | boolean) {
   if (val) {
     crossFactoryForm.value.factoryIds = factories.value.map(f => f.id);
   } else {

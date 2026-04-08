@@ -28,10 +28,24 @@ const indicatorsTypes = ['单位产品能耗', '综合能耗', '能耗强度'];
 
 const selectedIds = ref<number[]>([]);
 
+// Helper function to get time type tag color
+function getTimeTypeTagType(timeType: string): 'success' | 'warning' | 'info' | 'danger' | 'primary' {
+  if (timeType === '年') return 'success';
+  if (timeType === '月') return 'warning';
+  return 'info';
+}
+
+// Helper function to get energy type tag color
+function getEnergyTypeTagType(energyType: string): 'success' | 'warning' | 'info' | 'danger' | 'primary' {
+  if (energyType === '电') return 'primary';
+  if (energyType === '水') return 'info';
+  return 'warning';
+}
+
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchEnergyIndicatorsList(searchParams.value),
-  transform: defaultTransform,
+  transform: response => defaultTransform(response),
   columns: () => [
     { prop: 'selection', type: 'selection', width: 50 },
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
@@ -42,10 +56,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       prop: 'timeType',
       label: '时间类型',
       minWidth: 80,
-      formatter: row => (
-        <ElTag type={row.timeType === '年' ? 'success' : row.timeType === '月' ? 'warning' : 'info'}>
-          {row.timeType}
-        </ElTag>
+      formatter: (row: Api.EnergyIndicators.Item) => (
+        <ElTag type={getTimeTypeTagType(row.timeType)}>{row.timeType}</ElTag>
       )
     },
     { prop: 'dataTime', label: '时间', minWidth: 100 },
@@ -53,17 +65,15 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       prop: 'energyType',
       label: '能源类型',
       minWidth: 80,
-      formatter: row => (
-        <ElTag type={row.energyType === '电' ? 'primary' : row.energyType === '水' ? 'info' : 'warning'}>
-          {row.energyType}
-        </ElTag>
+      formatter: (row: Api.EnergyIndicators.Item) => (
+        <ElTag type={getEnergyTypeTagType(row.energyType)}>{row.energyType}</ElTag>
       )
     },
     {
       prop: 'indicatorsType',
       label: '指标类型',
       minWidth: 120,
-      formatter: row => <ElTag effect="plain">{row.indicatorsType}</ElTag>
+      formatter: (row: Api.EnergyIndicators.Item) => <ElTag effect="plain">{row.indicatorsType}</ElTag>
     },
     { prop: 'number', label: '产量/值', minWidth: 100 },
     { prop: 'unit', label: '单位', minWidth: 80 },
@@ -72,7 +82,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 160,
-      formatter: row => {
+      formatter: (row: Api.EnergyIndicators.Item) => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
@@ -115,7 +125,7 @@ async function handleBatchDelete() {
   }
 }
 
-function handleSelectionChange(selection: EnergyIndicators.Item[]) {
+function handleSelectionChange(selection: Api.EnergyIndicators.Item[]) {
   selectedIds.value = selection.map(item => item.id);
 }
 
@@ -127,10 +137,15 @@ onMounted(() => getData());
     <ElCard class="card-wrapper">
       <ElForm :model="searchParams" label-width="80px" class="flex flex-wrap gap-16px">
         <ElFormItem label="名称" class="w-280px">
-          <ElInput v-model="searchParams.name" placeholder="搜索名称" clearable @keyup.enter="getDataByPage" />
+          <ElInput v-model="searchParams.name" placeholder="搜索名称" clearable @keyup.enter="() => getDataByPage()" />
         </ElFormItem>
         <ElFormItem label="用能单元" class="w-280px">
-          <ElInput v-model="searchParams.nodeId" placeholder="搜索用能单元ID" clearable @keyup.enter="getDataByPage" />
+          <ElInput
+            v-model="searchParams.nodeId"
+            placeholder="搜索用能单元ID"
+            clearable
+            @keyup.enter="() => getDataByPage()"
+          />
         </ElFormItem>
         <ElFormItem label="时间类型" class="w-280px">
           <ElSelect v-model="searchParams.timeType" placeholder="选择时间类型" clearable>
@@ -148,7 +163,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {
@@ -206,7 +221,7 @@ onMounted(() => getData());
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        @submitted="getDataByPage"
+        @submitted="() => getDataByPage()"
       />
     </ElCard>
   </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
@@ -50,7 +50,7 @@ async function getList() {
       chartData.value = chartResult;
       updateChart();
     }
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('获取数据失败');
   } finally {
     loading.value = false;

@@ -212,6 +212,8 @@ const local: App.I18n.Schema = {
     'manage_route-menu-obsolete': 'Obsolete Routes',
     'manage_advanced-permission': 'Advanced Permission',
     manage_organization: 'Organization',
+    'manage_password-change': 'Change Password',
+    'manage_user-lock': 'User Lock Management',
     plugin: 'Plugin',
     plugin_copy: 'Copy',
     plugin_charts: 'Charts',

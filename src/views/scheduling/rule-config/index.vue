@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { ElButton, ElMessage, ElTag } from 'element-plus';
 import { useBoolean } from '@sa/hooks';
 import { fetchDeleteRuleConfig, fetchGetRuleConfigList } from '@/service/api/scheduling/rule-engine';
@@ -7,6 +8,7 @@ import RuleConfigOperateDrawer from './modules/rule-config-operate-drawer.vue';
 
 defineOptions({ name: 'RuleConfigPage' });
 
+const router = useRouter();
 const { bool: drawerVisible, setTrue: openDrawer, setFalse: closeDrawer } = useBoolean(false);
 
 const loading = ref(false);
@@ -39,7 +41,7 @@ const columns = computed(() => [
     width: 120,
     render: (row: Api.Scheduling.RuleConfig) => {
       const type = ruleTypeOptions.find(t => t.value === row.ruleType);
-      const colorMap: Record<number, string> = {
+      const colorMap: Record<number, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
         1: 'primary',
         2: 'success',
         3: 'warning'
@@ -124,7 +126,7 @@ function handleEdit(row: Api.Scheduling.RuleConfig) {
 
 function handleVersionHistory(row: Api.Scheduling.RuleConfig) {
   // 导航到版本管理页面
-  window.$router?.push({
+  router.push({
     path: '/scheduling/rule-version',
     query: { ruleId: row.id, ruleName: row.ruleName }
   });
@@ -208,10 +210,18 @@ onMounted(() => {
       </template>
 
       <ElTable v-loading="loading" :data="tableData" stripe>
-        <ElTableColumn v-for="col in columns" :key="col.key" v-bind="col">
+        <ElTableColumn
+          v-for="(col, index) in columns"
+          :key="index"
+          :prop="col.key"
+          :label="col.title"
+          :align="col.align"
+          :width="col.width"
+          :min-width="col.minWidth"
+        >
           <template #default="{ row }">
             <component :is="col.render?.(row)" v-if="col.render" />
-            <span v-else>{{ row[col.key] || '-' }}</span>
+            <span v-else>{{ row[col.key as keyof typeof row] || '-' }}</span>
           </template>
         </ElTableColumn>
       </ElTable>

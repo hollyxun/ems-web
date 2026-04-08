@@ -20,7 +20,8 @@ const loadData = async () => {
       date: selectedDate.value,
       energyType: energyType.value === 'all' ? undefined : energyType.value
     };
-    reportData.value = await fetchDailyReport(params);
+    const { data: res } = await fetchDailyReport(params);
+    reportData.value = res || null;
   } catch {
     ElMessage.error('获取日报数据失败');
   } finally {

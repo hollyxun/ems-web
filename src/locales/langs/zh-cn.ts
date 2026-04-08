@@ -211,6 +211,8 @@ const local: App.I18n.Schema = {
     'manage_route-menu-obsolete': '废弃路由',
     'manage_advanced-permission': '高级权限',
     manage_organization: '组织架构',
+    'manage_password-change': '修改密码',
+    'manage_user-lock': '用户锁定管理',
     plugin: '插件示例',
     plugin_copy: '剪贴板',
     plugin_charts: '图表',

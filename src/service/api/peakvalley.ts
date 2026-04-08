@@ -29,7 +29,7 @@ export function fetchPriceDateById(id: number) {
  * 创建电价时间段
  * @param data 创建参数
  */
-export function fetchCreatePriceDate(data: Api.PeakValley.PriceDate) {
+export function fetchCreatePriceDate(data: Api.PeakValley.PriceDateCreateParams) {
   return request({
     url: '/electricitypricedate',
     method: 'post',
@@ -41,7 +41,7 @@ export function fetchCreatePriceDate(data: Api.PeakValley.PriceDate) {
  * 更新电价时间段
  * @param data 更新参数
  */
-export function fetchUpdatePriceDate(data: Api.PeakValley.PriceDate) {
+export function fetchUpdatePriceDate(data: Api.PeakValley.PriceDateUpdateParams) {
   return request({
     url: `/electricitypricedate/${data.id}`,
     method: 'put',

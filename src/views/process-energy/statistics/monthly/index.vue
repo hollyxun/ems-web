@@ -26,22 +26,31 @@ const getDaysInMonth = (month: string) => {
 };
 
 // 表格列定义
-const tableColumns = computed(() => {
-  const baseColumns = [
-    { prop: 'indexName', label: '指标名称', width: 150, fixed: 'left' as const },
+interface TableColumn {
+  prop: string;
+  label: string;
+  width: number;
+  fixed?: 'left';
+  align?: 'center';
+  formatter?: (row: Api.ProcessEnergy.MonthlyList) => string;
+}
+
+const tableColumns = computed<TableColumn[]>(() => {
+  const baseColumns: TableColumn[] = [
+    { prop: 'indexName', label: '指标名称', width: 150, fixed: 'left' },
     { prop: 'unitId', label: '单位', width: 80 }
   ];
 
   const daysInMonth = getDaysInMonth(selectedMonth.value);
-  const dayColumns = [];
-  for (let i = 1; i <= daysInMonth; i++) {
+  const dayColumns: TableColumn[] = [];
+  for (let i = 1; i <= daysInMonth; i += 1) {
+    const key = `value${i}` as keyof Api.ProcessEnergy.MonthlyList;
     dayColumns.push({
       prop: `value${i}`,
       label: `${i}日`,
       width: 70,
-      align: 'center' as const,
-      formatter: (row: Api.ProcessEnergy.MonthlyList) =>
-        formatValue(row[`value${i}` as keyof Api.ProcessEnergy.MonthlyList])
+      align: 'center',
+      formatter: (row: Api.ProcessEnergy.MonthlyList) => formatValue(row[key] as number | undefined)
     });
   }
 
@@ -64,7 +73,8 @@ const loadTableData = async () => {
       timeType: 'day',
       energyType: energyType.value || undefined
     };
-    tableData.value = await fetchMonthlyProcessEnergyList(params);
+    const { data: res } = await fetchMonthlyProcessEnergyList(params);
+    tableData.value = res || [];
 
     if (tableData.value.length > 0 && !selectedIndexId.value) {
       selectedIndexId.value = tableData.value[0].indexId;
@@ -88,7 +98,8 @@ const loadChartData = async () => {
       timeType: 'day',
       energyType: energyType.value || undefined
     };
-    chartData.value = await fetchMonthlyProcessEnergyChart(params);
+    const { data: res } = await fetchMonthlyProcessEnergyChart(params);
+    chartData.value = res || [];
     updateChart();
   } catch {
     ElMessage.error('获取图表数据失败');
@@ -214,13 +225,13 @@ onMounted(() => {
       </template>
       <ElTable v-loading="loading" :data="tableData" border stripe highlight-current-row @row-click="handleRowClick">
         <ElTableColumn
-          v-for="col in tableColumns"
-          :key="col.prop"
+          v-for="(col, colIndex) in tableColumns"
+          :key="colIndex"
           :prop="col.prop"
           :label="col.label"
           :width="col.width"
           :fixed="col.fixed"
-          :align="col.align || 'left'"
+          :align="col.align"
         >
           <template #default="{ row }">
             {{ col.formatter ? col.formatter(row) : row[col.prop as keyof typeof row] }}

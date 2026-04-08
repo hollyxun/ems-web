@@ -4,22 +4,21 @@ import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as ECharts from 'echarts';
 import { fetchElectricLoadAnalysis, fetchElectricityMeterList } from '@/service/api/electric-analysis';
-import type { ElectricLoad } from '@/service/api/electric-analysis';
 
 // 查询参数
-const queryParams = ref({
+const queryParams = ref<Api.ElectricLoad.Request>({
   nodeId: '',
   meterId: '',
-  timeType: 'DAY' as 'DAY' | 'MONTH' | 'YEAR',
+  timeType: 'DAY',
   timeCode: dayjs().format('YYYY-MM-DD')
 });
 
 // 电表选项
-const meterOptions = ref<ElectricLoad.MeterOption[]>([]);
+const meterOptions = ref<Api.ElectricLoad.MeterOption[]>([]);
 
 // 数据
 const loading = ref(false);
-const chartData = ref<ElectricLoad.Response | null>(null);
+const chartData = ref<Api.ElectricLoad.Response | null>(null);
 
 // 时间类型选项
 const timeTypeOptions = [
@@ -36,9 +35,9 @@ let chartInstance: ECharts.ECharts | null = null;
 const getMeterList = async () => {
   if (!queryParams.value.nodeId) return;
   try {
-    const res = await fetchElectricityMeterList(queryParams.value.nodeId);
-    meterOptions.value = res;
-    if (res.length > 0 && !queryParams.value.meterId) {
+    const { data: res } = await fetchElectricityMeterList(queryParams.value.nodeId);
+    meterOptions.value = res || [];
+    if (res && res.length > 0 && !queryParams.value.meterId) {
       queryParams.value.meterId = res[0].code;
     }
   } catch {
@@ -55,10 +54,10 @@ const fetchData = async () => {
 
   loading.value = true;
   try {
-    const res = await fetchElectricLoadAnalysis(queryParams.value);
-    chartData.value = res;
+    const { data: res } = await fetchElectricLoadAnalysis(queryParams.value);
+    chartData.value = res || null;
     updateChart();
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('查询失败');
   } finally {
     loading.value = false;
@@ -74,10 +73,10 @@ const updateChart = () => {
   }
 
   const data = chartData.value;
-  const xData = data.itemList.map(item => item.timeCodeChart);
-  const avgData = data.itemList.map(item => Number.parseFloat(item.avg) || 0);
-  const maxData = data.itemList.map(item => Number.parseFloat(item.max) || 0);
-  const minData = data.itemList.map(item => Number.parseFloat(item.min) || 0);
+  const xData = data.itemList.map((item: Api.ElectricLoad.Item) => item.timeCodeChart);
+  const avgData = data.itemList.map((item: Api.ElectricLoad.Item) => Number.parseFloat(item.avg) || 0);
+  const maxData = data.itemList.map((item: Api.ElectricLoad.Item) => Number.parseFloat(item.max) || 0);
+  const minData = data.itemList.map((item: Api.ElectricLoad.Item) => Number.parseFloat(item.min) || 0);
 
   const option: ECharts.EChartsOption = {
     title: {
@@ -143,7 +142,15 @@ const updateChart = () => {
 // 汇总数据
 const summaryData = computed(() => {
   if (!chartData.value) return null;
-  return chartData.value.detail;
+  const detail = chartData.value.detail;
+  return {
+    max: Number.parseFloat(detail.max) || 0,
+    maxTime: detail.maxTime,
+    min: Number.parseFloat(detail.min) || 0,
+    minTime: detail.minTime,
+    avg: Number.parseFloat(detail.avg) || 0,
+    rate: Number.parseFloat(detail.rate) || 0
+  };
 });
 
 // 处理时间类型变化

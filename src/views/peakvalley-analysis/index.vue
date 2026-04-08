@@ -2,7 +2,6 @@
 import { computed, onMounted, ref } from 'vue';
 import dayjs from 'dayjs';
 import { fetchSegmentAnalysisDay, fetchSegmentAnalysisHour } from '@/service/api/peakvalley';
-import type { PeakValley } from '@/service/api/peakvalley';
 
 defineOptions({ name: 'PeakValleyAnalysis' });
 
@@ -21,8 +20,8 @@ const queryParams = ref({
 
 const loading = ref(false);
 const analysisType = ref<'hour' | 'day'>('hour');
-const hourData = ref<PeakValley.HourVO | null>(null);
-const dayData = ref<PeakValley.DayVO | null>(null);
+const hourData = ref<Api.PeakValley.HourVO | null>(null);
+const dayData = ref<Api.PeakValley.DayVO | null>(null);
 
 // 获取分析数据
 async function getAnalysis() {

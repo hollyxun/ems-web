@@ -15,7 +15,7 @@ defineOptions({ name: 'VirtualMeterOperateDrawer' });
 
 interface Props {
   operateType: UI.TableOperateType;
-  rowData?: Api.Energy.VirtualMeter | null;
+  rowData?: Api.Energy.VirtualMeterView | null;
 }
 
 const props = defineProps<Props>();
@@ -98,13 +98,13 @@ function generateFormula() {
 
   switch (calculateType) {
     case 'sum':
-      formData.value.formula = sourceConfig.map((s, i) => `M${i + 1}`).join(' + ');
+      formData.value.formula = sourceConfig.map((_s, i) => `M${i + 1}`).join(' + ');
       break;
     case 'difference':
-      formData.value.formula = sourceConfig.map((s, i) => (i === 0 ? `M${i + 1}` : `- M${i + 1}`)).join(' ');
+      formData.value.formula = sourceConfig.map((_s, i) => (i === 0 ? `M${i + 1}` : `- M${i + 1}`)).join(' ');
       break;
     case 'average':
-      formData.value.formula = `(${sourceConfig.map((s, i) => `M${i + 1}`).join(' + ')}) / ${sourceConfig.length}`;
+      formData.value.formula = `(${sourceConfig.map((_s, i) => `M${i + 1}`).join(' + ')}) / ${sourceConfig.length}`;
       break;
     case 'ratio':
       formData.value.formula = sourceConfig.length >= 2 ? 'M1 / M2' : '';
@@ -112,8 +112,11 @@ function generateFormula() {
     case 'custom':
       // 保持现有公式或生成模板
       if (!formData.value.formula) {
-        formData.value.formula = sourceConfig.map((s, i) => `M${i + 1}`).join(' + ');
+        formData.value.formula = sourceConfig.map((_s, i) => `M${i + 1}`).join(' + ');
       }
+      break;
+    default:
+      formData.value.formula = '';
       break;
   }
 }
@@ -128,16 +131,16 @@ async function validateFormula() {
   validating.value = true;
   const { data, error } = await fetchValidateFormula({
     formula: formData.value.formula,
-    sourceMeters: formData.value.sourceConfig.map(s => s.meterId)
+    sourceMeterIds: formData.value.sourceConfig.map(s => s.meterId)
   });
   validating.value = false;
 
   if (!error && data) {
-    formulaValid.value = data.valid;
-    if (data.valid) {
+    formulaValid.value = data.isValid;
+    if (data.isValid) {
       ElMessage.success('公式验证通过');
     } else {
-      ElMessage.error(data.error || '公式验证失败');
+      ElMessage.error(data.errors?.[0] || '公式验证失败');
     }
   }
 }
@@ -355,12 +358,12 @@ watch(
 
       <ElFormItem label="状态">
         <ElRadioGroup v-model="formData.status">
-          <ElRadio :label="1">启用</ElRadio>
-          <ElRadio :label="2">停用</ElRadio>
+          <ElRadio :value="1">启用</ElRadio>
+          <ElRadio :value="2">停用</ElRadio>
         </ElRadioGroup>
       </ElFormItem>
       <ElFormItem label="描述">
-        <ElInput v-model="formData.description" type="textarea" rows="3" placeholder="请输入描述" />
+        <ElInput v-model="formData.description" type="textarea" :rows="3" placeholder="请输入描述" />
       </ElFormItem>
     </ElForm>
     <template #footer>

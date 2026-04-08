@@ -87,7 +87,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       width: 250,
       formatter: row => (
         <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => handleEdit(row)}>
+          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
             {$t('common.edit')}
           </ElButton>
           {!row.isStandard && (
@@ -115,6 +115,10 @@ const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedR
   'id',
   getData
 );
+
+function edit(id: number) {
+  handleEdit(id);
+}
 
 async function handleDelete(id: number) {
   const { error } = await fetchDeleteUnit(id);

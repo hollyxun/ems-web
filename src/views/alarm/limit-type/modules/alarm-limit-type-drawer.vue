@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { fetchCreateAlarmLimitType, fetchUpdateAlarmLimitType } from '@/service/api/alarm';
-import { $t } from '@/locales';
 
 defineOptions({ name: 'AlarmLimitTypeDrawer' });
 

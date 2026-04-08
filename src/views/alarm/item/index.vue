@@ -1,12 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchAlarmItemList,
-  fetchBatchDeleteAlarmItems,
-  fetchDeleteAlarmItem,
-  fetchUpdateAlarmStartStop
-} from '@/service/api/alarm';
+import { fetchAlarmItemList, fetchDeleteAlarmItem, fetchUpdateAlarmStartStop } from '@/service/api/alarm';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import AlarmItemSearch from './modules/alarm-item-search.vue';
@@ -37,8 +32,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     return defaultTransform(response);
   },
   onPaginationParamsChange: params => {
-    searchParams.value.page = params.currentPage;
-    searchParams.value.pageSize = params.pageSize;
+    searchParams.value.page = params.currentPage ?? 1;
+    searchParams.value.pageSize = params.pageSize ?? 10;
   },
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
@@ -120,7 +115,7 @@ async function handleToggleStatus(row: Api.AlarmItem.Item) {
   }
 }
 
-async function handleDelete(id: number) {
+async function handleDelete(id: string) {
   const { error } = await fetchDeleteAlarmItem(id);
   if (!error) {
     onDeleted();
@@ -131,7 +126,7 @@ function resetSearchParams() {
   searchParams.value = getInitSearchParams();
 }
 
-function edit(id: number) {
+function edit(id: string) {
   handleEdit(id);
 }
 

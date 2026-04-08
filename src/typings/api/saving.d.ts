@@ -22,10 +22,7 @@ declare namespace Api {
         plan?: string;
       }
 
-      interface ListResponse {
-        list: Item[];
-        total: number;
-      }
+      type ListResponse = Api.Common.PageResult<Item>;
 
       interface CreateParams {
         plan: string;
@@ -60,10 +57,7 @@ declare namespace Api {
         type?: string;
       }
 
-      interface ListResponse {
-        list: Item[];
-        total: number;
-      }
+      type ListResponse = Api.Common.PageResult<Item>;
 
       interface CreateParams {
         title: string;

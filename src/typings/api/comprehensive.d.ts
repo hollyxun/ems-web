@@ -162,10 +162,16 @@ declare namespace Api {
       qoqValue: number;
       /** 数量 */
       count?: number;
+    }
+
+    /**
+     * 月综合指标列表响应
+     */
+    interface MonthlyComprehensiveListResponse {
       /** 表头 */
-      tablehead?: Record<string, string>[];
+      tablehead: Record<string, string>[];
       /** 表格数据 */
-      tabledata?: MonthlyComprehensive[];
+      tabledata: MonthlyComprehensive[];
     }
 
     /**

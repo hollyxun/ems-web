@@ -78,7 +78,7 @@ export function fetchUpdateUserInfo(data: { nickName?: string; headerImg?: strin
 }
 
 /**
- * 修改密码
+ * 修改密码（普通修改）
  * @param oldPassword 原密码
  * @param newPassword 新密码
  */
@@ -87,5 +87,64 @@ export function fetchChangePassword(oldPassword: string, newPassword: string) {
     url: '/api/v1/user/changePassword',
     method: 'post',
     data: { oldPassword, newPassword }
+  });
+}
+
+// ============ Security Module API ============
+
+/**
+ * 解锁用户（管理员操作）
+ * @param userId 用户 ID
+ */
+export function fetchUnlockUser(userId: number) {
+  return request<boolean>({
+    url: '/api/v1/security/unlockUser',
+    method: 'post',
+    data: { userId }
+  });
+}
+
+/**
+ * 获取锁定用户列表
+ * @param page 页码
+ * @param pageSize 每页数量
+ */
+export function fetchGetLockedUsers(page: number = 1, pageSize: number = 10) {
+  return request<Api.Common.PageResult<Api.Auth.LockedUser>>({
+    url: '/api/v1/security/lockedUsers',
+    method: 'get',
+    params: { page, pageSize }
+  });
+}
+
+/**
+ * 获取当前用户密码状态
+ */
+export function fetchGetPasswordStatus() {
+  return request<Api.Auth.PasswordStatus>({
+    url: '/api/v1/security/passwordStatus',
+    method: 'get'
+  });
+}
+
+/**
+ * 安全修改密码（支持密码过期强制修改）
+ * @param data 密码参数
+ */
+export function fetchSecurityChangePassword(data: Api.Auth.SecurityChangePasswordParams) {
+  return request<boolean>({
+    url: '/api/v1/security/changePassword',
+    method: 'post',
+    data
+  });
+}
+
+/**
+ * 获取加密公钥
+ */
+export function fetchGetPublicKey() {
+  return request<Api.Auth.PublicKeyResponse>({
+    url: '/api/v1/security/publicKey',
+    method: 'get'
   });
 }

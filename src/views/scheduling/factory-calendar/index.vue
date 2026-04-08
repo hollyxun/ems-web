@@ -248,11 +248,7 @@ function openMappingConfig(row: Api.Scheduling.FactoryCalendar) {
 }
 
 // 保存映射配置
-async function handleSaveMappingConfig(config: {
-  mappingRuleId: number;
-  mappingConfig: string;
-  naturalMonthStart: number;
-}) {
+async function handleSaveMappingConfig(config: { mappingRuleId?: number; mappingConfig?: string; naturalMonthStart?: number }) {
   const { error } = await fetchUpdateMappingConfig({
     calendarId: editingCalendarId.value,
     mappingRuleId: config.mappingRuleId,

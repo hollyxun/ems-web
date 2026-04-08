@@ -4,23 +4,22 @@ import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as ECharts from 'echarts';
 import { fetchElectricityMeterList, fetchThreePhaseAnalysis } from '@/service/api/electric-analysis';
-import type { ThreePhase } from '@/service/api/electric-analysis';
 
 // 查询参数
-const queryParams = ref({
+const queryParams = ref<Api.ThreePhase.Request>({
   nodeId: '',
   meterId: '',
-  timeType: 'DAY' as 'DAY' | 'MONTH' | 'YEAR',
+  timeType: 'DAY',
   timeCode: dayjs().format('YYYY-MM-DD'),
-  requestType: '0' as '0' | '1'
+  requestType: '0'
 });
 
 // 电表选项
-const meterOptions = ref<{ code: string; label: string }[]>([]);
+const meterOptions = ref<Api.ElectricLoad.MeterOption[]>([]);
 
 // 数据
 const loading = ref(false);
-const chartData = ref<ThreePhase.Response | null>(null);
+const chartData = ref<Api.ThreePhase.Response | null>(null);
 
 // 时间类型选项
 const timeTypeOptions = [
@@ -43,9 +42,9 @@ let chartInstance: ECharts.ECharts | null = null;
 const getMeterList = async () => {
   if (!queryParams.value.nodeId) return;
   try {
-    const res = await fetchElectricityMeterList(queryParams.value.nodeId);
-    meterOptions.value = res;
-    if (res.length > 0 && !queryParams.value.meterId) {
+    const { data: res } = await fetchElectricityMeterList(queryParams.value.nodeId);
+    meterOptions.value = res || [];
+    if (res && res.length > 0 && !queryParams.value.meterId) {
       queryParams.value.meterId = res[0].code;
     }
   } catch {
@@ -66,10 +65,10 @@ const fetchData = async () => {
 
   loading.value = true;
   try {
-    const res = await fetchThreePhaseAnalysis(queryParams.value);
-    chartData.value = res;
+    const { data: res } = await fetchThreePhaseAnalysis(queryParams.value);
+    chartData.value = res || null;
     updateChart();
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('查询失败');
   } finally {
     loading.value = false;
@@ -85,10 +84,10 @@ const updateChart = () => {
   }
 
   const data = chartData.value;
-  const xData = data.itemList.map(item => item.timeCodeChart);
-  const phaseA = data.itemList.map(item => Number.parseFloat(item.phaseA) || 0);
-  const phaseB = data.itemList.map(item => Number.parseFloat(item.phaseB) || 0);
-  const phaseC = data.itemList.map(item => Number.parseFloat(item.phaseC) || 0);
+  const xData = data.itemList.map((item: Api.ThreePhase.Item) => item.timeCodeChart);
+  const phaseA = data.itemList.map((item: Api.ThreePhase.Item) => Number.parseFloat(item.phaseA) || 0);
+  const phaseB = data.itemList.map((item: Api.ThreePhase.Item) => Number.parseFloat(item.phaseB) || 0);
+  const phaseC = data.itemList.map((item: Api.ThreePhase.Item) => Number.parseFloat(item.phaseC) || 0);
 
   const unit = queryParams.value.requestType === '0' ? 'V' : 'A';
 
@@ -149,7 +148,12 @@ const updateChart = () => {
 // 汇总数据
 const summaryData = computed(() => {
   if (!chartData.value) return null;
-  return chartData.value.detail;
+  const detail = chartData.value.detail;
+  return {
+    maxUnbalance: Number.parseFloat(detail.maxUnbalance) || 0,
+    maxUnbalanceTime: detail.maxUnbalanceTime,
+    avgUnbalance: Number.parseFloat(detail.avgUnbalance) || 0
+  };
 });
 
 // 处理时间类型变化

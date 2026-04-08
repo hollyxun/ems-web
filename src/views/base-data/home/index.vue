@@ -166,9 +166,9 @@ onMounted(() => {
         <h2>基础数据管理中心</h2>
       </div>
       <div class="header-status">
-        <div class="status-indicator" :class="{ pulse: overviewData?.meter.fault > 0 }">
-          <span class="indicator-dot" :class="overviewData?.meter.fault > 0 ? 'danger' : 'success'" />
-          <span class="indicator-label">{{ overviewData?.meter.fault > 0 ? '异常告警' : '系统正常' }}</span>
+        <div class="status-indicator" :class="{ pulse: (overviewData?.meter?.fault ?? 0) > 0 }">
+          <span class="indicator-dot" :class="(overviewData?.meter?.fault ?? 0) > 0 ? 'danger' : 'success'" />
+          <span class="indicator-label">{{ (overviewData?.meter?.fault ?? 0) > 0 ? '异常告警' : '系统正常' }}</span>
         </div>
       </div>
     </div>

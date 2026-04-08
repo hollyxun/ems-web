@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Api } from '@/service/api/knowledge';
-
 defineOptions({ name: 'KnowledgeSearch' });
 
 interface Emits {

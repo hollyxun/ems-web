@@ -1,26 +1,37 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { fetchDailyProcessEnergyList as fetchProcessEnergyList } from '@/service/api/process-energy';
-import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
+import { useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ProcessEnergy' });
 
-const searchParams = ref({ page: 1, pageSize: 10 });
+const searchParams = ref<Api.ProcessEnergy.DailyQuery>({
+  indexCode: 'default',
+  dataTime: '',
+  timeType: 'day'
+});
 
-const { columns, columnChecks, data, getData, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, loading, mobilePagination } = useUIPaginatedTable<
+  Api.ProcessEnergy.DailyList[],
+  Api.ProcessEnergy.DailyList
+>({
   paginationProps: { currentPage: 1, pageSize: 10 },
-  api: () => fetchProcessEnergyList(searchParams.value),
-  transform: defaultTransform,
+  api: async () => {
+    const { data: res } = await fetchProcessEnergyList(searchParams.value);
+    return res || [];
+  },
+  transform: list => ({
+    data: list,
+    pageNum: 1,
+    pageSize: 10,
+    total: list.length
+  }),
   columns: () => [
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
-    { prop: 'nodeName', label: '节点名称', minWidth: 150 },
-    { prop: 'processName', label: '工序名称', minWidth: 120 },
-    { prop: 'timeType', label: '时间类型', width: 100 },
-    { prop: 'dataTime', label: '数据时间', minWidth: 120 },
-    { prop: 'energyValue', label: '能耗值', width: 100 },
-    { prop: 'productValue', label: '产量', width: 100 },
-    { prop: 'unitConsumption', label: '单耗', width: 100 }
+    { prop: 'indexName', label: '指标名称', minWidth: 150 },
+    { prop: 'unitId', label: '单位', minWidth: 80 },
+    { prop: 'timeType', label: '时间类型', width: 100 }
   ]
 });
 

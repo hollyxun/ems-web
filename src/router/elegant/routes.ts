@@ -109,6 +109,35 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'approval',
+    path: '/approval',
+    component: 'layout.base',
+    meta: {
+      title: 'approval',
+      i18nKey: 'route.approval'
+    },
+    children: [
+      {
+        name: 'approval_flow-designer',
+        path: '/approval/flow-designer',
+        component: 'view.approval_flow-designer',
+        meta: {
+          title: 'approval_flow-designer',
+          i18nKey: 'route.approval_flow-designer'
+        }
+      },
+      {
+        name: 'approval_workspace',
+        path: '/approval/workspace',
+        component: 'view.approval_workspace',
+        meta: {
+          title: 'approval_workspace',
+          i18nKey: 'route.approval_workspace'
+        }
+      }
+    ]
+  },
+  {
     name: 'base-data',
     path: '/base-data',
     component: 'layout.base',
@@ -319,6 +348,26 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'costmanagement_trend',
           i18nKey: 'route.costmanagement_trend'
+        }
+      }
+    ]
+  },
+  {
+    name: 'dashboard',
+    path: '/dashboard',
+    component: 'layout.base',
+    meta: {
+      title: 'dashboard',
+      i18nKey: 'route.dashboard'
+    },
+    children: [
+      {
+        name: 'dashboard_custom',
+        path: '/dashboard/custom',
+        component: 'view.dashboard_custom',
+        meta: {
+          title: 'dashboard_custom',
+          i18nKey: 'route.dashboard_custom'
         }
       }
     ]
@@ -849,6 +898,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'manage_password-change',
+        path: '/manage/password-change',
+        component: 'view.manage_password-change',
+        meta: {
+          title: 'manage_password-change',
+          i18nKey: 'route.manage_password-change'
+        }
+      },
+      {
         name: 'manage_role',
         path: '/manage/role',
         component: 'view.manage_role',
@@ -892,6 +950,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           hideInMenu: true,
           roles: ['R_ADMIN'],
           activeMenu: 'manage_user'
+        }
+      },
+      {
+        name: 'manage_user-lock',
+        path: '/manage/user-lock',
+        component: 'view.manage_user-lock',
+        meta: {
+          title: 'manage_user-lock',
+          i18nKey: 'route.manage_user-lock'
         }
       }
     ]

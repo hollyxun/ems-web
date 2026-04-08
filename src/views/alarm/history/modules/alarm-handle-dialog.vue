@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import type { Api } from '@/service/api/alarm';
 
 defineOptions({ name: 'AlarmHandleDialog' });
 
 interface Props {
   visible: boolean;
-  rowData: Api.AlarmHistory.Item | null;
+  rowData: Api.AlarmHistory.AlarmHistoryItem | null;
 }
 
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
-  (e: 'confirm', id: number, handleStatus: string, handleRemark: string): void;
+  (e: 'confirm', id: string, handleStatus: string, handleRemark: string): void;
 }
 
 const props = defineProps<Props>();

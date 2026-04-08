@@ -8,24 +8,23 @@ import {
   fetchMonthlyKeyEquipmentList,
   fetchPointFacility
 } from '@/service/api/keyequipment';
-import type { KeyEquipment } from '@/service/api/keyequipment';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'KeyEquipmentMonthly' });
 
 // 设备列表
-const deviceList = ref<KeyEquipment.Device[]>([]);
+const deviceList = ref<Api.KeyEquipment.Device[]>([]);
 const selectedDevice = ref<string>();
 
 // 时间选择
 const selectedMonth = ref(dayjs().format('YYYY-MM'));
 
 // 数据列表
-const dataList = ref<KeyEquipment.MonthlyData[]>([]);
+const dataList = ref<Api.KeyEquipment.MonthlyData[]>([]);
 const loading = ref(false);
 
 // 图表数据
-const chartData = ref<KeyEquipment.MonthlyData[]>([]);
+const chartData = ref<Api.KeyEquipment.MonthlyData[]>([]);
 const selectedRowIndex = ref<number>();
 
 // 当月天数
@@ -118,7 +117,7 @@ function updateChartData() {
   if (!row) return;
 
   const values = Array.from({ length: daysInMonth.value }, (_, i) => {
-    const key = `value${i + 1}` as keyof KeyEquipment.MonthlyData;
+    const key = `value${i + 1}` as keyof Api.KeyEquipment.MonthlyData;
     return (row[key] as number) || 0;
   });
 
@@ -191,7 +190,7 @@ onMounted(() => {
         <ElTableColumn prop="indexName" label="指标名称" min-width="120" />
         <ElTableColumn v-for="col in dayColumns" :key="col.prop" :prop="col.prop" :label="col.label" :width="col.width">
           <template #default="{ row }">
-            {{ (row[col.prop as keyof KeyEquipment.MonthlyData] as number)?.toFixed(2) || '-' }}
+            {{ (row[col.prop as keyof Api.KeyEquipment.MonthlyData] as number)?.toFixed(2) || '-' }}
           </template>
         </ElTableColumn>
       </ElTable>

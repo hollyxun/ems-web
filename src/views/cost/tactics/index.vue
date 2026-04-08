@@ -1,13 +1,12 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { ElMessage, ElPopconfirm } from 'element-plus';
+import { ElButton, ElMessage, ElPopconfirm } from 'element-plus';
 import {
   fetchCreatePriceTactics,
   fetchDeletePriceTactics,
   fetchPriceTacticsList,
   fetchUpdatePriceTactics
 } from '@/service/api/costmanagement';
-import type { CostManagement } from '@/service/api/costmanagement';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
@@ -25,7 +24,9 @@ const energyTypes = [
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchPriceTacticsList(searchParams.value),
-  transform: defaultTransform,
+  transform: response => {
+    return defaultTransform(response);
+  },
   columns: () => [
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
     { prop: 'tacticsNumber', label: '策略编码', minWidth: 120 },
@@ -64,7 +65,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
 
 const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
   data,
-  'id',
+  'id' as const,
   getData
 );
 
@@ -114,12 +115,12 @@ async function handleSubmit() {
   }
 }
 
-async function handleDelete(id: number) {
+async function handleDelete(id: string) {
   const { error } = await fetchDeletePriceTactics(id);
   if (!error) onDeleted();
 }
 
-function edit(id: number) {
+function edit(id: string) {
   handleEdit(id);
   const row = data.value.find(item => item.id === id);
   if (row) {
@@ -150,7 +151,7 @@ onMounted(() => getData());
           />
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

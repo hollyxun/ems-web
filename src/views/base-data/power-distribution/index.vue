@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
+import { ElButton, ElMessage, ElPopconfirm } from 'element-plus';
 import { fetchDeletePowerDistributions, fetchGetPowerDistributionList } from '@/service/api/power-distribution';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -87,7 +87,7 @@ async function handleBatchDelete() {
     ElMessage.warning('请选择要删除的数据');
     return;
   }
-  const { error } = await fetchDeletePowerDistributions(checkedRowKeys.value as number[]);
+  const { error } = await fetchDeletePowerDistributions(checkedRowKeys.value as unknown as number[]);
   if (!error) {
     checkedRowKeys.value = [];
     getData();

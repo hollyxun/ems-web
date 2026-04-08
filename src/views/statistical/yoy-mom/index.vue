@@ -18,7 +18,6 @@ import {
   ElTag
 } from 'element-plus';
 import { fetchElectricMoM, fetchElectricYoY, fetchWaterMoM, fetchWaterYoY } from '@/service/api/statistical';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'StatisticalYoyMom' });
 
@@ -51,7 +50,7 @@ const queryParams = ref<Api.Statistical.Comparison.CompareParams>({
 const selectedEnergyType = ref<'electric' | 'water'>('electric');
 
 // 时间范围
-const dateRange = ref<[Date, Date] | null>(null);
+const dateRange = ref<[string, string] | null>(null);
 
 // 加载状态
 const loading = ref(false);
@@ -68,9 +67,9 @@ const summary = computed(() => {
   const avgRatio = totalOld > 0 ? ((totalCurrent - totalOld) / totalOld) * 100 : 0;
 
   return {
-    totalCurrent: totalCurrent.toFixed(2),
-    totalOld: totalOld.toFixed(2),
-    avgRatio: avgRatio.toFixed(2),
+    totalCurrent: Number(totalCurrent.toFixed(2)),
+    totalOld: Number(totalOld.toFixed(2)),
+    avgRatio: Number(avgRatio.toFixed(2)),
     trend: avgRatio > 0 ? 'up' : avgRatio < 0 ? 'down' : 'flat'
   };
 });
@@ -80,15 +79,15 @@ function initDateRange() {
   const now = new Date();
   const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0);
   const end = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-  dateRange.value = [start, end];
+  dateRange.value = [formatDate(start), formatDate(end)];
   updateQueryTime();
 }
 
 // 更新查询时间
 function updateQueryTime() {
-  if (dateRange.value) {
-    queryParams.value.beginTime = formatDate(dateRange.value[0]);
-    queryParams.value.endTime = formatDate(dateRange.value[1]);
+  if (dateRange.value && dateRange.value[0] && dateRange.value[1]) {
+    queryParams.value.beginTime = dateRange.value[0];
+    queryParams.value.endTime = dateRange.value[1];
   }
 }
 
@@ -114,15 +113,17 @@ async function loadData() {
     const isYoy = activeTab.value === 'yoy';
     const isElectric = selectedEnergyType.value === 'electric';
 
-    let result: Api.Statistical.Comparison.YoYResponse[] = [];
-
     if (isElectric) {
-      result = isYoy ? await fetchElectricYoY(queryParams.value) : await fetchElectricMoM(queryParams.value);
+      const { data: result } = isYoy
+        ? await fetchElectricYoY(queryParams.value)
+        : await fetchElectricMoM(queryParams.value);
+      dataList.value = result || [];
     } else {
-      result = isYoy ? await fetchWaterYoY(queryParams.value) : await fetchWaterMoM(queryParams.value);
+      const { data: result } = isYoy
+        ? await fetchWaterYoY(queryParams.value)
+        : await fetchWaterMoM(queryParams.value);
+      dataList.value = result || [];
     }
-
-    dataList.value = result;
   } catch {
     dataList.value = [];
   } finally {

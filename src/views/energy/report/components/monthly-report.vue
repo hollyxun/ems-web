@@ -20,7 +20,8 @@ const loadData = async () => {
       month: selectedMonth.value,
       energyType: energyType.value === 'all' ? undefined : energyType.value
     };
-    reportData.value = await fetchMonthlyReport(params);
+    const { data: res } = await fetchMonthlyReport(params);
+    reportData.value = res || null;
   } catch {
     ElMessage.error('获取月报数据失败');
   } finally {

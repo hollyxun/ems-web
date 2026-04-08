@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
-import { ElMessage } from 'element-plus';
 import { Graph } from '@antv/g6';
 
 defineOptions({ name: 'FormulaVisualEditor' });
@@ -21,13 +20,6 @@ interface Props {
 
 const props = defineProps<Props>();
 
-interface Emits {
-  (e: 'update:formula', value: string): void;
-  (e: 'update:sourceConfig', value: SourceConfig[]): void;
-}
-
-const emit = defineEmits<Emits>();
-
 const containerRef = ref<HTMLDivElement>();
 let graph: Graph | null = null;
 
@@ -43,27 +35,41 @@ const operatorNodes = computed(() => {
   const operators: { id: string; label: string; type: string }[] = [];
 
   switch (props.calculateType) {
-    case 'sum':
+    case 'sum': {
       operators.push({ id: 'op-add', label: '+', type: 'add' });
       break;
-    case 'difference':
+    }
+    case 'difference': {
       operators.push({ id: 'op-sub', label: '-', type: 'sub' });
       break;
-    case 'average':
+    }
+    case 'average': {
       operators.push({ id: 'op-add', label: '+', type: 'add' });
       operators.push({ id: 'op-div', label: '÷', type: 'div' });
       break;
-    case 'ratio':
+    }
+    case 'ratio': {
       operators.push({ id: 'op-div', label: '÷', type: 'div' });
       break;
-    case 'custom':
+    }
+    case 'custom': {
       // 解析自定义公式中的运算符
       const opMatches = props.formula.match(/[+\-*/]/g) || [];
       const uniqueOps = [...new Set(opMatches)];
       uniqueOps.forEach((op, i) => {
-        const label = op === '*' ? '×' : op === '/' ? '÷' : op;
+        let label: string;
+        if (op === '*') {
+          label = '×';
+        } else if (op === '/') {
+          label = '÷';
+        } else {
+          label = op;
+        }
         operators.push({ id: `op-${i}`, label, type: `op-${op}` });
       });
+      break;
+    }
+    default:
       break;
   }
 
@@ -97,7 +103,7 @@ function initGraph() {
   });
 
   // 运算符节点
-  operatorNodes.value.forEach((op, index) => {
+  operatorNodes.value.forEach(op => {
     nodes.push({
       id: op.id,
       data: {

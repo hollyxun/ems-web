@@ -83,9 +83,9 @@ const filterText = ref('');
 const treeRef = ref<InstanceType<typeof ElTree>>();
 
 // Filter tree nodes
-function filterNode(value: string, data: Api.Organization.OrganizationItem): boolean {
+function filterNode(value: string, data: any): boolean {
   if (!value) return true;
-  return data.name.includes(value) || data.code.includes(value);
+  return data.name?.includes(value) || data.code?.includes(value) || false;
 }
 
 // Watch filter text

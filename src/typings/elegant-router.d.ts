@@ -40,6 +40,9 @@ declare module "@elegant-router/types" {
     "alarm_limit-type": "/alarm/limit-type";
     "analysis": "/analysis";
     "analysis_consumption": "/analysis/consumption";
+    "approval": "/approval";
+    "approval_flow-designer": "/approval/flow-designer";
+    "approval_workspace": "/approval/workspace";
     "base-data": "/base-data";
     "base-data_coefficient": "/base-data/coefficient";
     "base-data_home": "/base-data/home";
@@ -63,6 +66,8 @@ declare module "@elegant-router/types" {
     "costmanagement_electricity": "/costmanagement/electricity";
     "costmanagement_tactics": "/costmanagement/tactics";
     "costmanagement_trend": "/costmanagement/trend";
+    "dashboard": "/dashboard";
+    "dashboard_custom": "/dashboard/custom";
     "energy": "/energy";
     "energy_base-data": "/energy/base-data";
     "energy_base-data_coefficient": "/energy/base-data/coefficient";
@@ -115,10 +120,12 @@ declare module "@elegant-router/types" {
     "manage_menu": "/manage/menu";
     "manage_operation-record": "/manage/operation-record";
     "manage_organization": "/manage/organization";
+    "manage_password-change": "/manage/password-change";
     "manage_role": "/manage/role";
     "manage_route-menu-obsolete": "/manage/route-menu-obsolete";
     "manage_user": "/manage/user";
     "manage_user-detail": "/manage/user-detail/:id";
+    "manage_user-lock": "/manage/user-lock";
     "peakvalley": "/peakvalley";
     "peakvalley-analysis": "/peakvalley-analysis";
     "plugin": "/plugin";
@@ -222,6 +229,7 @@ declare module "@elegant-router/types" {
     | "about"
     | "alarm"
     | "analysis"
+    | "approval"
     | "base-data"
     | "benchmark"
     | "branchanalysis"
@@ -230,6 +238,7 @@ declare module "@elegant-router/types" {
     | "consumptionanalysis"
     | "cost"
     | "costmanagement"
+    | "dashboard"
     | "energy"
     | "energy-analysis"
     | "energy-indicators"
@@ -282,6 +291,8 @@ declare module "@elegant-router/types" {
     | "alarm_item"
     | "alarm_limit-type"
     | "analysis_consumption"
+    | "approval_flow-designer"
+    | "approval_workspace"
     | "base-data_coefficient"
     | "base-data_home"
     | "base-data_medium"
@@ -301,6 +312,7 @@ declare module "@elegant-router/types" {
     | "costmanagement_electricity"
     | "costmanagement_tactics"
     | "costmanagement_trend"
+    | "dashboard_custom"
     | "energy-analysis_comprehensive_daily"
     | "energy-analysis_comprehensive_monthly"
     | "energy-analysis_comprehensive_statistics"
@@ -343,9 +355,11 @@ declare module "@elegant-router/types" {
     | "manage_menu"
     | "manage_operation-record"
     | "manage_organization"
+    | "manage_password-change"
     | "manage_role"
     | "manage_route-menu-obsolete"
     | "manage_user-detail"
+    | "manage_user-lock"
     | "manage_user"
     | "peakvalley-analysis"
     | "peakvalley"

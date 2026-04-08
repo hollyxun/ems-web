@@ -98,3 +98,40 @@ export function ignoreAlert(alertId: string, remark?: string) {
     data: { alertId, remark }
   });
 }
+
+// ===== 自定义看板 API =====
+
+/** 保存看板配置 */
+export function fetchSaveDashboardConfig(data: any) {
+  return request({ url: '/dashboard/config/save', method: 'post', data });
+}
+
+/** 获取看板配置 */
+export function fetchGetDashboardConfig(params: { id?: number; code?: string; owner_type?: string; owner_id?: string }) {
+  return request({ url: '/dashboard/config/get', method: 'get', params });
+}
+
+/** 删除看板配置 */
+export function fetchDeleteDashboardConfig(data: { id: number }) {
+  return request({ url: '/dashboard/config/delete', method: 'delete', data });
+}
+
+/** 设为默认看板 */
+export function fetchSetDefaultDashboard(data: { id: number }) {
+  return request({ url: '/dashboard/config/set-default', method: 'post', data });
+}
+
+/** 看板列表 */
+export function fetchDashboardConfigList(params?: { page?: number; pageSize?: number; owner_type?: string }) {
+  return request({ url: '/dashboard/config/list', method: 'get', params });
+}
+
+/** 组件市场 */
+export function fetchDashboardComponents() {
+  return request({ url: '/dashboard/components', method: 'get' });
+}
+
+/** 看板数据代理 */
+export function fetchDashboardData(params: { component_type: string; data_source: string }) {
+  return request({ url: '/dashboard/data', method: 'get', params });
+}

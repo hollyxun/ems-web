@@ -23,6 +23,32 @@ declare namespace Api {
     }
 
     /**
+     * 电价时间段创建参数
+     */
+    interface PriceDateCreateParams {
+      /** 开始日期 */
+      beginDate: string;
+      /** 结束日期 */
+      endDate: string;
+      /** 备注 */
+      remark?: string;
+    }
+
+    /**
+     * 电价时间段更新参数
+     */
+    interface PriceDateUpdateParams {
+      /** 主键ID */
+      id: number;
+      /** 开始日期 */
+      beginDate: string;
+      /** 结束日期 */
+      endDate: string;
+      /** 备注 */
+      remark?: string;
+    }
+
+    /**
      * 电价明细
      */
     interface Price {

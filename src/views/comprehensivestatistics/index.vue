@@ -1,27 +1,29 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { fetchGetComprehensiveList as fetchComprehensiveList } from '@/service/api/comprehensive';
-import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'ComprehensiveStatistics' });
 
-const searchParams = ref({ page: 1, pageSize: 10 });
+const loading = ref(false);
+const data = ref<Api.Comprehensive.ComprehensiveListItem[]>([]);
 
-const { columns, columnChecks, data, getData, loading, mobilePagination } = useUIPaginatedTable({
-  paginationProps: { currentPage: 1, pageSize: 10 },
-  api: () => fetchComprehensiveList(searchParams.value),
-  transform: defaultTransform,
-  columns: () => [
-    { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
-    { prop: 'timeLabel', label: '时间', minWidth: 120 },
-    { prop: 'totalEnergy', label: '总能耗', width: 120 },
-    { prop: 'electricEnergy', label: '电', width: 100 },
-    { prop: 'waterEnergy', label: '水', width: 100 },
-    { prop: 'gasEnergy', label: '气', width: 100 },
-    { prop: 'heatEnergy', label: '热', width: 100 }
-  ]
-});
+async function getData() {
+  loading.value = true;
+  try {
+    const params: Api.Comprehensive.ComprehensiveQuery = {
+      timeType: 'MONTH'
+    };
+    const { data: result } = await fetchComprehensiveList(params);
+    if (result) {
+      data.value = result.dataList || [];
+    }
+  } catch (_error) {
+    console.error('获取数据失败:', _error);
+  } finally {
+    loading.value = false;
+  }
+}
 
 onMounted(() => getData());
 </script>
@@ -32,21 +34,14 @@ onMounted(() => getData());
       <template #header>
         <div class="flex items-center justify-between">
           <p>综合统计</p>
-          <TableHeaderOperation v-model:columns="columnChecks" :loading="loading" @refresh="getData" />
+          <ElButton type="primary" @click="getData">刷新</ElButton>
         </div>
       </template>
-      <ElTable v-loading="loading" height="100%" border :data="data" row-key="timeLabel">
-        <ElTableColumn v-for="col in columns" :key="col.prop" v-bind="col" />
+      <ElTable v-loading="loading" height="100%" border :data="data" row-key="currentTime">
+        <ElTableColumn type="index" :label="$t('common.index')" width="64" />
+        <ElTableColumn prop="currentTime" label="时间" min-width="120" />
+        <ElTableColumn prop="currentValue" label="总能耗(tce)" min-width="120" />
       </ElTable>
-      <div class="mt-20px flex justify-end">
-        <ElPagination
-          v-if="mobilePagination.total"
-          layout="total,prev,pager,next,sizes"
-          v-bind="mobilePagination"
-          @current-change="mobilePagination['current-change']"
-          @size-change="mobilePagination['size-change']"
-        />
-      </div>
     </ElCard>
   </div>
 </template>

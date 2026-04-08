@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import {
   fetchDeleteSpikesAndValleys,
   fetchSpikesAndValleysList,
@@ -19,7 +20,10 @@ const searchParams = ref({
   type: undefined as string | undefined
 });
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Common.PageResult<Api.SpikesAndValleys.Scheme>>,
+  Api.SpikesAndValleys.Scheme
+>({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchSpikesAndValleysList(searchParams.value),
   transform: defaultTransform,
@@ -30,20 +34,20 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       prop: 'type',
       label: '方案类型',
       minWidth: 100,
-      formatter: row => {
+      formatter: (row: Api.SpikesAndValleys.Scheme) => {
         const typeItem = schemeTypeOptions.find(t => t.value === row.type);
         return typeItem ? <ElTag>{typeItem.label}</ElTag> : row.type;
       }
     },
     { prop: 'executeTime', label: '执行时间', minWidth: 120 },
     { prop: 'remark', label: '备注', minWidth: 150 },
-    { prop: 'createdAt', label: $t('common.createTime'), minWidth: 160 },
+    { prop: 'createdAt', label: '创建时间', minWidth: 160 },
     {
       prop: 'operate',
       label: $t('common.operate'),
       align: 'center',
       width: 160,
-      formatter: row => (
+      formatter: (row: Api.SpikesAndValleys.Scheme) => (
         <div class="flex-center">
           <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
             {$t('common.edit')}
@@ -99,7 +103,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import {
   fetchBatchDeleteProductOutput,
   fetchDeleteProductOutput,
@@ -26,7 +27,10 @@ const dataTypes = ['产量', '仪表', '指标'];
 
 const selectedIds = ref<number[]>([]);
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Common.PageResult<Api.ProductOutput.Item>>,
+  Api.ProductOutput.Item
+>({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchProductOutputList(searchParams.value),
   transform: defaultTransform,
@@ -47,7 +51,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 160,
-      formatter: row => {
+      formatter: (row: Api.ProductOutput.Item) => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
@@ -55,9 +59,13 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               {$t('common.edit')}
             </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">
-                {$t('common.delete')}
-              </ElButton>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
             </ElPopconfirm>
           </div>
         );
@@ -115,7 +123,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

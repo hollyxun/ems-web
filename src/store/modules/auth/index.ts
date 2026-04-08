@@ -1,8 +1,9 @@
 import { computed, reactive, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { defineStore } from 'pinia';
+import type { AxiosError } from 'axios';
 import { useLoading } from '@sa/hooks';
-import { fetchGetUserButtons, fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { fetchGetPasswordStatus, fetchGetUserButtons, fetchGetUserInfo, fetchLogin } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
 import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
@@ -13,12 +14,22 @@ import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const route = useRoute();
+  const router = useRouter();
   const routeStore = useRouteStore();
   const tabStore = useTabStore();
   const { toLogin, redirectFromLogin } = useRouterPush(false);
   const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
   const token = ref(getToken());
+
+  // 密码状态
+  const passwordStatus = ref<Api.Auth.PasswordStatus | null>(null);
+  const passwordExpired = computed(() => passwordStatus.value?.expired ?? false);
+  const passwordWarning = computed(() => passwordStatus.value?.warning ?? false);
+
+  // 登录错误状态
+  const loginErrorCode = ref<number | null>(null);
+  const loginErrorData = ref<Record<string, unknown> | null>(null);
 
   /** Check if debug mode is enabled */
   const isDebugMode = computed(() => {
@@ -119,6 +130,80 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   }
 
   /**
+   * Handle password expired scenario
+   * Redirect to password change page with force mode
+   */
+  function handlePasswordExpired() {
+    window.$notification?.warning({
+      title: '密码已过期',
+      message: '您的密码已过期，请修改后继续使用系统',
+      duration: 5000
+    });
+    router.push({ name: 'manage_password-change', query: { force: 'true' } });
+    endLoading();
+  }
+
+  /**
+   * Show password expiration warning notification
+   */
+  function showPasswordExpirationWarning() {
+    if (passwordWarning.value && !passwordExpired.value) {
+      window.$notification?.warning({
+        title: '密码即将过期',
+        message: `您的密码将在 ${passwordStatus.value?.daysRemaining ?? 0} 天后过期，建议尽快修改`,
+        duration: 8000
+      });
+    }
+  }
+
+  /**
+   * Handle successful login
+   */
+  async function handleLoginSuccess(redirect: boolean) {
+    await checkPasswordStatus();
+
+    // If password expired, redirect to password change page
+    if (passwordExpired.value) {
+      handlePasswordExpired();
+      return { handled: true, result: null };
+    }
+
+    // Check if the tab needs to be cleared
+    const isClear = checkTabClear();
+    const needRedirect = isClear ? false : redirect;
+    await redirectFromLogin(needRedirect);
+
+    // Show password warning if within warning period
+    showPasswordExpirationWarning();
+
+    window.$notification?.success({
+      title: $t('page.login.common.loginSuccess'),
+      message: $t('page.login.common.welcomeBack', { userName: userInfo.userName }),
+      duration: 4500
+    });
+    endLoading();
+    return { handled: true, result: null };
+  }
+
+  /**
+   * Extract error info from axios error response
+   */
+  function extractLoginErrorInfo(error: AxiosError<unknown> | null): {
+    code: number;
+    message: string;
+    data?: Record<string, unknown>;
+  } {
+    const responseData = error?.response?.data as
+      | { code?: number; msg?: string; data?: Record<string, unknown> }
+      | undefined;
+    return {
+      code: responseData?.code ?? 500,
+      message: responseData?.msg || error?.message || '登录失败',
+      data: responseData?.data
+    };
+  }
+
+  /**
    * Login
    *
    * @param userName User name
@@ -126,37 +211,61 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
    * @param captcha Captcha code
    * @param captchaId Captcha ID
    * @param [redirect=true] Whether to redirect after login. Default is `true`
+   * @returns Error code and data if login failed, null if success
    */
-  async function login(userName: string, password: string, captcha?: string, captchaId?: string, redirect = true) {
+  async function login(
+    userName: string,
+    password: string,
+    captcha?: string,
+    captchaId?: string,
+    redirect = true
+  ): Promise<{ code: number; message: string; data?: Record<string, unknown> } | null> {
     startLoading();
+    loginErrorCode.value = null;
+    loginErrorData.value = null;
 
     const { data: loginToken, error } = await fetchLogin(userName, password, captcha, captchaId);
 
+    // Login success
     if (!error) {
       const pass = await loginByToken(loginToken);
-
       if (pass) {
-        // Check if the tab needs to be cleared
-        const isClear = checkTabClear();
-        let needRedirect = redirect;
-
-        if (isClear) {
-          // If the tab needs to be cleared,it means we don't need to redirect.
-          needRedirect = false;
-        }
-        await redirectFromLogin(needRedirect);
-
-        window.$notification?.success({
-          title: $t('page.login.common.loginSuccess'),
-          message: $t('page.login.common.welcomeBack', { userName: userInfo.userName }),
-          duration: 4500
-        });
+        const { result } = await handleLoginSuccess(redirect);
+        return result;
       }
-    } else {
-      resetStore();
     }
 
+    // Login failed - extract error code from response
+    const errorInfo = extractLoginErrorInfo(error as AxiosError<unknown> | null);
+
+    // Store error info
+    loginErrorCode.value = errorInfo.code;
+    loginErrorData.value = errorInfo.data ?? null;
+
+    resetStore();
     endLoading();
+    return { code: errorInfo.code, message: errorInfo.message, data: errorInfo.data };
+  }
+
+  /**
+   * Logout user
+   */
+  async function logout() {
+    await resetStore();
+  }
+
+  /**
+   * Check password status after login
+   */
+  async function checkPasswordStatus() {
+    try {
+      const { data, error } = await fetchGetPasswordStatus();
+      if (!error && data) {
+        passwordStatus.value = data;
+      }
+    } catch {
+      // Silently ignore password status check errors
+    }
   }
 
   async function loginByToken(loginToken: Api.Auth.LoginToken) {
@@ -278,10 +387,17 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     isLogin,
     loginLoading,
     isDebugMode,
+    passwordStatus,
+    passwordExpired,
+    passwordWarning,
+    loginErrorCode,
+    loginErrorData,
     resetStore,
+    logout,
     login,
     initUserInfo,
     initDebugUser,
-    fetchButtonPermissions
+    fetchButtonPermissions,
+    checkPasswordStatus
   };
 });

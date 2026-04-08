@@ -108,18 +108,18 @@ watch(visible, val => {
       </ElFormItem>
       <ElFormItem label="标准单位">
         <ElRadioGroup v-model="formData.isStandard">
-          <ElRadio :label="true">是</ElRadio>
-          <ElRadio :label="false">否</ElRadio>
+          <ElRadio :value="true">是</ElRadio>
+          <ElRadio :value="false">否</ElRadio>
         </ElRadioGroup>
       </ElFormItem>
       <ElFormItem label="状态">
         <ElRadioGroup v-model="formData.status">
-          <ElRadio :label="1">启用</ElRadio>
-          <ElRadio :label="2">停用</ElRadio>
+          <ElRadio :value="1">启用</ElRadio>
+          <ElRadio :value="2">停用</ElRadio>
         </ElRadioGroup>
       </ElFormItem>
       <ElFormItem label="备注">
-        <ElInput v-model="formData.remark" type="textarea" rows="3" placeholder="请输入备注" />
+        <ElInput v-model="formData.remark" type="textarea" :rows="3" placeholder="请输入备注" />
       </ElFormItem>
     </ElForm>
     <template #footer>

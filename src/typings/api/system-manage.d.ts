@@ -190,6 +190,10 @@ declare namespace Api {
       desc: string;
       /** menu id */
       menuId: number;
+      /** button label */
+      label?: string;
+      /** button title */
+      title?: string;
     };
 
     /**
@@ -240,6 +244,8 @@ declare namespace Api {
       status: number;
       /** children menus */
       children?: Menu[];
+      /** buttons on this menu */
+      buttons?: MenuButton[];
     };
 
     /** menu list response */

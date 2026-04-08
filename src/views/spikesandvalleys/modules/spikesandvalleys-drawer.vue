@@ -2,7 +2,6 @@
 import { computed, ref, watch } from 'vue';
 import { ElButton, ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
-import type { SpikesAndValleys } from '@/service/api/spikesandvalleys';
 import {
   fetchCreateSpikesAndValleys,
   fetchSpikesAndValleysById,
@@ -40,14 +39,14 @@ const formRef = ref<FormInstance>();
 const loading = ref(false);
 
 // 默认时段明细项
-const defaultItem = (): SpikesAndValleys.ItemCreate => ({
+const defaultItem = (): Api.SpikesAndValleys.ItemCreate => ({
   time: '1',
   electrovalency: 0,
   startTime: '',
   endTime: ''
 });
 
-const formData = ref<SpikesAndValleys.CreateParams>({
+const formData = ref<Api.SpikesAndValleys.CreateParams>({
   schemeName: '',
   executeTime: '',
   type: '1',

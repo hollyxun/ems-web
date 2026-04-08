@@ -79,7 +79,7 @@ onMounted(() => {
         <ElTreeSelect
           v-model="model.organizationId"
           :data="organizationTree"
-          :props="{ label: 'name', value: 'id' }"
+          :props="{ label: 'name', value: 'id' } as any"
           placeholder="请选择组织"
           clearable
           check-strictly

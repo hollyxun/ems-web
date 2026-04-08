@@ -79,12 +79,13 @@ function handleCompare() {
   }
 }
 
-function getVersionColor(version: Api.Scheduling.RuleVersionResponse) {
-  if (version.isActive) return 'primary';
+function getVersionColor(version: Api.Scheduling.RuleVersionResponse): string {
+  if (version.isActive) return '#409eff';
+  if (!version.createdAt) return '#909399';
   const daysSinceCreated = Math.floor((Date.now() - new Date(version.createdAt).getTime()) / (1000 * 60 * 60 * 24));
-  if (daysSinceCreated < 7) return 'success';
-  if (daysSinceCreated < 30) return 'warning';
-  return 'info';
+  if (daysSinceCreated < 7) return '#67c23a';
+  if (daysSinceCreated < 30) return '#e6a23c';
+  return '#909399';
 }
 </script>
 

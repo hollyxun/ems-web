@@ -16,7 +16,6 @@ import {
   ElTableColumn
 } from 'element-plus';
 import { fetchEnergyCostTrendDetail, fetchEnergyCostTrendList } from '@/service/api/statistical';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'StatisticalCost' });
 
@@ -45,7 +44,7 @@ const queryParams = ref<Api.Statistical.CostTrend.CostTrendParams>({
 });
 
 // 查询日期
-const queryDate = ref<Date>(new Date());
+const queryDate = ref<string>(new Date().toISOString().split('T')[0]);
 
 // 加载状态
 const loading = ref(false);
@@ -57,14 +56,16 @@ const dataList = ref<Api.Statistical.CostTrend.CostTrendItem[]>([]);
 const total = ref(0);
 
 // 格式化日期为时间编码
-function formatDateCode(date: Date, timeType: string): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
+function formatDateCode(dateStr: string, timeType: string): string {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  const year = parts[0];
+  const month = parts[1] || '01';
+  const day = parts[2] || '01';
 
   switch (timeType) {
     case 'YEAR':
-      return String(year);
+      return year;
     case 'MONTH':
       return `${year}-${month}`;
     default:
@@ -80,8 +81,8 @@ const summary = computed(() => {
   const avgCost = totalCost / dataList.value.length;
 
   return {
-    totalCost: totalCost.toFixed(2),
-    avgCost: avgCost.toFixed(2),
+    totalCost: Number(totalCost.toFixed(2)),
+    avgCost: Number(avgCost.toFixed(2)),
     itemCount: dataList.value.length
   };
 });
@@ -90,12 +91,12 @@ const summary = computed(() => {
 async function loadData() {
   loading.value = true;
   try {
-    const result = await fetchEnergyCostTrendList({
+    const { data: result } = await fetchEnergyCostTrendList({
       ...queryParams.value,
       timeCode: formatDateCode(queryDate.value, queryParams.value.timeType || 'DAY')
     });
-    dataList.value = result.list || [];
-    total.value = result.total || 0;
+    dataList.value = result?.list || [];
+    total.value = result?.total || 0;
   } catch {
     dataList.value = [];
     total.value = 0;

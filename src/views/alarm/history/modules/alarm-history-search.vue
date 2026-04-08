@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { Api } from '@/service/api/alarm';
-
 defineOptions({ name: 'AlarmHistorySearch' });
 
 interface Emits {

@@ -41,15 +41,15 @@ function formatRankChange(change: number) {
 }
 
 function handleRowClick(row: Api.Energy.Ranking.TeamRankingItem) {
-  emit('row-click', row);
+  emit('rowClick', row);
 }
 
 function handleTrendClick(row: Api.Energy.Ranking.TeamRankingItem) {
-  emit('trend-click', row);
+  emit('trendClick', row);
 }
 
 function handleSortChange({ prop, order }: { prop: string; order: string }) {
-  emit('sort-change', prop, order as 'ascending' | 'descending');
+  emit('sortChange', prop, order as 'ascending' | 'descending');
 }
 </script>
 

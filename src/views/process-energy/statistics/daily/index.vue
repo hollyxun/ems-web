@@ -7,6 +7,15 @@ import { fetchDailyProcessEnergyChart, fetchDailyProcessEnergyList } from '@/ser
 
 defineOptions({ name: 'DailyProcessEnergy' });
 
+interface TableColumn {
+  prop: string;
+  label: string;
+  width: number;
+  fixed?: 'left' | 'right';
+  align?: 'left' | 'center' | 'right';
+  formatter?: (row: Api.ProcessEnergy.DailyList) => string;
+}
+
 const loading = ref(false);
 const chartLoading = ref(false);
 const tableData = ref<Api.ProcessEnergy.DailyList[]>([]);
@@ -19,20 +28,27 @@ const energyType = ref('');
 let chartInstance: echarts.ECharts | null = null;
 const chartRef = ref<HTMLElement | null>(null);
 
+// 格式化数值
+const formatValue = (value: unknown) => {
+  if (value === undefined || value === null) return '-';
+  if (typeof value === 'number') return value.toFixed(2);
+  return '-';
+};
+
 // 表格列定义
-const tableColumns = computed(() => {
-  const baseColumns = [
-    { prop: 'indexName', label: '指标名称', width: 150, fixed: 'left' as const },
+const tableColumns = computed<TableColumn[]>(() => {
+  const baseColumns: TableColumn[] = [
+    { prop: 'indexName', label: '指标名称', width: 150, fixed: 'left' },
     { prop: 'unitId', label: '单位', width: 80 }
   ];
 
-  const hourColumns = [];
-  for (let i = 0; i < 24; i++) {
+  const hourColumns: TableColumn[] = [];
+  for (let i = 0; i < 24; i += 1) {
     hourColumns.push({
       prop: `value${i}`,
       label: `${i}时`,
       width: 80,
-      align: 'center' as const,
+      align: 'center',
       formatter: (row: Api.ProcessEnergy.DailyList) =>
         formatValue(row[`value${i}` as keyof Api.ProcessEnergy.DailyList])
     });
@@ -41,23 +57,20 @@ const tableColumns = computed(() => {
   return [...baseColumns, ...hourColumns];
 });
 
-// 格式化数值
-const formatValue = (value: number | undefined) => {
-  if (value === undefined || value === null) return '-';
-  return value.toFixed(2);
-};
-
 // 加载表格数据
 const loadTableData = async () => {
   loading.value = true;
   try {
     const params: Api.ProcessEnergy.DailyQuery = {
-      indexCode: 'default', // TODO: 从模型节点选择器获取
+      indexCode: 'default',
       dataTime: selectedDate.value,
       timeType: 'hour',
       energyType: energyType.value || undefined
     };
-    tableData.value = await fetchDailyProcessEnergyList(params);
+    const { data } = await fetchDailyProcessEnergyList(params);
+    if (data) {
+      tableData.value = data;
+    }
 
     // 默认选中第一个指标显示图表
     if (tableData.value.length > 0 && !selectedIndexId.value) {
@@ -82,7 +95,10 @@ const loadChartData = async () => {
       timeType: 'hour',
       energyType: energyType.value || undefined
     };
-    chartData.value = await fetchDailyProcessEnergyChart(params);
+    const { data } = await fetchDailyProcessEnergyChart(params);
+    if (data) {
+      chartData.value = data;
+    }
     updateChart();
   } catch {
     ElMessage.error('获取图表数据失败');

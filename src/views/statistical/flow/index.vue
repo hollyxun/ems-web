@@ -13,7 +13,6 @@ import {
   ElStatistic
 } from 'element-plus';
 import { fetchFlowCharts } from '@/service/api/statistical';
-import type { Api } from '@/typings/api';
 
 defineOptions({ name: 'StatisticalFlow' });
 
@@ -41,7 +40,7 @@ const queryParams = ref<Api.Statistical.FlowCharts.FlowChartsParams>({
 });
 
 // 查询日期
-const queryDate = ref<Date>(new Date());
+const queryDate = ref<string>(new Date().toISOString().split('T')[0]);
 
 // 加载状态
 const loading = ref(false);
@@ -50,22 +49,19 @@ const loading = ref(false);
 const flowData = ref<Api.Statistical.FlowCharts.FlowChartsResponse | null>(null);
 
 // 格式化日期
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+function formatDate(dateStr: string): string {
+  return dateStr;
 }
 
 // 加载数据
 async function loadData() {
   loading.value = true;
   try {
-    const result = await fetchFlowCharts({
+    const { data: result } = await fetchFlowCharts({
       ...queryParams.value,
-      queryTime: formatDate(queryDate.value)
+      queryTime: queryDate.value
     });
-    flowData.value = result;
+    flowData.value = result || null;
   } catch {
     flowData.value = null;
   } finally {
@@ -88,7 +84,7 @@ function transformToSankey(data: Api.Statistical.FlowCharts.FlowChartsResponse) 
   const nodeSet = new Set<string>();
   const links: { source: string; target: string; value: number }[] = [];
 
-  data.itemVOList.forEach(item => {
+  data.itemVOList.forEach((item: Api.Statistical.FlowCharts.FlowChartsItem) => {
     nodeSet.add(item.source);
     nodeSet.add(item.target);
     links.push({

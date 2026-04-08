@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElTag } from 'element-plus';
-import { fetchAlarmHistoryList, fetchBatchHandleAlarm, fetchHandleAlarm } from '@/service/api/alarm';
+import { fetchAlarmHistoryList, fetchHandleAlarm } from '@/service/api/alarm';
 import { defaultTransform, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import AlarmHistorySearch from './modules/alarm-history-search.vue';
@@ -34,8 +34,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     return defaultTransform(response);
   },
   onPaginationParamsChange: params => {
-    searchParams.value.page = params.currentPage;
-    searchParams.value.pageSize = params.pageSize;
+    searchParams.value.page = params.currentPage ?? 1;
+    searchParams.value.pageSize = params.pageSize ?? 10;
   },
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
@@ -89,21 +89,23 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
           <ElButton type="primary" plain size="small" onClick={() => handleOpenHandleDialog(row)}>
             处理
           </ElButton>
-        ) : null
+        ) : (
+          <span />
+        )
     }
   ]
 });
 
 const handleDialogVisible = ref(false);
-const selectedRow = ref<Api.AlarmHistory.Item | null>(null);
+const selectedRow = ref<Api.AlarmHistory.AlarmHistoryItem | null>(null);
 const checkedRowKeys = ref<number[]>([]);
 
-function handleOpenHandleDialog(row: Api.AlarmHistory.Item) {
+function handleOpenHandleDialog(row: Api.AlarmHistory.AlarmHistoryItem) {
   selectedRow.value = row;
   handleDialogVisible.value = true;
 }
 
-async function handleConfirm(id: number, handleStatus: string, handleRemark: string) {
+async function handleConfirm(id: string, handleStatus: string, handleRemark: string) {
   const { error } = await fetchHandleAlarm({ id, handleStatus, handleRemark });
   if (!error) {
     ElMessage.success('处理成功');

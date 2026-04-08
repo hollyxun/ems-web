@@ -39,7 +39,7 @@ const columns = computed(() => [
     width: 120,
     render: (row: Api.Scheduling.RuleTemplate) => {
       const type = ruleTypeOptions.find(t => t.value === row.ruleType);
-      const colorMap: Record<number, string> = {
+      const colorMap: Record<number, 'primary' | 'success' | 'warning' | 'info' | 'danger'> = {
         1: 'primary',
         2: 'success',
         3: 'warning'
@@ -198,10 +198,18 @@ onMounted(() => {
       </template>
 
       <ElTable v-loading="loading" :data="tableData" stripe>
-        <ElTableColumn v-for="col in columns" :key="col.key" v-bind="col">
+        <ElTableColumn
+          v-for="(col, index) in columns"
+          :key="index"
+          :prop="col.key"
+          :label="col.title"
+          :align="col.align"
+          :width="col.width"
+          :min-width="col.minWidth"
+        >
           <template #default="{ row }">
             <component :is="col.render?.(row)" v-if="col.render" />
-            <span v-else>{{ row[col.key] || '-' }}</span>
+            <span v-else>{{ row[col.key as keyof typeof row] || '-' }}</span>
           </template>
         </ElTableColumn>
       </ElTable>

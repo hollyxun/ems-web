@@ -9,6 +9,7 @@ declare namespace Api {
       energyType: number; // 0-电 1-水 2-天然气 3-蒸汽
       content: string;
       createdAt: string;
+      files?: File[];
     }
 
     interface File {
@@ -27,10 +28,7 @@ declare namespace Api {
       energyType?: number;
     }
 
-    interface ListResponse {
-      list: Item[];
-      total: number;
-    }
+    type ListResponse = Api.Common.PageResult<Item>;
 
     interface CreateParams {
       title: string;

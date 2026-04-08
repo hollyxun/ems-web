@@ -32,7 +32,8 @@ const loadTableData = async () => {
       timeType: 'month',
       energyType: energyType.value || undefined
     };
-    tableData.value = await fetchYearProcessEnergyList(params);
+    const { data: res } = await fetchYearProcessEnergyList(params);
+    tableData.value = res || [];
 
     if (tableData.value.length > 0 && !selectedIndexId.value) {
       selectedIndexId.value = tableData.value[0].indexId;
@@ -56,7 +57,8 @@ const loadChartData = async () => {
       timeType: 'month',
       energyType: energyType.value || undefined
     };
-    chartData.value = await fetchYearProcessEnergyChart(params);
+    const { data: res } = await fetchYearProcessEnergyChart(params);
+    chartData.value = res || [];
     updateChart();
   } catch {
     ElMessage.error('获取图表数据失败');

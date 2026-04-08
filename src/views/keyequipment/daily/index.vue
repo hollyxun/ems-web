@@ -8,24 +8,23 @@ import {
   fetchDailyKeyEquipmentList,
   fetchPointFacility
 } from '@/service/api/keyequipment';
-import type { KeyEquipment } from '@/service/api/keyequipment';
 import { $t } from '@/locales';
 
 defineOptions({ name: 'KeyEquipmentDaily' });
 
 // 设备列表
-const deviceList = ref<KeyEquipment.Device[]>([]);
+const deviceList = ref<Api.KeyEquipment.Device[]>([]);
 const selectedDevice = ref<string>();
 
 // 时间选择
 const selectedDate = ref(dayjs().format('YYYY-MM-DD'));
 
 // 数据列表
-const dataList = ref<KeyEquipment.DailyData[]>([]);
+const dataList = ref<Api.KeyEquipment.DailyData[]>([]);
 const loading = ref(false);
 
 // 图表数据
-const chartData = ref<KeyEquipment.DailyData[]>([]);
+const chartData = ref<Api.KeyEquipment.DailyData[]>([]);
 const selectedRowIndex = ref<number>();
 
 // 图表
@@ -114,7 +113,7 @@ function updateChartData() {
   if (!row) return;
 
   const values = Array.from({ length: 24 }, (_, i) => {
-    const key = `value${i}` as keyof KeyEquipment.DailyData;
+    const key = `value${i}` as keyof Api.KeyEquipment.DailyData;
     return (row[key] as number) || 0;
   });
 
@@ -193,7 +192,7 @@ onMounted(() => {
           :width="col.width"
         >
           <template #default="{ row }">
-            {{ (row[col.prop as keyof KeyEquipment.DailyData] as number)?.toFixed(2) || '-' }}
+            {{ (row[col.prop as keyof Api.KeyEquipment.DailyData] as number)?.toFixed(2) || '-' }}
           </template>
         </ElTableColumn>
       </ElTable>

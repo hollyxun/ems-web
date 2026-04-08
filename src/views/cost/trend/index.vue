@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue';
 import * as echarts from 'echarts';
 import { fetchCostTrend } from '@/service/api/costmanagement';
-import type { CostManagement } from '@/service/api/costmanagement';
 
 defineOptions({ name: 'CostTrendAnalysis' });
 
@@ -13,7 +12,7 @@ const queryParams = ref({
   dataTime: new Date().toISOString().split('T')[0]
 });
 
-const trendData = ref<CostManagement.TrendData[]>([]);
+const trendData = ref<Api.CostManagement.CostTrendData[]>([]);
 
 async function getData() {
   loading.value = true;

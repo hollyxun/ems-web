@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { ElButton, ElMessage, ElTag } from 'element-plus';
 import {
   fetchActivateVersion,
@@ -11,6 +12,7 @@ import CreateVersionDrawer from './modules/create-version-drawer.vue';
 
 defineOptions({ name: 'RuleVersionPage' });
 
+const router = useRouter();
 const loading = ref(false);
 const tableData = ref<Api.Scheduling.RuleVersionResponse[]>([]);
 const currentRuleId = ref<number>(0);
@@ -153,7 +155,7 @@ defineExpose({ handleRuleChange });
 
 onMounted(() => {
   // 从路由参数获取规则ID
-  const route = window.$router?.currentRoute?.value;
+  const route = router.currentRoute.value;
   if (route?.query?.ruleId) {
     const ruleId = Number(route.query.ruleId);
     const ruleName = String(route.query.ruleName || '');
@@ -178,10 +180,18 @@ onMounted(() => {
     <!-- 表格区域 -->
     <ElCard class="flex-1 card-wrapper">
       <ElTable v-loading="loading" :data="tableData" stripe>
-        <ElTableColumn v-for="col in columns" :key="col.key" v-bind="col">
+        <ElTableColumn
+          v-for="(col, index) in columns"
+          :key="index"
+          :prop="col.key"
+          :label="col.title"
+          :align="col.align"
+          :width="col.width"
+          :min-width="col.minWidth"
+        >
           <template #default="{ row }">
             <component :is="col.render?.(row)" v-if="col.render" />
-            <span v-else>{{ row[col.key] || '-' }}</span>
+            <span v-else>{{ row[col.key as keyof typeof row] || '-' }}</span>
           </template>
         </ElTableColumn>
       </ElTable>

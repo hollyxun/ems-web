@@ -24,7 +24,9 @@ const timeTypes = [
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchElectricityCostList(searchParams.value),
-  transform: defaultTransform,
+  transform: response => {
+    return defaultTransform(response);
+  },
   columns: () => [
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
     { prop: 'dataTime', label: '数据时间', minWidth: 120 },
@@ -62,16 +64,16 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
 
 const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
   data,
-  'id',
+  'id' as const,
   getData
 );
 
-async function handleDelete(id: number) {
+async function handleDelete(id: string) {
   const { error } = await fetchDeleteElectricityCost(id);
   if (!error) onDeleted();
 }
 
-function edit(id: number) {
+function edit(id: string) {
   handleEdit(id);
 }
 
@@ -88,7 +90,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

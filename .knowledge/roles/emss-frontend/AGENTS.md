@@ -195,6 +195,21 @@ pnpm lint
 - 业务组件放 `components/custom/`
 - 高级组件放 `components/advanced/`
 
+### 【第五步】验证（CRITICAL）
+
+**完成开发后必须执行检查：**
+
+```bash
+# 1. TypeScript 类型检查
+npx tsc --noEmit
+
+# 2. ESLint 检查
+pnpm lint
+
+# 3. 构建验证
+pnpm build
+```
+
 ---
 
 ## 知识索引

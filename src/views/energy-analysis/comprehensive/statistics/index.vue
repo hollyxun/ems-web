@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
@@ -109,6 +109,62 @@ function initCharts() {
   }
 }
 
+// 更新同比环比表格数据
+function updateComparisonTable(yoyData: Api.Comprehensive.YoYResponse | undefined) {
+  if (!yoyData) return;
+
+  // 更新同比数据
+  if (yoyData.tongbi) {
+    comprehensiveTable.value[0].icon = yoyData.tongbi.ratio || 0;
+    comprehensiveTable.value[0].data[0].label = yoyData.tongbi.currentTime || '';
+    comprehensiveTable.value[0].data[0].value = yoyData.tongbi.currentValue || 0;
+    comprehensiveTable.value[0].data[1].label = yoyData.tongbi.compareTime || '';
+    comprehensiveTable.value[0].data[1].value = yoyData.tongbi.compareValue || 0;
+  }
+
+  // 更新环比数据
+  if (yoyData.huanbi) {
+    comprehensiveTable.value[1].icon = yoyData.huanbi.ratio || 0;
+    comprehensiveTable.value[1].data[0].label = yoyData.huanbi.currentTime || '';
+    comprehensiveTable.value[1].data[0].value = yoyData.huanbi.currentValue || 0;
+    comprehensiveTable.value[1].data[1].label = yoyData.huanbi.compareTime || '';
+    comprehensiveTable.value[1].data[1].value = yoyData.huanbi.compareValue || 0;
+  }
+}
+
+// 获取请求参数
+function getRequestParams() {
+  return {
+    nodeId: queryParams.value.nodeId,
+    timeType: queryParams.value.timeType,
+    dataTime: queryParams.value.dataTime
+  };
+}
+
+// 获取综合能耗数据
+async function fetchComprehensiveData() {
+  const { data } = await fetchGetComprehensiveList(getRequestParams());
+  if (!data) return;
+
+  updateChart1(data.chartDataList || []);
+  updateChart2(data.energyProportion || []);
+  comprehensiveList.value = data.dataList || [];
+}
+
+// 获取同比环比数据
+async function fetchYoYData() {
+  const { data } = await fetchGetYoY(getRequestParams());
+  updateComparisonTable(data ?? undefined);
+}
+
+// 获取能耗排名数据
+async function fetchRankingData() {
+  const { data } = await fetchGetEnergyRanking(getRequestParams());
+  if (data) {
+    updateChart3(data);
+  }
+}
+
 // 获取数据
 async function getList() {
   if (!queryParams.value.nodeId) {
@@ -120,60 +176,7 @@ async function getList() {
   initCharts();
 
   try {
-    // 获取综合能耗数据
-    const { data: comprehensiveData } = await fetchGetComprehensiveList({
-      nodeId: queryParams.value.nodeId,
-      timeType: queryParams.value.timeType,
-      dataTime: queryParams.value.dataTime
-    });
-
-    if (comprehensiveData) {
-      // 更新图表1 - 综合能耗趋势
-      updateChart1(comprehensiveData.chartDataList || []);
-
-      // 更新图表2 - 各介质能耗占比
-      updateChart2(comprehensiveData.energyProportion || []);
-
-      // 更新列表数据
-      comprehensiveList.value = comprehensiveData.dataList || [];
-    }
-
-    // 获取同比环比数据
-    const { data: yoyData } = await fetchGetYoY({
-      nodeId: queryParams.value.nodeId,
-      timeType: queryParams.value.timeType,
-      dataTime: queryParams.value.dataTime
-    });
-
-    if (yoyData) {
-      // 更新同比数据
-      if (yoyData.tongbi) {
-        comprehensiveTable.value[0].icon = yoyData.tongbi.ratio || 0;
-        comprehensiveTable.value[0].data[0].label = yoyData.tongbi.currentTime || '';
-        comprehensiveTable.value[0].data[0].value = yoyData.tongbi.currentValue || 0;
-        comprehensiveTable.value[0].data[1].label = yoyData.tongbi.compareTime || '';
-        comprehensiveTable.value[0].data[1].value = yoyData.tongbi.compareValue || 0;
-      }
-      // 更新环比数据
-      if (yoyData.huanbi) {
-        comprehensiveTable.value[1].icon = yoyData.huanbi.ratio || 0;
-        comprehensiveTable.value[1].data[0].label = yoyData.huanbi.currentTime || '';
-        comprehensiveTable.value[1].data[0].value = yoyData.huanbi.currentValue || 0;
-        comprehensiveTable.value[1].data[1].label = yoyData.huanbi.compareTime || '';
-        comprehensiveTable.value[1].data[1].value = yoyData.huanbi.compareValue || 0;
-      }
-    }
-
-    // 获取能耗排名数据
-    const { data: rankingData } = await fetchGetEnergyRanking({
-      nodeId: queryParams.value.nodeId,
-      timeType: queryParams.value.timeType,
-      dataTime: queryParams.value.dataTime
-    });
-
-    if (rankingData) {
-      updateChart3(rankingData);
-    }
+    await Promise.all([fetchComprehensiveData(), fetchYoYData(), fetchRankingData()]);
   } catch (error) {
     console.error('获取数据失败:', error);
     ElMessage.error('获取数据失败');

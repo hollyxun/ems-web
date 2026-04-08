@@ -39,7 +39,8 @@ const loadData = async () => {
       energyType: energyType.value,
       topN: topN.value
     };
-    reportData.value = await fetchRankingReportData(params);
+    const { data: res } = await fetchRankingReportData(params);
+    reportData.value = res || null;
   } catch {
     ElMessage.error('获取排名数据失败');
   } finally {

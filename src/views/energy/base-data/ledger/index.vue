@@ -155,7 +155,7 @@ onMounted(() => {
           />
         </ElFormItem>
         <ElFormItem>
-          <ElButton type="primary" @click="getDataByPage">
+          <ElButton type="primary" @click="() => getDataByPage()">
             <template #icon>
               <icon-ic-round-search />
             </template>

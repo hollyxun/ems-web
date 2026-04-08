@@ -121,5 +121,10 @@ declare namespace Api {
       /** ID数组 */
       ids: number[];
     }
+
+    /**
+     * 产品产量列表响应
+     */
+    type ListResponse = Api.Common.PageResult<Item>;
   }
 }

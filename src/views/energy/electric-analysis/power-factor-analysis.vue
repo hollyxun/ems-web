@@ -4,21 +4,20 @@ import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import * as ECharts from 'echarts';
 import { fetchElectricityMeterList, fetchPowerFactorAnalysis } from '@/service/api/electric-analysis';
-import type { PowerFactor } from '@/service/api/electric-analysis';
 
 // 查询参数
-const queryParams = ref({
+const queryParams = ref<Api.PowerFactor.Request>({
   nodeId: '',
   meterId: '',
   timeCode: dayjs().format('YYYY-MM-DD')
 });
 
 // 电表选项
-const meterOptions = ref<{ code: string; label: string }[]>([]);
+const meterOptions = ref<Api.ElectricLoad.MeterOption[]>([]);
 
 // 数据
 const loading = ref(false);
-const chartData = ref<PowerFactor.Response | null>(null);
+const chartData = ref<Api.PowerFactor.Response | null>(null);
 
 // 图表实例
 const chartRef = ref<HTMLElement | null>(null);
@@ -28,9 +27,9 @@ let chartInstance: ECharts.ECharts | null = null;
 const getMeterList = async () => {
   if (!queryParams.value.nodeId) return;
   try {
-    const res = await fetchElectricityMeterList(queryParams.value.nodeId);
-    meterOptions.value = res;
-    if (res.length > 0 && !queryParams.value.meterId) {
+    const { data: res } = await fetchElectricityMeterList(queryParams.value.nodeId);
+    meterOptions.value = res || [];
+    if (res && res.length > 0 && !queryParams.value.meterId) {
       queryParams.value.meterId = res[0].code;
     }
   } catch {
@@ -47,10 +46,10 @@ const fetchData = async () => {
 
   loading.value = true;
   try {
-    const res = await fetchPowerFactorAnalysis(queryParams.value);
-    chartData.value = res;
+    const { data: res } = await fetchPowerFactorAnalysis(queryParams.value);
+    chartData.value = res || null;
     updateChart();
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('查询失败');
   } finally {
     loading.value = false;
@@ -66,8 +65,8 @@ const updateChart = () => {
   }
 
   const data = chartData.value;
-  const xData = data.itemList.map(item => item.timeCodeChart);
-  const values = data.itemList.map(item => Number.parseFloat(item.value) || 0);
+  const xData = data.itemList.map((item: Api.PowerFactor.Item) => item.timeCodeChart);
+  const values = data.itemList.map((item: Api.PowerFactor.Item) => Number.parseFloat(item.value) || 0);
 
   const option: ECharts.EChartsOption = {
     title: {
@@ -124,7 +123,14 @@ const updateChart = () => {
 // 汇总数据
 const summaryData = computed(() => {
   if (!chartData.value) return null;
-  return chartData.value.detail;
+  const detail = chartData.value.detail;
+  return {
+    max: Number.parseFloat(detail.max) || 0,
+    maxTime: detail.maxTime,
+    min: Number.parseFloat(detail.min) || 0,
+    minTime: detail.minTime,
+    avg: Number.parseFloat(detail.avg) || 0
+  };
 });
 
 // 窗口大小变化

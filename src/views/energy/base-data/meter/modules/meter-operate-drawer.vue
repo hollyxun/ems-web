@@ -178,7 +178,7 @@ onMounted(() => {
         <ElTreeSelect
           v-model="formData.organizationId"
           :data="organizationTree"
-          :props="{ label: 'name', value: 'id' }"
+          :props="{ label: 'name', value: 'id' } as any"
           placeholder="请选择所属组织"
           check-strictly
           class="w-full"

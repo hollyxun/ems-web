@@ -20,7 +20,7 @@ const queryParams = ref({
 const loading = ref(false);
 
 // 数据
-const tableData = ref<Api.Comprehensive.MonthlyComprehensive>({
+const tableData = ref<Api.Comprehensive.MonthlyComprehensiveListResponse>({
   tablehead: [],
   tabledata: []
 });
@@ -53,7 +53,7 @@ async function getList() {
       chartData.value = chartResult;
       updateChart();
     }
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('获取数据失败');
   } finally {
     loading.value = false;
@@ -118,7 +118,7 @@ async function handleExport() {
       timeType: queryParams.value.timeType
     });
     ElMessage.success('导出成功');
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('导出失败');
   }
 }

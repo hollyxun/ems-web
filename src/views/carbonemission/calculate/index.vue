@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Bottom, Top } from '@element-plus/icons-vue';
 import * as echarts from 'echarts';
 import { fetchMiddleCarbonEmission, fetchUpCarbonEmission } from '@/service/api/carbonemission';
-import type { CarbonEmission } from '@/service/api/carbonemission';
 
 defineOptions({ name: 'CarbonEmissionCalculate' });
 
 const loading = ref(false);
-const queryParams = ref({
-  nodeId: 1 as number,
-  nodeName: '工厂',
-  timeType: 'MONTH' as 'DAY' | 'MONTH' | 'YEAR',
+const queryParams = ref<Api.CarbonEmission.QueryParams>({
+  nodeId: 1,
+  timeType: 'MONTH',
   dataTime: new Date().toISOString().split('T')[0]
 });
 
@@ -22,13 +20,13 @@ const timeTypes = [
 ];
 
 // 顶部汇总数据
-const upData = ref<CarbonEmission.Summary | null>(null);
+const upData = ref<Api.CarbonEmission.Summary | null>(null);
 // 排名数据
-const rankData = ref<CarbonEmission.Rank[]>([]);
+const rankData = ref<Api.CarbonEmission.Rank[]>([]);
 // 趋势数据
-const trendData = ref<CarbonEmission.Trend[]>([]);
+const trendData = ref<Api.CarbonEmission.Trend[]>([]);
 // 表格数据
-const tableData = ref<CarbonEmission.Trend[]>([]);
+const tableData = ref<Api.CarbonEmission.Trend[]>([]);
 
 // 图标配置
 const iconColors = ['#3371eb', '#f52528', '#ff6200', '#ffce0c', '#78e801'];
@@ -45,10 +43,7 @@ async function getData() {
     }
 
     // 获取趋势数据
-    const midRes = await fetchMiddleCarbonEmission({
-      ...queryParams.value,
-      emissionType: 'allType'
-    });
+    const midRes = await fetchMiddleCarbonEmission(queryParams.value);
     if (midRes.data) {
       trendData.value = midRes.data.data || [];
       tableData.value = midRes.data.data || [];
@@ -66,10 +61,10 @@ function renderChart() {
 
   const myChart = echarts.init(chartDom);
 
-  const xData = trendData.value.map(item => item.timeLabel);
-  const valueData = trendData.value.map(item => item.value);
-  const yoyData = trendData.value.map(item => item.yoy);
-  const qoqData = trendData.value.map(item => item.qoq);
+  const xData = trendData.value.map((item: Api.CarbonEmission.Trend) => item.timeLabel);
+  const valueData = trendData.value.map((item: Api.CarbonEmission.Trend) => item.value);
+  const yoyData = trendData.value.map((item: Api.CarbonEmission.Trend) => item.yoy);
+  const qoqData = trendData.value.map((item: Api.CarbonEmission.Trend) => item.qoq);
 
   myChart.setOption({
     color: ['#2979ff', '#19be6b', '#ff9900'],
@@ -195,12 +190,12 @@ onMounted(() => {
     </ElCard>
 
     <!-- 趋势图表 -->
-    <ElCard class="card-wrapper" :title="`${queryParams.nodeName}-碳排放量同环比(${queryParams.dataTime})`">
+    <ElCard class="card-wrapper" title="碳排放量同环比">
       <div id="carbonChart" class="h-400px w-full"></div>
     </ElCard>
 
     <!-- 表格 -->
-    <ElCard class="card-wrapper" :title="`${queryParams.nodeName}-碳排放量统计分析表(${queryParams.dataTime})`">
+    <ElCard class="card-wrapper" title="碳排放量统计分析表">
       <ElTable v-loading="loading" :data="tableData" border>
         <ElTableColumn prop="timeLabel" label="时间" align="center" />
         <ElTableColumn prop="value" label="碳排放量(tCO2e)" align="center">

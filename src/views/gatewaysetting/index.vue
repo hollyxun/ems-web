@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import {
   fetchBatchDeleteGatewaySetting,
   fetchDeleteGatewaySetting,
@@ -22,53 +23,65 @@ const searchParams = ref({
 
 const runStatusOptions = ['在线', '离线', '未知'];
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, selectedRowKeys } =
-  useUIPaginatedTable({
-    paginationProps: { currentPage: 1, pageSize: 10 },
-    api: () => fetchGatewaySettingList(searchParams.value),
-    transform: defaultTransform,
-    columns: () => [
-      { prop: 'selection', type: 'selection', width: 50 },
-      { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
-      { prop: 'gatewayNum', label: '网关编号', minWidth: 120 },
-      { prop: 'gatewayName', label: '网关名称', minWidth: 120 },
-      { prop: 'specsModel', label: '规格型号', minWidth: 100 },
-      { prop: 'installLocation', label: '安装位置', minWidth: 150 },
-      { prop: 'ipAdd', label: 'IP地址', minWidth: 120 },
-      {
-        prop: 'runStatus',
-        label: '运行状态',
-        minWidth: 80,
-        formatter: row => {
-          const statusMap: Record<string, string> = { 在线: 'success', 离线: 'danger', 未知: 'info' };
-          return <ElTag type={statusMap[row.runStatus] || 'info'}>{row.runStatus || '未知'}</ElTag>;
-        }
-      },
-      { prop: 'deviceNum', label: '计量器具数量', minWidth: 100 },
-      { prop: 'ptNum', label: '监测点数量', minWidth: 100 },
-      {
-        prop: 'operate',
-        label: $t('common.operate'),
-        align: 'center',
-        width: 160,
-        formatter: row => {
-          const handleConfirm = () => handleDelete(row.id);
-          return (
-            <div class="flex-center">
-              <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
-                {$t('common.edit')}
-              </ElButton>
-              <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-                <ElButton type="danger" plain size="small">
-                  {$t('common.delete')}
-                </ElButton>
-              </ElPopconfirm>
-            </div>
-          );
-        }
+const selectedRowKeys = ref<number[]>([]);
+
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Common.PageResult<Api.GatewaySetting.Item>>,
+  Api.GatewaySetting.Item
+>({
+  paginationProps: { currentPage: 1, pageSize: 10 },
+  api: () => fetchGatewaySettingList(searchParams.value),
+  transform: defaultTransform,
+  columns: () => [
+    { prop: 'selection', type: 'selection', width: 50 },
+    { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
+    { prop: 'gatewayNum', label: '网关编号', minWidth: 120 },
+    { prop: 'gatewayName', label: '网关名称', minWidth: 120 },
+    { prop: 'specsModel', label: '规格型号', minWidth: 100 },
+    { prop: 'installLocation', label: '安装位置', minWidth: 150 },
+    { prop: 'ipAdd', label: 'IP地址', minWidth: 120 },
+    {
+      prop: 'runStatus',
+      label: '运行状态',
+      minWidth: 80,
+      formatter: (row: Api.GatewaySetting.Item) => {
+        const statusMap: Record<string, 'success' | 'danger' | 'info'> = {
+          在线: 'success',
+          离线: 'danger',
+          未知: 'info'
+        };
+        return <ElTag type={statusMap[row.runStatus] || 'info'}>{row.runStatus || '未知'}</ElTag>;
       }
-    ]
-  });
+    },
+    { prop: 'deviceNum', label: '计量器具数量', minWidth: 100 },
+    { prop: 'ptNum', label: '监测点数量', minWidth: 100 },
+    {
+      prop: 'operate',
+      label: $t('common.operate'),
+      align: 'center',
+      width: 160,
+      formatter: (row: Api.GatewaySetting.Item) => {
+        const handleConfirm = () => handleDelete(row.id);
+        return (
+          <div class="flex-center">
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
+            </ElPopconfirm>
+          </div>
+        );
+      }
+    }
+  ]
+});
 
 const { drawerVisible, operateType, handleAdd, handleEdit, editingData, onDeleted } = useTableOperate(
   data,
@@ -123,7 +136,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

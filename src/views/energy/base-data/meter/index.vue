@@ -123,7 +123,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       formatter: row => (
         <div class="flex-center">
           {/* eslint-disable-next-line @typescript-eslint/no-use-before-define */}
-          <ElButton type="primary" plain size="small" onClick={() => handleEdit(row)}>
+          <ElButton type="primary" plain size="small" onClick={() => handleEdit(row.id)}>
             {$t('common.edit')}
           </ElButton>
           <ElButton type="success" plain size="small" onClick={() => handleViewQRCode(row)}>

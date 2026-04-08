@@ -91,6 +91,11 @@ declare namespace Api {
     }
 
     /**
+     * 方案列表响应
+     */
+    type ListResponse = Api.Common.PageResult<Scheme>;
+
+    /**
      * 时段创建项
      */
     interface ItemCreate {

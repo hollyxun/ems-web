@@ -31,10 +31,7 @@ declare namespace Api {
       timeType?: string;
     }
 
-    interface ElectricityCostListResponse {
-      list: ElectricityCost[];
-      total: number;
-    }
+    type ElectricityCostListResponse = Api.Common.PageResult<ElectricityCost>;
 
     interface CreateElectricityCostParams {
       organizationId: number;
@@ -77,10 +74,7 @@ declare namespace Api {
       energyType?: number;
     }
 
-    interface PriceTacticsListResponse {
-      list: PriceTactics[];
-      total: number;
-    }
+    type PriceTacticsListResponse = Api.Common.PageResult<PriceTactics>;
 
     interface CreatePriceTacticsParams {
       tacticsNumber: string;
@@ -114,5 +108,8 @@ declare namespace Api {
       timeType: string;
       dataTime: string;
     }
+
+    // Alias for backward compatibility
+    type TrendData = CostTrendData;
   }
 }

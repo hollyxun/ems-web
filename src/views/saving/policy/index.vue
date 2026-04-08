@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import { fetchDeletePolicy, fetchPolicyList } from '@/service/api/saving';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -17,14 +18,22 @@ const searchParams = ref({
 
 const policyTypes = ['国家政策', '地方政策', '行业标准', '企业制度'];
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Saving.Policy.ListResponse>,
+  Api.Saving.Policy.Item
+>({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchPolicyList(searchParams.value),
   transform: defaultTransform,
   columns: () => [
     { prop: 'index', type: 'index', label: $t('common.index'), width: 64 },
     { prop: 'title', label: '政策标题', minWidth: 200 },
-    { prop: 'type', label: '政策类型', width: 100, formatter: row => <ElTag>{row.type}</ElTag> },
+    {
+      prop: 'type',
+      label: '政策类型',
+      width: 100,
+      formatter: (row: Api.Saving.Policy.Item) => <ElTag>{row.type}</ElTag>
+    },
     { prop: 'dept', label: '印发部门', minWidth: 120 },
     { prop: 'issuingTime', label: '印发时间', minWidth: 120 },
     {
@@ -32,7 +41,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 160,
-      formatter: row => {
+      formatter: (row: Api.Saving.Policy.Item) => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
@@ -40,9 +49,13 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               {$t('common.edit')}
             </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">
-                {$t('common.delete')}
-              </ElButton>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
             </ElPopconfirm>
           </div>
         );
@@ -82,7 +95,7 @@ onMounted(() => getData());
           </ElSelect>
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

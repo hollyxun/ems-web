@@ -2,7 +2,6 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import { fetchPriceList, fetchSavePriceList } from '@/service/api/peakvalley';
-import type { PeakValley } from '@/service/api/peakvalley';
 
 defineOptions({ name: 'PriceConfigDrawer' });
 
@@ -38,7 +37,7 @@ const electricityTypes = [
 ];
 
 // 电价明细列表
-const priceList = ref<PeakValley.PriceItem[]>([]);
+const priceList = ref<Api.PeakValley.PriceItem[]>([]);
 
 // 加载电价明细
 async function loadPriceList() {

@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import { fetchDeleteProgram, fetchProgramList } from '@/service/api/saving';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -10,7 +11,10 @@ defineOptions({ name: 'EnergySavingProgram' });
 
 const searchParams = ref({ page: 1, pageSize: 10, plan: undefined as string | undefined });
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Saving.Program.ListResponse>,
+  Api.Saving.Program.Item
+>({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchProgramList(searchParams.value),
   transform: defaultTransform,
@@ -26,7 +30,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 160,
-      formatter: row => {
+      formatter: (row: Api.Saving.Program.Item) => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
@@ -34,9 +38,13 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               {$t('common.edit')}
             </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">
-                {$t('common.delete')}
-              </ElButton>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
             </ElPopconfirm>
           </div>
         );
@@ -71,7 +79,7 @@ onMounted(() => getData());
           <ElInput v-model="searchParams.plan" placeholder="搜索总体计划" clearable @keyup.enter="getDataByPage" />
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

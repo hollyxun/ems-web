@@ -35,7 +35,7 @@ function handleClose() {
         <ElDescriptionsItem label="所属车间">{{ data.workshopName }}</ElDescriptionsItem>
         <ElDescriptionsItem label="能源介质">{{ data.energyMedium }}</ElDescriptionsItem>
         <ElDescriptionsItem label="当前排名">
-          <ElTag :type="data.rank <= 3 ? 'success' : data.rank > 10 ? 'danger' : ''">第 {{ data.rank }} 名</ElTag>
+          <ElTag :type="data.rank <= 3 ? 'success' : data.rank > 10 ? 'danger' : 'info'">第 {{ data.rank }} 名</ElTag>
         </ElDescriptionsItem>
       </ElDescriptions>
 

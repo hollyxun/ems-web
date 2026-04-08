@@ -33,13 +33,11 @@ declare namespace Api {
       alarmLevel?: string;
     }
 
-    interface ListResponse {
-      list: AlarmHistoryItem[];
-      total: number;
-    }
+    type ListResponse = Api.Common.PageResult<AlarmHistoryItem>;
 
     interface HandleParams {
       id: string;
+      handleStatus: string;
       handleRemark: string;
     }
 
@@ -73,10 +71,7 @@ declare namespace Api {
       startStop?: string;
     }
 
-    interface ListResponse {
-      list: Item[];
-      total: number;
-    }
+    type ListResponse = Api.Common.PageResult<Item>;
 
     interface CreateParams {
       indexCode: string;
@@ -111,10 +106,7 @@ declare namespace Api {
       limitName?: string;
     }
 
-    interface ListResponse {
-      list: Item[];
-      total: number;
-    }
+    type ListResponse = Api.Common.PageResult<Item>;
 
     interface CreateParams {
       limitName: string;

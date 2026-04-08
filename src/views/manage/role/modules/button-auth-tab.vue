@@ -13,23 +13,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-interface ButtonConfig {
-  id: number;
-  label: string;
-  name: string;
-  title: string;
-}
-
-interface MenuButtonTree {
-  id: number;
-  name: string;
-  title: string;
-  path: string;
-  buttons: ButtonConfig[];
-  children: MenuButtonTree[];
-}
-
-const tree = shallowRef<MenuButtonTree[]>([]);
+const tree = shallowRef<Api.SystemManage.Menu[]>([]);
 const loading = shallowRef(false);
 
 // 将菜单按钮树转换为树形数据格式
@@ -87,10 +71,12 @@ async function handleSubmit() {
 // 全选按钮
 function handleSelectAll() {
   const allIds: number[] = [];
-  function traverse(nodes: MenuButtonTree[]) {
+  function traverse(nodes: Api.SystemManage.Menu[]) {
     for (const node of nodes) {
-      for (const btn of node.buttons) {
-        allIds.push(btn.id);
+      if (node.buttons) {
+        for (const btn of node.buttons) {
+          allIds.push(btn.id);
+        }
       }
       if (node.children?.length) {
         traverse(node.children);

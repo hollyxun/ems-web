@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { computed, onMounted, ref } from 'vue';
 import { ElButton, ElPopconfirm } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import { fetchDeletePriceDate, fetchPriceDateList } from '@/service/api/peakvalley';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -10,7 +11,10 @@ defineOptions({ name: 'PeakValleyManage' });
 
 const searchParams = ref({ page: 1, pageSize: 10, remark: undefined as string | undefined });
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Common.PageResult<Api.PeakValley.PriceDate>>,
+  Api.PeakValley.PriceDate
+>({
   paginationProps: { currentPage: 1, pageSize: 10 },
   api: () => fetchPriceDateList(searchParams.value),
   transform: defaultTransform,
@@ -25,7 +29,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       label: $t('common.operate'),
       align: 'center',
       width: 200,
-      formatter: row => {
+      formatter: (row: Api.PeakValley.PriceDate) => {
         const handleConfirm = () => handleDelete(row.id);
         return (
           <div class="flex-center">
@@ -36,9 +40,13 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               配置电价
             </ElButton>
             <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={handleConfirm}>
-              <ElButton type="danger" plain size="small">
-                {$t('common.delete')}
-              </ElButton>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
             </ElPopconfirm>
           </div>
         );
@@ -81,7 +89,7 @@ onMounted(() => getData());
           <ElInput v-model="searchParams.remark" placeholder="搜索备注" clearable @keyup.enter="getDataByPage" />
         </ElFormItem>
         <ElFormItem class="ml-auto">
-          <ElButton type="primary" @click="getDataByPage">查询</ElButton>
+          <ElButton type="primary" @click="() => getDataByPage()">查询</ElButton>
           <ElButton
             @click="
               () => {

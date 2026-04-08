@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import type { FormInstance } from 'element-plus';
 import dayjs from 'dayjs';
 import {
-  type ConsumptionAnalysisVO,
-  type ProductEnergyAnalysisVO,
-  type RankingEnergyData,
+  fetchConsumptionEnergyRanking,
   fetchGetByArea,
   fetchGetComprehensiveEnergy,
-  fetchGetEnergyRanking,
   fetchGetProdEnergy,
   fetchGetYOY
 } from '@/service/api/consumption-analysis';
@@ -28,16 +24,16 @@ const queryForm = ref({
 const loading = ref(false);
 
 // 能耗分析数据
-const analysisData = ref<ConsumptionAnalysisVO | null>(null);
+const analysisData = ref<Api.ConsumptionAnalysis.ConsumptionAnalysisVO | null>(null);
 
 // 同比环比数据
-const yoyData = ref<ConsumptionAnalysisVO | null>(null);
+const yoyData = ref<Api.ConsumptionAnalysis.ConsumptionAnalysisVO | null>(null);
 
 // 能耗排名数据
-const rankingData = ref<RankingEnergyData[]>([]);
+const rankingData = ref<Api.ConsumptionAnalysis.RankingEnergyData[]>([]);
 
 // 产品单耗数据
-const prodEnergyData = ref<ProductEnergyAnalysisVO | null>(null);
+const prodEnergyData = ref<Api.ConsumptionAnalysis.ProductEnergyAnalysisVO | null>(null);
 
 // 当前激活的标签页
 const activeTab = ref('area');
@@ -81,42 +77,42 @@ async function handleQuery() {
 
     // 根据当前标签页查询对应数据
     if (activeTab.value === 'area') {
-      const result = await fetchGetByArea(params);
-      analysisData.value = result;
+      const { data: result } = await fetchGetByArea(params);
+      analysisData.value = result || null;
     } else if (activeTab.value === 'comprehensive') {
-      const result = await fetchGetComprehensiveEnergy({
+      const { data: result } = await fetchGetComprehensiveEnergy({
         nodeId: params.nodeId,
         timeType: params.timeType,
         dataTime: params.dataTime
       });
-      analysisData.value = result;
+      analysisData.value = result || null;
     } else if (activeTab.value === 'ranking') {
-      const result = await fetchGetEnergyRanking({
+      const { data: result } = await fetchConsumptionEnergyRanking({
         nodeId: params.nodeId,
         timeType: params.timeType,
         dataTime: params.dataTime
       });
-      rankingData.value = result;
+      rankingData.value = result || [];
     } else if (activeTab.value === 'prodEnergy') {
-      const result = await fetchGetProdEnergy({
+      const { data: result } = await fetchGetProdEnergy({
         nodeId: params.nodeId,
         timeType: params.timeType,
         dataTime: params.dataTime,
         energyType: params.energyType
       });
-      prodEnergyData.value = result;
+      prodEnergyData.value = result || null;
     }
 
     // 同时获取同比环比数据
-    const yoyResult = await fetchGetYOY({
+    const { data: yoyResult } = await fetchGetYOY({
       nodeId: params.nodeId,
       timeType: params.timeType,
       dataTime: params.dataTime,
       energyType: params.energyType
     });
-    yoyData.value = yoyResult;
-  } catch (error) {
-    console.error('查询失败:', error);
+    yoyData.value = yoyResult || null;
+  } catch (_error) {
+    console.error('查询失败:', _error);
   } finally {
     loading.value = false;
   }

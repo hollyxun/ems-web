@@ -9,7 +9,7 @@ defineOptions({ name: 'ElectricityDrawer' });
 interface Props {
   visible: boolean;
   operateType: 'add' | 'edit';
-  rowData?: { id: number } | null;
+  rowData?: { id: string } | null;
 }
 interface Emits {
   (e: 'update:visible', visible: boolean): void;
@@ -93,7 +93,7 @@ async function handleSubmit() {
   loading.value = true;
   try {
     if (props.operateType === 'edit' && props.rowData?.id) {
-      const { error } = await fetchUpdateElectricityCost(props.rowData.id, formData.value as any);
+      const { error } = await fetchUpdateElectricityCost({ id: props.rowData.id, ...formData.value } as any);
       if (!error) {
         ElMessage.success('更新成功');
         drawerVisible.value = false;

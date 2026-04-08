@@ -9,7 +9,7 @@ defineOptions({ name: 'TacticsDrawer' });
 interface Props {
   visible: boolean;
   operateType: 'add' | 'edit';
-  rowData?: { id: number } | null;
+  rowData?: { id: string } | null;
 }
 interface Emits {
   (e: 'update:visible', visible: boolean): void;

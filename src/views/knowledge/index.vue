@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
+import type { FlatResponseData } from '@sa/axios';
 import { fetchBatchDeleteKnowledge, fetchDeleteKnowledge, fetchKnowledgeList } from '@/service/api/knowledge';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -27,7 +28,10 @@ const energyTypeMap: Record<number, { label: string; type: UI.ThemeColor }> = {
   3: { label: '蒸汽', type: 'danger' }
 };
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable<
+  FlatResponseData<App.Service.Response<any>, Api.Knowledge.ListResponse>,
+  Api.Knowledge.Item
+>({
   paginationProps: {
     currentPage: searchParams.value.page,
     pageSize: searchParams.value.pageSize
@@ -37,8 +41,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     return defaultTransform(response);
   },
   onPaginationParamsChange: params => {
-    searchParams.value.page = params.currentPage;
-    searchParams.value.pageSize = params.pageSize;
+    searchParams.value.page = params.currentPage ?? 1;
+    searchParams.value.pageSize = params.pageSize ?? 10;
   },
   columns: () => [
     { prop: 'selection', type: 'selection', width: 48 },
@@ -95,7 +99,7 @@ const { drawerVisible, operateType, handleAdd, handleEdit, editingData, checkedR
   getData
 );
 
-async function handleDelete(id: number) {
+async function handleDelete(id: string) {
   const { error } = await fetchDeleteKnowledge(id);
   if (!error) {
     onDeleted();
@@ -106,7 +110,7 @@ function resetSearchParams() {
   searchParams.value = getInitSearchParams();
 }
 
-function edit(id: number) {
+function edit(id: string) {
   handleEdit(id);
 }
 

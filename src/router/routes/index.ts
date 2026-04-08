@@ -1,3 +1,4 @@
+import type { RouteComponent } from 'vue-router';
 import type { CustomRoute, ElegantConstRoute, ElegantRoute } from '@elegant-router/types';
 import { generatedRoutes } from '../elegant/routes';
 import { layouts, views } from '../elegant/imports';
@@ -186,9 +187,9 @@ export function createStaticRoutes() {
 
   [...customRoutes, ...generatedRoutes].forEach(item => {
     if (item.meta?.constant) {
-      constantRoutes.push(item);
+      constantRoutes.push(item as ElegantRoute);
     } else {
-      authRoutes.push(item);
+      authRoutes.push(item as ElegantRoute);
     }
   });
 
@@ -204,5 +205,9 @@ export function createStaticRoutes() {
  * @param routes Elegant routes
  */
 export function getAuthVueRoutes(routes: ElegantConstRoute[]) {
-  return transformElegantRoutesToVueRoutes(routes, layouts, views);
+  return transformElegantRoutesToVueRoutes(
+    routes,
+    layouts,
+    views as Record<string, RouteComponent | (() => Promise<RouteComponent>)>
+  );
 }

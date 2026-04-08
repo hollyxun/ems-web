@@ -4,13 +4,12 @@ import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import { exportHistoricalData, fetchHistoricalData } from '@/service/api/electric-analysis';
 import { fetchGetMeterList } from '@/service/api/energy-meter';
-import type { HistoricalData } from '@/service/api/electric-analysis';
 
 // 查询参数
-const queryParams = ref({
+const queryParams = ref<Api.HistoricalData.Request>({
   indexId: '',
   dataTime: dayjs().format('YYYY-MM-DD'),
-  timeType: 'DAY' as 'DAY' | 'HOUR'
+  timeType: 'DAY'
 });
 
 // 计量点选项
@@ -19,7 +18,7 @@ const meterOptions = ref<{ id: string; name: string }[]>([]);
 // 数据
 const loading = ref(false);
 const exportLoading = ref(false);
-const tableData = ref<HistoricalData.Item[]>([]);
+const tableData = ref<Api.HistoricalData.Item[]>([]);
 const indexName = ref('');
 
 // 时间类型选项
@@ -31,8 +30,8 @@ const timeTypeOptions = [
 // 获取计量点列表
 const getMeterList = async () => {
   try {
-    const res = await fetchGetMeterList({ page: 1, pageSize: 1000 });
-    meterOptions.value = (res.list || []).map((item: any) => ({
+    const { data: res } = await fetchGetMeterList({ page: 1, pageSize: 1000 });
+    meterOptions.value = (res?.list || []).map((item: any) => ({
       id: String(item.id || item.meterId),
       name: item.meterName || item.name
     }));
@@ -53,10 +52,10 @@ const fetchData = async () => {
 
   loading.value = true;
   try {
-    const res = await fetchHistoricalData(queryParams.value);
-    tableData.value = res.data || [];
-    indexName.value = res.indexName || '';
-  } catch (error) {
+    const { data: res } = await fetchHistoricalData(queryParams.value);
+    tableData.value = res?.data || [];
+    indexName.value = res?.indexName || '';
+  } catch (_error) {
     ElMessage.error('查询失败');
     tableData.value = [];
   } finally {

@@ -156,6 +156,8 @@ declare namespace Api.Scheduling {
   interface ScheduleCalendarSearchParams {
     page?: number;
     pageSize?: number;
+    year?: number;
+    month?: number;
     startDate?: string;
     endDate?: string;
     teamId?: number;

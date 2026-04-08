@@ -46,7 +46,7 @@ const patternTypeMap: Record<number, { label: string; type: UI.ThemeColor }> = {
   3: { label: '三班两运转', type: 'warning' },
   4: { label: '两班制', type: 'info' },
   5: { label: '长白班', type: 'danger' },
-  6: { label: '自定义', type: 'default' }
+  6: { label: '自定义', type: 'primary' }
 };
 
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useUIPaginatedTable({

@@ -28,7 +28,7 @@ const passwordRules = {
   confirmPassword: [
     { required: true, message: () => $t('form.confirmPwd.required'), trigger: 'blur' },
     {
-      validator: (rule: any, value: string, callback: Function) => {
+      validator: (_rule: any, value: string, callback: (error?: Error) => void) => {
         if (value !== passwordForm.newPassword) {
           callback(new Error($t('form.confirmPwd.invalid')));
         } else {
