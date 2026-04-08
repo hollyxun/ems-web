@@ -250,13 +250,6 @@ const local: App.I18n.Schema = {
     energy_report: 'Report',
     'energy_electric-analysis': 'Electric Analysis',
     'energy_history-data': 'History Data',
-    'energy_base-data': 'Base Data',
-    'energy_base-data_coefficient': 'Coefficient',
-    'energy_base-data_ledger': 'Ledger',
-    'energy_base-data_medium': 'Medium',
-    'energy_base-data_meter': 'Meter',
-    'energy_base-data_tou': 'TOU',
-    'energy_base-data_unit': 'Unit',
     'energy_branch-analysis': 'Branch Analysis',
     // Base Data
     'base-data': 'Base Data',

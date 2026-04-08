@@ -69,13 +69,6 @@ declare module "@elegant-router/types" {
     "dashboard": "/dashboard";
     "dashboard_custom": "/dashboard/custom";
     "energy": "/energy";
-    "energy_base-data": "/energy/base-data";
-    "energy_base-data_coefficient": "/energy/base-data/coefficient";
-    "energy_base-data_ledger": "/energy/base-data/ledger";
-    "energy_base-data_medium": "/energy/base-data/medium";
-    "energy_base-data_meter": "/energy/base-data/meter";
-    "energy_base-data_tou": "/energy/base-data/tou";
-    "energy_base-data_unit": "/energy/base-data/unit";
     "energy_branch-analysis": "/energy/branch-analysis";
     "energy_comparison": "/energy/comparison";
     "energy_dashboard": "/energy/dashboard";
@@ -318,12 +311,6 @@ declare module "@elegant-router/types" {
     | "energy-analysis_comprehensive_statistics"
     | "energy-analysis_comprehensive_year"
     | "energy-indicators"
-    | "energy_base-data_coefficient"
-    | "energy_base-data_ledger"
-    | "energy_base-data_medium"
-    | "energy_base-data_meter"
-    | "energy_base-data_tou"
-    | "energy_base-data_unit"
     | "energy_branch-analysis"
     | "energy_comparison"
     | "energy_dashboard"

@@ -249,13 +249,6 @@ const local: App.I18n.Schema = {
     energy_report: '能耗报表',
     'energy_electric-analysis': '电力分析',
     'energy_history-data': '历史数据',
-    'energy_base-data': '基础数据',
-    'energy_base-data_coefficient': '转换系数',
-    'energy_base-data_ledger': '台账管理',
-    'energy_base-data_medium': '介质设置',
-    'energy_base-data_meter': '计量点设置',
-    'energy_base-data_tou': '分时电价',
-    'energy_base-data_unit': '单位设置',
     'energy_branch-analysis': '分支分析',
     // 基础数据管理
     'base-data': '基础数据',
