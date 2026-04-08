@@ -3,6 +3,10 @@
 > 日期：2026-04-07
 > 影响范围：`src/views/` 下多个模块
 > 修复结果：TypeScript 错误从 350+ 降至 0，ESLint 错误从 73 降至 68（剩余均为项目已存在质量问题）
+> **⚠️ 注意**：2026-04-08 路由菜单整合后，部分路径已变更：
+> - `views/statistical/` → `views/analysis/statistical/`
+> - `views/saving/` → `views/sustainability/`
+> - `views/processenergy/` → 已删除（合并到 `analysis/process-energy/`）
 
 ---
 

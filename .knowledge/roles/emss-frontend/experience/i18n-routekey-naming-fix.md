@@ -96,12 +96,68 @@ npx tsc --noEmit 2>&1 | grep -E "TS2353|TS2740|TS2561"
 3. **无效的子路由 key 应删除**：如 `gatewaySetting_manage` 无对应路由
 4. **elegant-router.d.ts 是 RouteKey 的唯一真实来源**
 
+## 路由开发规范
+
+### 新增路由流程
+
+1. **创建视图目录**：在 `src/views/` 下创建对应目录
+2. **路由自动生成**：elegant-router 会自动扫描并生成路由定义
+3. **更新 locale 文件**：在 `zh-cn.ts` 和 `en-us.ts` 的 `route` section 添加对应的 i18n key
+4. **添加 icon**：在路由 meta 中添加 `icon` 字段
+
+### 路由命名约定
+
+| 层级 | 格式 | 示例 |
+|------|------|------|
+| 一级菜单 | 小写单词或连字符 | `energy`, `base-data` |
+| 二级菜单 | `父级_子级` | `energy_dashboard`, `base-data_medium` |
+| 三级菜单 | `父级_子级_孙级` | `energy-analysis_comprehensive_daily` |
+
+### Icon 规范
+
+```typescript
+// 一级菜单必须有 icon
+meta: {
+  title: 'energy',
+  i18nKey: 'route.energy',
+  icon: 'carbon:energy'  // 使用 iconify 图标
+}
+
+// 二级菜单可选 icon，默认继承父级
+meta: {
+  title: 'energy_dashboard',
+  i18nKey: 'route.energy_dashboard'
+  // 无 icon 时继承父级
+}
+```
+
+### 常用一级菜单 Icon 对照表
+
+| 模块 | Icon | 说明 |
+|------|------|------|
+| home | `mdi:monitor-dashboard` | 首页 |
+| dashboard | `mdi:view-dashboard` | 仪表盘 |
+| energy | `carbon:energy` | 能源管理 |
+| analysis | `mdi:chart-line` | 能耗分析 |
+| base-data | `mdi:database-cog` | 基础数据 |
+| alarm | `mdi:alarm` | 报警管理 |
+| cost | `mdi:currency-cny` | 成本管理 |
+| sustainability | `mdi:molecule-co2` | 双碳管理 |
+| scheduling | `mdi:calendar-clock` | 排班管理 |
+| knowledge | `mdi:book-open-variant` | 知识库 |
+| approval | `mdi:clipboard-check` | 审批管理 |
+| gatewaysetting | `mdi:router-wireless` | 网关设置 |
+| manage | `carbon:cloud-service-management` | 系统管理 |
+| developer | `mdi:code-braces` | 开发者 |
+| about | `fluent:book-information-24-regular` | 关于 |
+
 ## 相关文件
 
 - RouteKey 定义：`src/typings/elegant-router.d.ts`
 - Locale 文件：`src/locales/langs/zh-cn.ts`, `src/locales/langs/en-us.ts`
 - I18n 类型：`src/typings/app.d.ts`（`I18nRouteKey` 定义）
+- 路由生成配置：`vite.config.ts` 中的 elegant-router 插件
 
 ---
 
-**最后更新**: 2026-04-06
+**最后更新**: 2026-04-08

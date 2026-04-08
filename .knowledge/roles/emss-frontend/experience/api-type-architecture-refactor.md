@@ -5,6 +5,8 @@ triggers:
   - "typings service 不一致"
   - "namespace 冲突"
 date: "2026-04-06"
+updated: "2026-04-08"
+notes: "2026-04-08 路由菜单整合后，部分视图目录已变更，但 API 类型文件位置不变"
 ---
 
 # API 类型架构混乱问题复盘

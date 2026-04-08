@@ -4,6 +4,98 @@
 
 ---
 
+## 2026-04-08
+
+### 路由菜单整合（重大变更）
+
+**背景**：一级菜单过多（35+ 个），存在大量重复和分散的功能模块。
+
+**整合结果**：一级菜单从 35+ 个整合为 18 个核心业务模块。
+
+#### 视图目录重组
+
+| 操作 | 源目录 | 目标目录 |
+|------|--------|----------|
+| 合并 | `benchmark` | `analysis/benchmark` |
+| 合并 | `branchanalysis` | `analysis/branch` |
+| 合并 | `comprehensivestatistics` | `analysis/comprehensive` |
+| 合并 | `consumptionanalysis` | `analysis/consumption-detail` |
+| 合并 | `energy-analysis` | `analysis/energy` |
+| 合并 | `energy-indicators` | `analysis/indicators` |
+| 合并 | `keyequipment` | `analysis/key-equipment` |
+| 合并 | `productoutput` | `analysis/product-output` |
+| 合并 | `statistical` | `analysis/statistical` |
+| 合并 | `peakvalley` | `analysis/peak-valley` |
+| 合并 | `peakvalley-analysis` | `analysis/peak-valley-detail` |
+| 合并 | `spikesandvalleys` | `analysis/peak-valley-scheme` |
+| 合并 | `process-energy` | `analysis/process-energy` |
+| 合并 | `itemized` | `analysis/itemized` |
+| 合并 | `itemizedenergyanalysis` | `analysis/itemized-detail` |
+| 新建 | `saving` + `carbonemission` | `sustainability` |
+| 新建 | `plugin` + `function` | `developer` |
+| 删除 | `costmanagement` | 合并到 `cost` |
+| 删除 | `processenergy` | 合并到 `analysis/process-energy` |
+
+#### 最终一级菜单结构
+
+| 序号 | 模块 | 说明 |
+|------|------|------|
+| 1 | home | 首页 |
+| 2 | dashboard | 自定义仪表盘 |
+| 3 | energy | 能源管理 |
+| 4 | analysis | 能耗分析（整合 15 个子模块） |
+| 5 | base-data | 基础数据 |
+| 6 | alarm | 报警管理 |
+| 7 | cost | 成本管理 |
+| 8 | sustainability | 双碳管理（新建） |
+| 9 | scheduling | 排班管理 |
+| 10 | knowledge | 知识库 |
+| 11 | approval | 审批管理 |
+| 12 | gatewaysetting | 网关设置 |
+| 13 | manage | 系统管理 |
+| 14 | profile | 个人中心 |
+| 15 | developer | 开发者（新建，合并 plugin+function） |
+| 16 | about | 关于 |
+| 17 | document | 外部文档（保留，iframe 嵌入） |
+| 18 | exception | 异常页（隐藏菜单） |
+
+#### 知识库更新
+
+- **[experience/i18n-routekey-naming-fix.md]** - 补充路由开发规范
+  - 新增路由命名约定（一级/二级/三级）
+  - 新增 Icon 规范和常用一级菜单 Icon 对照表
+  - 新增路由开发流程说明
+
+#### 注意事项
+
+1. 路由名称已变更，后端 `sys_route_menus` 表需同步更新
+2. 后端权限系统需更新对应的路由权限配置
+3. 代码中如有硬编码路由名称需检查更新
+
+### 知识库清理
+
+#### 更新
+
+- **[questions.md]** - 同步 Q3 已解决状态
+  - 动态路由缓存问题已验证并记录答案
+
+- **[experience/elegant-router-parent-child-conflict.md]** - 更新示例路径
+  - 添加 `status: archived` 标记
+  - 更新 `statistical/` → `analysis/statistical/`
+
+- **[experience/typescript-eslint-fix-2026-04-07.md]** - 添加路径变更说明
+  - 标注 `views/statistical/` → `views/analysis/statistical/`
+  - 标注 `views/saving/` → `views/sustainability/`
+  - 标注 `views/processenergy/` 已删除
+
+- **[experience/api-type-architecture-refactor.md]** - 添加更新说明
+
+- **[roles/emss-frontend/AGENTS.md]** - 更新知识索引
+  - 新增 `typescript-eslint-fix-2026-04-07.md` 索引
+  - 添加路由变更注意事项
+
+---
+
 ## 2026-04-06
 
 ### 新增

@@ -257,6 +257,9 @@ pnpm build
 | `experience/i18n-routekey-naming-fix.md` | i18n route key 命名规则修复 | 添加 locale route 翻译时 |
 | `experience/elegant-router-parent-child-conflict.md` | elegant-router 父子路由冲突修复 | 创建带子路由的目录时 |
 | `experience/api-type-architecture-refactor.md` | API 类型架构混乱问题复盘 | 遇到类型重复/不一致时 |
+| `experience/typescript-eslint-fix-2026-04-07.md` | TypeScript & ESLint 批量修复复盘 | 批量修复类型错误时 |
+
+**⚠️ 注意**：2026-04-08 路由菜单整合后，部分 experience 文件中引用的路径已变更，详见文件头部注释。
 
 ### Questions（待验证问题）
 
@@ -290,4 +293,4 @@ pnpm build
 
 ---
 
-**最后更新**: 2026-04-06
+**最后更新**: 2026-04-08

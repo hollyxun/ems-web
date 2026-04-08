@@ -8,8 +8,9 @@ triggers:
   - "component type incompatible"
 date: "2026-04-06"
 files:
-  - "src/views/statistical/index.vue"
+  - "src/views/analysis/statistical/index.vue"
   - "src/router/elegant/routes.ts"
+status: "archived"  # 2026-04-08: 示例路径已更新，statistical 移动到 analysis/statistical
 ---
 
 # elegant-router 父子路由冲突修复
@@ -28,25 +29,25 @@ Type 'layout.base' is not assignable to type 'layout.base$view.statistical | lay
 
 目录结构冲突：
 ```
-views/statistical/
-├── index.vue          ← 父级路由的视图
+views/analysis/statistical/
+├── index.vue          ← 父级路由的视图（冲突）
 ├── cost/index.vue     ← 子路由
 ├── flow/index.vue     ← 子路由
 └── yoy-mom/index.vue  ← 子路由
 ```
 
-elegant-router 检测到 `statistical/index.vue` 存在，期望生成 `layout.base$view.statistical` 组件类型。但同时 `statistical` 有子目录，被识别为父级路由，生成 `layout.base` 组件。
+elegant-router 检测到 `statistical/index.vue` 存在，期望生成 `layout.base$view.analysis_statistical` 组件类型。但同时 `statistical` 有子目录，被识别为父级路由，生成 `layout.base` 组件。
 
 **类型冲突**：
 - 实际生成：`component: 'layout.base'`（父级路由）
-- 类型期望：`component: 'layout.base$view.statistical'`（有视图的路由）
+- 类型期望：`component: 'layout.base$view.analysis_statistical'`（有视图的路由）
 
 ## 解决方案
 
 **删除父级目录的 `index.vue`**，使路由成为纯父级路由：
 
 ```bash
-rm src/views/statistical/index.vue
+rm src/views/analysis/statistical/index.vue
 ```
 
 重新构建后，elegant-router 生成正确的类型。
