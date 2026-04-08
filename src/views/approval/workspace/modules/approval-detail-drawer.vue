@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import { ref, watch, computed, shallowRef } from 'vue';
-import { ElDrawer, ElTimeline, ElTimelineItem, ElCard, ElTag, ElDescriptions, ElDescriptionsItem, ElButton, ElEmpty, ElMessage } from 'element-plus';
-import { fetchGetInstance } from '@/service/api/approval';
-import { useApprovalFlow, type ApprovalNodeData, type ApprovalFlowData } from '../../flow-designer/modules/use-approval-flow';
-import type { Graph } from '@antv/g6';
+import { computed, ref, shallowRef, watch } from 'vue';
+import {
+  ElCard,
+  ElDescriptions,
+  ElDescriptionsItem,
+  ElDrawer,
+  ElEmpty,
+  ElTag,
+  ElTimeline,
+  ElTimelineItem
+} from 'element-plus';
+import { fetchInstanceDetail } from '@/service/api/approval';
+import {
+  type ApprovalFlowData,
+  type ApprovalNodeData,
+  useApprovalFlow
+} from '../../flow-designer/modules/use-approval-flow';
 
 const props = defineProps<{
   visible: boolean;
@@ -16,7 +28,7 @@ const emit = defineEmits<{
 }>();
 
 const loading = ref(false);
-const instanceData = ref<ApprovalInstance | null>(null);
+const instanceData = ref<Api.Approval.Instance | null>(null);
 const flowContainerRef = ref<HTMLElement | null>(null);
 const flowHandle = shallowRef<ReturnType<typeof useApprovalFlow> | null>(null);
 
@@ -38,12 +50,7 @@ const flowNodes = computed<ApprovalNodeData[]>(() => {
 
 // 审批记录
 const approvalHistory = computed(() => {
-  if (!instanceData.value?.history) return [];
-  try {
-    return JSON.parse(instanceData.value.history);
-  } catch {
-    return [];
-  }
+  return instanceData.value?.history || [];
 });
 
 const statusMap: Record<string, { type: 'success' | 'warning' | 'danger' | 'info'; label: string }> = {
@@ -63,9 +70,9 @@ function getStatusInfo(status: string) {
 async function loadInstance() {
   if (!props.instanceId) return;
   loading.value = true;
-  const { data } = await fetchGetInstance({ id: props.instanceId });
+  const { data } = await fetchInstanceDetail({ id: props.instanceId });
   if (data) {
-    instanceData.value = data;
+    instanceData.value = data.instance;
     // 渲染流程图
     renderFlowGraph();
   }
@@ -77,17 +84,17 @@ function renderFlowGraph() {
 
   // 解析流程定义
   let flowData: ApprovalFlowData = { nodes: [], edges: [] };
-  try {
-    const definition = JSON.parse(instanceData.value.definition_snapshot);
-    flowData = definition;
-  } catch {
-    return;
+  if (instanceData.value.definition_snapshot) {
+    try {
+      const definition = JSON.parse(instanceData.value.definition_snapshot);
+      flowData = definition;
+    } catch {
+      return;
+    }
   }
 
   // 标记已完成节点
-  const completedNodeIds = approvalHistory.value
-    .filter((h: any) => h.status === 'approved')
-    .map((h: any) => h.node_id);
+  const completedNodeIds = approvalHistory.value.filter((h: any) => h.status === 'approved').map((h: any) => h.node_id);
 
   // 标记当前节点
   const currentNodes = flowNodes.value.map(n => n.id);
@@ -96,7 +103,7 @@ function renderFlowGraph() {
     container: flowContainerRef.value,
     data: flowData,
     editable: false,
-    onNodeClick: (node) => {
+    onNodeClick: _node => {
       // 可以显示节点详情
     }
   });
@@ -114,13 +121,16 @@ function renderFlowGraph() {
   }, 100);
 }
 
-watch(() => props.visible, (val) => {
-  if (val) loadInstance();
-  else {
-    flowHandle.value = null;
-    instanceData.value = null;
+watch(
+  () => props.visible,
+  val => {
+    if (val) loadInstance();
+    else {
+      flowHandle.value = null;
+      instanceData.value = null;
+    }
   }
-});
+);
 
 function handleClose() {
   emit('close');
@@ -128,12 +138,7 @@ function handleClose() {
 </script>
 
 <template>
-  <ElDrawer
-    v-model="props.visible"
-    title="审批详情"
-    :size="720"
-    @close="handleClose"
-  >
+  <ElDrawer v-model="props.visible" title="审批详情" :size="720" @close="handleClose">
     <div v-loading="loading" class="h-full flex flex-col gap-4">
       <!-- 基本信息 -->
       <ElCard shadow="never" header="基本信息">
@@ -153,7 +158,7 @@ function handleClose() {
 
       <!-- 流程追踪图 -->
       <ElCard shadow="never" header="流程追踪">
-        <div ref="flowContainerRef" class="w-full h-200px bg-dark-800 rounded-lg overflow-hidden">
+        <div ref="flowContainerRef" class="h-200px w-full overflow-hidden rounded-lg bg-dark-800">
           <ElEmpty v-if="!flowNodes.length" description="流程图加载中..." />
         </div>
       </ElCard>
@@ -164,7 +169,7 @@ function handleClose() {
           <ElTimelineItem
             v-for="record in approvalHistory"
             :key="record.id"
-            :timestamp="record.completed_at"
+            :timestamp="record.completed_at ?? undefined"
             :type="getStatusInfo(record.status).type"
           >
             <div class="flex items-center gap-2">
@@ -187,7 +192,7 @@ function handleClose() {
 
 <style scoped>
 :deep(.g6-tooltip) {
-  background: #1E2028 !important;
+  background: #1e2028 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 </style>

@@ -145,7 +145,7 @@ const emit = defineEmits<{
 
 ```bash
 # TypeScript 类型检查
-npx tsc --noEmit
+pnpm vue-tsc --noEmit
 
 # ESLint 检查
 pnpm lint
@@ -158,7 +158,27 @@ pnpm lint
 | 重构代码 | ✅ TypeScript + ESLint |
 | 提交代码前 | ✅ TypeScript + ESLint |
 
-**详细规范**：`principles/typescript-constraints.md` 第 11 节
+**详细规范**：`principles/typescript-constraints.md` 第 21 节
+
+### 7. API 参数类型抽离（CRITICAL）
+
+**所有 API 参数类型必须在 `src/typings/api/*.d.ts` 中定义，禁止内联定义：**
+
+```typescript
+// ❌ 错误：内联定义
+export function fetchList(params?: { page?: number; pageSize?: number }) { ... }
+
+// ✅ 正确：参数类型抽离
+// typings/api/module.d.ts
+declare namespace Api.Module {
+  interface ListParams { page?: number; pageSize?: number; }
+}
+
+// service/api/module.ts
+export function fetchList(params?: Api.Module.ListParams) { ... }
+```
+
+**详细规范**：`principles/api-encapsulation.md` → "API 类型定义规范" 章节
 
 ---
 
@@ -201,7 +221,7 @@ pnpm lint
 
 ```bash
 # 1. TypeScript 类型检查
-npx tsc --noEmit
+pnpm vue-tsc --noEmit
 
 # 2. ESLint 检查
 pnpm lint
@@ -209,6 +229,8 @@ pnpm lint
 # 3. 构建验证
 pnpm build
 ```
+
+**验证标准**：`vue-tsc --noEmit` 无错误输出，`pnpm build` 成功。
 
 ---
 
@@ -258,6 +280,7 @@ pnpm build
 | `experience/elegant-router-parent-child-conflict.md` | elegant-router 父子路由冲突修复 | 创建带子路由的目录时 |
 | `experience/api-type-architecture-refactor.md` | API 类型架构混乱问题复盘 | 遇到类型重复/不一致时 |
 | `experience/typescript-eslint-fix-2026-04-07.md` | TypeScript & ESLint 批量修复复盘 | 批量修复类型错误时 |
+| `experience/typescript-param-extraction-2026-04-08.md` | TypeScript 类型修复与参数抽离规范 | API 参数类型抽离时 |
 
 **⚠️ 注意**：2026-04-08 路由菜单整合后，部分 experience 文件中引用的路径已变更，详见文件头部注释。
 
@@ -282,6 +305,10 @@ pnpm build
 | 使用 ReturnType<typeof computed/ref> | TypeScript 类型错误（缺少内部 Symbol） | 直接使用 `ComputedRef<T>` 和 `Ref<T>` |
 | 父级路由目录同时有 index.vue 和子目录 | TS2322 组件类型不兼容 | 删除父级 index.vue，子页面放子目录 |
 | service/api 中定义重复类型 | 类型混乱、不一致、难维护 | 类型统一放 typings/api，使用 Api 命名空间 |
+| **API 参数内联定义** | 类型分散、不符合项目风格 | 参数类型抽离到 `typings/api/*.d.ts` |
+| **Vue 模板内联颜色值** | `TS1127 Invalid character` | 颜色值提取为变量 |
+| **catch 块缺少参数** | `_error` 未定义 | 添加 `error` 参数 |
+| **第三方库类型错误** | 构建失败 | `tsconfig.json` 添加 `skipLibCheck: true` |
 
 ---
 

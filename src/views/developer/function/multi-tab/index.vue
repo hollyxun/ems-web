@@ -14,7 +14,9 @@ const routeQuery = computed(() => JSON.stringify(route.query));
   <div>
     <LookForward>
       <div>
-        <ElButton @click="routerPushByKey('function_tab')">{{ $t('page.function.multiTab.backTab') }}</ElButton>
+        <ElButton @click="routerPushByKey('developer_function_tab')">
+          {{ $t('page.function.multiTab.backTab') }}
+        </ElButton>
         <div class="py-24px">{{ $t('page.function.multiTab.routeParam') }}: {{ routeQuery }}</div>
       </div>
     </LookForward>

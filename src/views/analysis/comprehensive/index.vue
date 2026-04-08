@@ -18,8 +18,8 @@ async function getData() {
     if (result) {
       data.value = result.dataList || [];
     }
-  } catch (_error) {
-    console.error('获取数据失败:', _error);
+  } catch (error) {
+    console.error('获取数据失败:', error);
   } finally {
     loading.value = false;
   }

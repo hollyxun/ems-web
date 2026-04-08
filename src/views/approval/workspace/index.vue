@@ -1,16 +1,33 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElTabs, ElTabPane, ElTable, ElTableColumn, ElTag, ElEmpty, ElPagination, ElButton, ElMessageBox, ElMessage } from 'element-plus';
-import { fetchMyPending, fetchMyDone, fetchMyInitiated, fetchApproveInstance, fetchRejectInstance, fetchCancelInstance } from '@/service/api/approval';
+import { onMounted, ref } from 'vue';
+import {
+  ElButton,
+  ElMessage,
+  ElMessageBox,
+  ElPagination,
+  ElTabPane,
+  ElTable,
+  ElTableColumn,
+  ElTabs,
+  ElTag
+} from 'element-plus';
+import {
+  fetchApproveInstance,
+  fetchCancelInstance,
+  fetchMyDone,
+  fetchMyInitiated,
+  fetchMyPending,
+  fetchRejectInstance
+} from '@/service/api/approval';
 import ApprovalDetailDrawer from './modules/approval-detail-drawer.vue';
 
 defineOptions({ name: 'ApprovalWorkspace' });
 
 const activeTab = ref('pending');
 const loading = ref(false);
-const pendingData = ref<ApprovalTask[]>([]);
-const doneData = ref<ApprovalTask[]>([]);
-const initiatedData = ref<ApprovalInstance[]>([]);
+const pendingData = ref<Api.Approval.Task[]>([]);
+const doneData = ref<Api.Approval.Task[]>([]);
+const initiatedData = ref<Api.Approval.Instance[]>([]);
 const pendingTotal = ref(0);
 const doneTotal = ref(0);
 const initiatedTotal = ref(0);
@@ -51,11 +68,12 @@ async function loadInitiated() {
   loading.value = false;
 }
 
-function handleTabChange(tab: string) {
+function handleTabChange(tab: string | number) {
   currentPage.value = 1;
-  if (tab === 'pending') loadPending();
-  else if (tab === 'done') loadDone();
-  else if (tab === 'initiated') loadInitiated();
+  const tabStr = String(tab);
+  if (tabStr === 'pending') loadPending();
+  else if (tabStr === 'done') loadDone();
+  else if (tabStr === 'initiated') loadInitiated();
 }
 
 function handleViewDetail(instanceId: number) {
@@ -80,7 +98,7 @@ async function handleReject(taskId: number) {
     confirmButtonText: '确认驳回',
     cancelButtonText: '取消',
     inputPlaceholder: '驳回原因（必填）',
-    inputValidator: (val: string) => val ? true : '请输入驳回原因'
+    inputValidator: (val: string) => (val ? true : '请输入驳回原因')
   }).catch(() => ({ value: '' }));
   if (!comment) return;
   await fetchRejectInstance({ task_id: taskId, comment });
@@ -118,7 +136,7 @@ onMounted(() => {
     <ElTabs v-model="activeTab" @tab-change="handleTabChange">
       <!-- 我的待办 -->
       <ElTabPane label="我的待办" name="pending">
-        <ElTable :data="pendingData" v-loading="loading" stripe>
+        <ElTable v-loading="loading" :data="pendingData" stripe>
           <ElTableColumn prop="instance_title" label="审批标题" min-width="200">
             <template #default="{ row }">
               <span class="cursor-pointer hover:text-blue-500" @click="handleViewDetail(row.instance_id)">
@@ -130,7 +148,9 @@ onMounted(() => {
           <ElTableColumn prop="assignee_name" label="指派人" width="100" />
           <ElTableColumn prop="approval_mode" label="审批模式" width="100">
             <template #default="{ row }">
-              <ElTag size="small">{{ row.approval_mode === 'or_sign' ? '或签' : row.approval_mode === 'and_sign' ? '会签' : '逐级' }}</ElTag>
+              <ElTag size="small">
+                {{ row.approval_mode === 'or_sign' ? '或签' : row.approval_mode === 'and_sign' ? '会签' : '逐级' }}
+              </ElTag>
             </template>
           </ElTableColumn>
           <ElTableColumn prop="created_at" label="创建时间" width="170" />
@@ -143,13 +163,19 @@ onMounted(() => {
           </ElTableColumn>
         </ElTable>
         <div class="mt-4 flex justify-end">
-          <ElPagination v-model:current-page="currentPage" :page-size="pageSize" :total="pendingTotal" layout="total, prev, pager, next" @current-change="loadPending" />
+          <ElPagination
+            v-model:current-page="currentPage"
+            :page-size="pageSize"
+            :total="pendingTotal"
+            layout="total, prev, pager, next"
+            @current-change="loadPending"
+          />
         </div>
       </ElTabPane>
 
       <!-- 我的已办 -->
       <ElTabPane label="我的已办" name="done">
-        <ElTable :data="doneData" v-loading="loading" stripe>
+        <ElTable v-loading="loading" :data="doneData" stripe>
           <ElTableColumn prop="instance_title" label="审批标题" min-width="200">
             <template #default="{ row }">
               <span class="cursor-pointer hover:text-blue-500" @click="handleViewDetail(row.instance_id)">
@@ -172,13 +198,19 @@ onMounted(() => {
           </ElTableColumn>
         </ElTable>
         <div class="mt-4 flex justify-end">
-          <ElPagination v-model:current-page="currentPage" :page-size="pageSize" :total="doneTotal" layout="total, prev, pager, next" @current-change="loadDone" />
+          <ElPagination
+            v-model:current-page="currentPage"
+            :page-size="pageSize"
+            :total="doneTotal"
+            layout="total, prev, pager, next"
+            @current-change="loadDone"
+          />
         </div>
       </ElTabPane>
 
       <!-- 我发起的 -->
       <ElTabPane label="我发起的" name="initiated">
-        <ElTable :data="initiatedData" v-loading="loading" stripe>
+        <ElTable v-loading="loading" :data="initiatedData" stripe>
           <ElTableColumn prop="title" label="审批标题" min-width="200">
             <template #default="{ row }">
               <span class="cursor-pointer hover:text-blue-500" @click="handleViewDetail(row.id)">
@@ -197,12 +229,20 @@ onMounted(() => {
           <ElTableColumn label="操作" width="160" fixed="right">
             <template #default="{ row }">
               <ElButton size="small" @click="handleViewDetail(row.id)">详情</ElButton>
-              <ElButton v-if="row.status === 'running'" type="warning" size="small" @click="handleCancel(row.id)">撤回</ElButton>
+              <ElButton v-if="row.status === 'running'" type="warning" size="small" @click="handleCancel(row.id)">
+                撤回
+              </ElButton>
             </template>
           </ElTableColumn>
         </ElTable>
         <div class="mt-4 flex justify-end">
-          <ElPagination v-model:current-page="currentPage" :page-size="pageSize" :total="initiatedTotal" layout="total, prev, pager, next" @current-change="loadInitiated" />
+          <ElPagination
+            v-model:current-page="currentPage"
+            :page-size="pageSize"
+            :total="initiatedTotal"
+            layout="total, prev, pager, next"
+            @current-change="loadInitiated"
+          />
         </div>
       </ElTabPane>
     </ElTabs>
@@ -211,7 +251,10 @@ onMounted(() => {
     <ApprovalDetailDrawer
       :visible="detailVisible"
       :instance-id="detailInstanceId"
-      @close="detailVisible = false; detailInstanceId = null"
+      @close="
+        detailVisible = false;
+        detailInstanceId = null;
+      "
       @refresh="loadPending"
     />
   </div>

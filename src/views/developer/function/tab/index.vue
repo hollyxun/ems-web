@@ -36,10 +36,10 @@ function resetTabLabel() {
       </ElSpace>
       <ElDivider content-position="left">{{ $t('page.function.tab.tabOperate.addMultiTab') }}</ElDivider>
       <ElSpace>
-        <ElButton @click="routerPushByKey('function_multi-tab')">
+        <ElButton @click="routerPushByKey('developer_function_multi-tab')">
           {{ $t('page.function.tab.tabOperate.addMultiTabDesc1') }}
         </ElButton>
-        <ElButton @click="routerPushByKey('function_multi-tab', { query: { a: '1' } })">
+        <ElButton @click="routerPushByKey('developer_function_multi-tab', { query: { a: '1' } })">
           {{ $t('page.function.tab.tabOperate.addMultiTabDesc2') }}
         </ElButton>
       </ElSpace>

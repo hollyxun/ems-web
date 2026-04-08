@@ -50,7 +50,7 @@ async function getList() {
       chartData.value = chartResult;
       updateChart();
     }
-  } catch (_error) {
+  } catch {
     ElMessage.error('获取数据失败');
   } finally {
     loading.value = false;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElCard, ElStatistic, ElRow, ElCol, ElProgress, ElEmpty } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { ElCard, ElCol, ElEmpty, ElProgress, ElRow, ElStatistic } from 'element-plus';
 
 defineOptions({ name: 'QuickStatsCard' });
 
@@ -38,15 +38,17 @@ const monthProgress = ref(0);
 
 onMounted(async () => {
   await loadData();
-  dayComparison.value = Math.round((stats.value.todayEnergy - stats.value.yesterdayEnergy) / stats.value.yesterdayEnergy * 100);
-  monthProgress.value = Math.round(stats.value.monthEnergy / monthTarget.value * 100);
+  dayComparison.value = Math.round(
+    ((stats.value.todayEnergy - stats.value.yesterdayEnergy) / stats.value.yesterdayEnergy) * 100
+  );
+  monthProgress.value = Math.round((stats.value.monthEnergy / monthTarget.value) * 100);
 });
 
 defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <span class="font-medium">快速统计</span>
     </template>

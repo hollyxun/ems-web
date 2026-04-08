@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { ElCard, ElEmpty, ElTable, ElTableColumn, ElTag } from 'element-plus';
 import { use } from 'echarts/core';
 import { BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
-import { ElCard, ElTable, ElTableColumn, ElTag, ElEmpty } from 'element-plus';
 
 use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
@@ -43,17 +43,19 @@ const chartOption = ref({
   grid: { left: '3%', right: '4%', bottom: '3%', top: '10%', containLabel: true },
   xAxis: { type: 'value' },
   yAxis: { type: 'category', data: [] as string[] },
-  series: [{
-    name: '能耗',
-    type: 'bar',
-    data: [] as number[],
-    itemStyle: {
-      color: (params: any) => {
-        const colors = ['#10B981', '#34D399', '#FBBF24', '#F59E0B', '#EF4444'];
-        return colors[params.dataIndex] || '#6B7280';
+  series: [
+    {
+      name: '能耗',
+      type: 'bar',
+      data: [] as number[],
+      itemStyle: {
+        color: (params: any) => {
+          const colors = ['#10B981', '#34D399', '#FBBF24', '#F59E0B', '#EF4444'];
+          return colors[params.dataIndex] || '#6B7280';
+        }
       }
     }
-  }]
+  ]
 });
 
 onMounted(async () => {
@@ -66,7 +68,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">班组能效排名</span>

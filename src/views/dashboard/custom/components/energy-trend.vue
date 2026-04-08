@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { ElCard, ElEmpty, ElRadioButton, ElRadioGroup } from 'element-plus';
 import { use } from 'echarts/core';
 import { LineChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, DataZoomComponent } from 'echarts/components';
+import { DataZoomComponent, GridComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
-import { ElCard, ElRadioGroup, ElRadioButton, ElEmpty } from 'element-plus';
 
 use([LineChart, GridComponent, TooltipComponent, DataZoomComponent, CanvasRenderer]);
 
@@ -63,15 +63,17 @@ const chartOption = computed(() => ({
     { type: 'inside', start: 0, end: 100 },
     { type: 'slider', start: 0, end: 100, height: 20, bottom: 5 }
   ],
-  series: [{
-    name: '能耗',
-    type: 'line',
-    smooth: true,
-    symbol: 'none',
-    areaStyle: { opacity: 0.3 },
-    lineStyle: { width: 2 },
-    data: trendData.value.values
-  }]
+  series: [
+    {
+      name: '能耗',
+      type: 'line',
+      smooth: true,
+      symbol: 'none',
+      areaStyle: { opacity: 0.3 },
+      lineStyle: { width: 2 },
+      data: trendData.value.values
+    }
+  ]
 }));
 
 function handleRangeChange() {
@@ -84,7 +86,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">能耗趋势</span>

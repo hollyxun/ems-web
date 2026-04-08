@@ -53,7 +53,7 @@ async function getList() {
       chartData.value = chartResult;
       updateChart();
     }
-  } catch (_error) {
+  } catch {
     ElMessage.error('获取数据失败');
   } finally {
     loading.value = false;
@@ -118,7 +118,7 @@ async function handleExport() {
       timeType: queryParams.value.timeType
     });
     ElMessage.success('导出成功');
-  } catch (_error) {
+  } catch {
     ElMessage.error('导出失败');
   }
 }

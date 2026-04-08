@@ -1,5 +1,4 @@
-import { Graph } from '@antv/g6';
-import type { IPointerEvent } from '@antv/g6';
+import { Graph, type IPointerEvent, type NodeData } from '@antv/g6';
 
 // 节点类型
 export type ApprovalNodeType = 'start' | 'end' | 'approval' | 'condition' | 'parallel';
@@ -56,7 +55,8 @@ export function useApprovalFlow(config: ApprovalFlowConfig) {
     data,
     node: {
       type: 'rect',
-      style: (node: ApprovalNodeData) => {
+      style: (nodeData: NodeData) => {
+        const node = nodeData as ApprovalNodeData;
         const style = nodeStyleMap[node.type] || nodeStyleMap.approval;
         return {
           labelText: node.name,
@@ -71,9 +71,7 @@ export function useApprovalFlow(config: ApprovalFlowConfig) {
           labelTextBaseline: 'middle',
           labelFontFamily: 'DM Sans, sans-serif',
           cursor: editable ? 'pointer' : 'default',
-          badges: [
-            { text: style.icon, placement: 'top-left', offsetX: -25, offsetY: -5, fill: style.fill }
-          ],
+          badges: [{ text: style.icon, placement: 'top-left', offsetX: -25, offsetY: -5, fill: style.fill }],
           badgeFontSize: 12,
           badgeFill: '#E5E7EB',
           ports: [
@@ -163,7 +161,7 @@ export function useApprovalFlow(config: ApprovalFlowConfig) {
 
   // 绑定事件
   graph.on('node:click', (event: IPointerEvent) => {
-    const nodeId = event.target.id;
+    const nodeId = (event.target as any).id;
     const node = data.nodes.find(n => n.id === nodeId);
     if (node && onNodeClick) {
       onNodeClick(node);
@@ -171,7 +169,7 @@ export function useApprovalFlow(config: ApprovalFlowConfig) {
   });
 
   graph.on('edge:click', (event: IPointerEvent) => {
-    const edgeId = event.target.id;
+    const edgeId = (event.target as any).id;
     const edge = data.edges.find(e => e.id === edgeId);
     if (edge && onEdgeClick) {
       onEdgeClick(edge);
@@ -198,11 +196,11 @@ export function useApprovalFlow(config: ApprovalFlowConfig) {
     },
     // 删除节点
     removeNode: (nodeId: string) => {
-      graph.removeNodeData(nodeId);
+      graph.removeNodeData([nodeId]);
     },
     // 删除边
     removeEdge: (edgeId: string) => {
-      graph.removeEdgeData(edgeId);
+      graph.removeEdgeData([edgeId]);
     },
     // 更新节点
     updateNode: (nodeId: string, updates: Partial<ApprovalNodeData>) => {

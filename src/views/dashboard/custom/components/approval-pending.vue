@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElCard, ElBadge, ElButton, ElEmpty, ElTag, ElAvatar } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { ElAvatar, ElBadge, ElButton, ElCard, ElEmpty, ElTag } from 'element-plus';
 
 defineOptions({ name: 'ApprovalPendingCard' });
 
@@ -44,7 +44,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <div class="flex items-center justify-between">
         <ElBadge :value="pendingCount" :max="99" class="mr-2">
@@ -60,7 +60,7 @@ defineExpose({ refresh: loadData });
       <div
         v-for="item in pendingList"
         :key="item.id"
-        class="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-dark-700 cursor-pointer transition-colors"
+        class="flex cursor-pointer items-center justify-between rounded-lg p-2 transition-colors hover:bg-gray-50 dark:hover:bg-dark-700"
       >
         <div class="flex items-center gap-3">
           <ElAvatar size="small" class="bg-blue-500">

@@ -102,27 +102,27 @@ export function ignoreAlert(alertId: string, remark?: string) {
 // ===== 自定义看板 API =====
 
 /** 保存看板配置 */
-export function fetchSaveDashboardConfig(data: any) {
+export function fetchSaveDashboardConfig(data: Api.Dashboard.SaveDashboardConfigParams) {
   return request({ url: '/dashboard/config/save', method: 'post', data });
 }
 
 /** 获取看板配置 */
-export function fetchGetDashboardConfig(params: { id?: number; code?: string; owner_type?: string; owner_id?: string }) {
+export function fetchGetDashboardConfig(params: Api.Dashboard.GetDashboardConfigParams) {
   return request({ url: '/dashboard/config/get', method: 'get', params });
 }
 
 /** 删除看板配置 */
-export function fetchDeleteDashboardConfig(data: { id: number }) {
+export function fetchDeleteDashboardConfig(data: Api.Dashboard.DeleteDashboardConfigParams) {
   return request({ url: '/dashboard/config/delete', method: 'delete', data });
 }
 
 /** 设为默认看板 */
-export function fetchSetDefaultDashboard(data: { id: number }) {
+export function fetchSetDefaultDashboard(data: Api.Dashboard.SetDefaultDashboardParams) {
   return request({ url: '/dashboard/config/set-default', method: 'post', data });
 }
 
 /** 看板列表 */
-export function fetchDashboardConfigList(params?: { page?: number; pageSize?: number; owner_type?: string }) {
+export function fetchDashboardConfigList(params?: Api.Dashboard.DashboardConfigListParams) {
   return request({ url: '/dashboard/config/list', method: 'get', params });
 }
 
@@ -132,6 +132,6 @@ export function fetchDashboardComponents() {
 }
 
 /** 看板数据代理 */
-export function fetchDashboardData(params: { component_type: string; data_source: string }) {
+export function fetchDashboardData(params: Api.Dashboard.DashboardDataParams) {
   return request({ url: '/dashboard/data', method: 'get', params });
 }

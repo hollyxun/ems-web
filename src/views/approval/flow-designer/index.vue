@@ -1,29 +1,50 @@
 <script setup lang="ts">
-import { ref, onMounted, shallowRef } from 'vue';
-import { ElCard, ElButton, ElMessage, ElTag, ElTable, ElTableColumn, ElPagination, ElDrawer, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElEmpty, ElDropdown, ElDropdownMenu, ElDropdownItem, ElDialog } from 'element-plus';
+import { onMounted, ref, shallowRef } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 import {
-  fetchDefinitionList,
-  fetchGetDefinition,
-  fetchCreateDefinition,
-  fetchUpdateDefinition,
+  ElButton,
+  ElCard,
+  ElDrawer,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
+  ElEmpty,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElMessage,
+  ElOption,
+  ElPagination,
+  ElSelect,
+  ElTable,
+  ElTableColumn,
+  ElTag
+} from 'element-plus';
+import {
   fetchActivateDefinition,
-  fetchDeleteDefinition
+  fetchCreateDefinition,
+  fetchDefinitionList,
+  fetchDeleteDefinition,
+  fetchUpdateDefinition
 } from '@/service/api/approval';
-import { useApprovalFlow, type ApprovalFlowData, type ApprovalNodeData, type ApprovalNodeType } from './modules/use-approval-flow';
-import type { Graph } from '@antv/g6';
+import {
+  type ApprovalFlowData,
+  type ApprovalNodeData,
+  type ApprovalNodeType,
+  useApprovalFlow
+} from './modules/use-approval-flow';
 
 defineOptions({ name: 'ApprovalFlowDesigner' });
 
 // 列表状态
 const loading = ref(false);
-const definitions = ref<ApprovalDefinition[]>([]);
+const definitions = ref<Api.Approval.Definition[]>([]);
 const total = ref(0);
 const currentPage = ref(1);
 const pageSize = ref(10);
 
 // 编辑状态
-const editingDefinition = ref<ApprovalDefinition | null>(null);
+const editingDefinition = ref<Api.Approval.Definition | null>(null);
 const editorVisible = ref(false);
 const editorMode = ref<'list' | 'design'>('list');
 const saving = ref(false);
@@ -70,7 +91,7 @@ function handleCreate() {
 }
 
 // 编辑流程
-async function handleEdit(row: ApprovalDefinition) {
+async function handleEdit(row: Api.Approval.Definition) {
   editingDefinition.value = row;
   try {
     const parsed = JSON.parse(row.definition_json);
@@ -102,7 +123,7 @@ function handleAddNodeType(type: ApprovalNodeType) {
   if (!typeInfo) return;
 
   const id = `${type}_${Date.now()}`;
-  const maxX = flowData.value.nodes.reduce((max, n) => Math.max(max, (n as any).position?.x || 0), 0);
+  const _maxX = flowData.value.nodes.reduce((max, n) => Math.max(max, (n as any).position?.x || 0), 0);
 
   const newNode: ApprovalNodeData = {
     id,
@@ -137,7 +158,7 @@ function initFlow() {
     container: containerRef.value,
     data: flowData.value,
     editable: true,
-    onNodeClick: (node) => {
+    onNodeClick: node => {
       selectedNode.value = node;
       nodeConfigVisible.value = true;
     },
@@ -215,14 +236,17 @@ onMounted(() => {
         </div>
       </template>
 
-      <ElTable :data="definitions" v-loading="loading" stripe>
+      <ElTable v-loading="loading" :data="definitions" stripe>
         <ElTableColumn prop="name" label="流程名称" min-width="150" />
         <ElTableColumn prop="code" label="编码" width="180" />
         <ElTableColumn prop="category" label="分类" width="120" />
         <ElTableColumn prop="version" label="版本" width="80" align="center" />
         <ElTableColumn prop="status" label="状态" width="100" align="center">
           <template #default="{ row }">
-            <ElTag :type="row.status === 'active' ? 'success' : row.status === 'draft' ? 'warning' : 'info'" size="small">
+            <ElTag
+              :type="row.status === 'active' ? 'success' : row.status === 'draft' ? 'warning' : 'info'"
+              size="small"
+            >
               {{ row.status === 'active' ? '已激活' : row.status === 'draft' ? '草稿' : '已废弃' }}
             </ElTag>
           </template>
@@ -231,21 +255,29 @@ onMounted(() => {
         <ElTableColumn label="操作" width="200" fixed="right">
           <template #default="{ row }">
             <ElButton size="small" @click="handleEdit(row)">编辑</ElButton>
-            <ElButton v-if="row.status !== 'active'" type="success" size="small" @click="handleActivate(row.id)">激活</ElButton>
+            <ElButton v-if="row.status !== 'active'" type="success" size="small" @click="handleActivate(row.id)">
+              激活
+            </ElButton>
             <ElButton type="danger" size="small" @click="handleDelete(row.id)">删除</ElButton>
           </template>
         </ElTableColumn>
       </ElTable>
 
       <div class="mt-4 flex justify-end">
-        <ElPagination v-model:current-page="currentPage" :page-size="pageSize" :total="total" layout="total, prev, pager, next" @current-change="loadDefinitions" />
+        <ElPagination
+          v-model:current-page="currentPage"
+          :page-size="pageSize"
+          :total="total"
+          layout="total, prev, pager, next"
+          @current-change="loadDefinitions"
+        />
       </div>
     </ElCard>
 
     <!-- 流程设计器 -->
-    <div v-if="editorVisible" class="h-full flex flex-col" style="background: #1E2028;">
+    <div v-if="editorVisible" class="h-full flex flex-col" style="background: #1e2028">
       <!-- 工具栏 -->
-      <div class="flex items-center justify-between px-4 py-3 border-b" style="border-color: rgba(255,255,255,0.06);">
+      <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: rgba(255, 255, 255, 0.06)">
         <div class="flex items-center gap-4">
           <ElButton text @click="handleCloseEditor">
             <icon-mdi:arrow-left class="mr-1" />
@@ -269,14 +301,18 @@ onMounted(() => {
               </ElDropdownMenu>
             </template>
           </ElDropdown>
-          <ElButton size="small" type="success" @click="handleSave" :loading="saving">保存</ElButton>
+          <ElButton size="small" type="success" :loading="saving" @click="handleSave">保存</ElButton>
         </div>
       </div>
 
       <!-- 画布区域 -->
-      <div class="flex-1 relative overflow-hidden">
-        <div ref="containerRef" class="w-full h-full"></div>
-        <ElEmpty v-if="flowData.nodes.length === 0" description="点击「添加节点」开始设计流程" class="absolute inset-0 flex-center" />
+      <div class="relative flex-1 overflow-hidden">
+        <div ref="containerRef" class="h-full w-full"></div>
+        <ElEmpty
+          v-if="flowData.nodes.length === 0"
+          description="点击「添加节点」开始设计流程"
+          class="absolute inset-0 flex-center"
+        />
       </div>
     </div>
 
@@ -287,9 +323,9 @@ onMounted(() => {
           <ElInput v-model="selectedNode.name" />
         </ElFormItem>
         <ElFormItem label="节点类型">
-          <ElTag>{{ nodeTypes.find(t => t.type === selectedNode.type)?.name }}</ElTag>
+          <ElTag>{{ nodeTypes.find(t => t.type === selectedNode?.type)?.name }}</ElTag>
         </ElFormItem>
-        <template v-if="selectedNode.type === 'approval'">
+        <template v-if="selectedNode?.type === 'approval'">
           <ElFormItem label="审批模式">
             <ElSelect v-model="selectedNode.config!.approval_mode">
               <ElOption label="或签（任一人通过即可）" value="or_sign" />
@@ -316,7 +352,7 @@ onMounted(() => {
 
 <style scoped>
 :deep(.g6-tooltip) {
-  background: #1E2028 !important;
+  background: #1e2028 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 </style>

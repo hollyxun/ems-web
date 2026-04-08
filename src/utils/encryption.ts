@@ -234,7 +234,8 @@ export async function decryptAESGCMData(
 export async function decryptResponseData(payload: { encryptedData: string; nonce: string }): Promise<unknown> {
   const encryptedBytes = base64ToArray(payload.encryptedData);
   // nonce will be used when AES decryption is implemented
-  void base64ToArray(payload.nonce);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _nonce = base64ToArray(payload.nonce);
 
   // 注意：响应解密需要后端返回 AES 密钥
   // 这里假设后端在同一会话中保持 AES 密钥关联

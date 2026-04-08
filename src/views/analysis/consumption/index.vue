@@ -111,8 +111,8 @@ async function handleQuery() {
       energyType: params.energyType
     });
     yoyData.value = yoyResult || null;
-  } catch (_error) {
-    console.error('查询失败:', _error);
+  } catch (error) {
+    console.error('查询失败:', error);
   } finally {
     loading.value = false;
   }

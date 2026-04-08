@@ -1,7 +1,19 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
-import { ElDrawer, ElForm, ElFormItem, ElInput, ElInputNumber, ElSelect, ElOption, ElSwitch, ElButton, ElDivider, ElMessage } from 'element-plus';
-import { builtinComponents, categoryNames, type DashboardComponentType } from '../components/index';
+import { computed, ref, watch } from 'vue';
+import {
+  ElButton,
+  ElDivider,
+  ElDrawer,
+  ElForm,
+  ElFormItem,
+  ElInput,
+  ElInputNumber,
+  ElMessage,
+  ElOption,
+  ElSelect,
+  ElSwitch
+} from 'element-plus';
+import { type DashboardComponentType, categoryNames } from '../components/index';
 
 const props = defineProps<{
   visible: boolean;
@@ -59,9 +71,12 @@ function initConfig() {
   }
 }
 
-watch(() => props.visible, (val) => {
-  if (val) initConfig();
-});
+watch(
+  () => props.visible,
+  val => {
+    if (val) initConfig();
+  }
+);
 
 function handleSave() {
   const config: Record<string, any> = {
@@ -81,16 +96,11 @@ function handleClose() {
 </script>
 
 <template>
-  <ElDrawer
-    v-model="props.visible"
-    title="组件配置"
-    :size="400"
-    @close="handleClose"
-  >
+  <ElDrawer v-model="props.visible" title="组件配置" :size="400" @close="handleClose">
     <div v-if="componentInfo" class="flex flex-col gap-4">
       <!-- 组件信息 -->
-      <div class="p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
-        <div class="flex items-center gap-3 mb-2">
+      <div class="rounded-lg bg-gray-50 p-4 dark:bg-dark-700">
+        <div class="mb-2 flex items-center gap-3">
           <icon-mdi:chart-bar v-if="componentInfo.icon === 'mdi:chart-bar'" />
           <icon-mdi:trophy v-if="componentInfo.icon === 'mdi:trophy'" />
           <icon-mdi:clipboard-check v-if="componentInfo.icon === 'mdi:clipboard-check'" />
@@ -107,7 +117,7 @@ function handleClose() {
         <div class="text-sm text-gray-400">
           <span class="mr-2">类别: {{ componentInfo.category }}</span>
         </div>
-        <div class="text-sm text-gray-500 mt-1">
+        <div class="mt-1 text-sm text-gray-500">
           {{ componentInfo.description }}
         </div>
       </div>
@@ -123,14 +133,9 @@ function handleClose() {
         <!-- 数据源 -->
         <ElFormItem label="数据源">
           <ElSelect v-model="dataSourceId" placeholder="选择数据源" clearable>
-            <ElOption
-              v-for="ds in dataSources"
-              :key="ds.id"
-              :label="ds.name"
-              :value="ds.id"
-            >
+            <ElOption v-for="ds in dataSources" :key="ds.id" :label="ds.name" :value="ds.id">
               <span>{{ ds.name }}</span>
-              <span class="text-xs text-gray-400 ml-2">({{ ds.type }})</span>
+              <span class="ml-2 text-xs text-gray-400">({{ ds.type }})</span>
             </ElOption>
           </ElSelect>
         </ElFormItem>
@@ -142,13 +147,7 @@ function handleClose() {
 
         <!-- 刷新间隔 -->
         <ElFormItem v-if="autoRefresh" label="刷新间隔 (毫秒)">
-          <ElInputNumber
-            v-model="refreshInterval"
-            :min="5000"
-            :max="300000"
-            :step="5000"
-            controls-position="right"
-          />
+          <ElInputNumber v-model="refreshInterval" :min="5000" :max="300000" :step="5000" controls-position="right" />
         </ElFormItem>
 
         <!-- 扩展配置（根据组件类型） -->
@@ -195,7 +194,7 @@ function handleClose() {
       </ElForm>
 
       <!-- 操作按钮 -->
-      <div class="flex justify-end gap-2 mt-4">
+      <div class="mt-4 flex justify-end gap-2">
         <ElButton @click="handleClose">取消</ElButton>
         <ElButton type="primary" @click="handleSave">保存配置</ElButton>
       </div>

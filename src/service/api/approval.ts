@@ -5,78 +5,78 @@ const MODULE = '/approval';
 // ===== 流程定义 =====
 
 /** 创建流程定义 */
-export function fetchCreateDefinition(data: CreateDefinitionRequest) {
+export function fetchCreateDefinition(data: Api.Approval.CreateDefinitionParams) {
   return request({ url: `${MODULE}/definition/create`, method: 'post', data });
 }
 
 /** 更新流程定义 */
-export function fetchUpdateDefinition(data: Partial<ApprovalDefinition> & { id: number }) {
+export function fetchUpdateDefinition(data: Api.Approval.UpdateDefinitionParams) {
   return request({ url: `${MODULE}/definition/update`, method: 'put', data });
 }
 
 /** 激活流程定义 */
-export function fetchActivateDefinition(data: { id: number; version?: number }) {
+export function fetchActivateDefinition(data: Api.Approval.ActivateDefinitionParams) {
   return request({ url: `${MODULE}/definition/activate`, method: 'post', data });
 }
 
 /** 删除流程定义 */
-export function fetchDeleteDefinition(data: { id: number }) {
+export function fetchDeleteDefinition(data: Api.Approval.DeleteDefinitionParams) {
   return request({ url: `${MODULE}/definition/delete`, method: 'delete', data });
 }
 
 /** 获取流程定义详情 */
-export function fetchGetDefinition(params: { id: number }) {
-  return request<ApprovalDefinition>({ url: `${MODULE}/definition/get`, method: 'get', params });
+export function fetchGetDefinition(params: Api.Approval.GetDefinitionParams) {
+  return request<Api.Approval.Definition>({ url: `${MODULE}/definition/get`, method: 'get', params });
 }
 
 /** 流程定义列表 */
-export function fetchDefinitionList(params?: { page?: number; pageSize?: number; category?: string; status?: string; keyword?: string }) {
+export function fetchDefinitionList(params?: Api.Approval.DefinitionListParams) {
   return request({ url: `${MODULE}/definition/list`, method: 'get', params });
 }
 
 // ===== 审批实例 =====
 
 /** 发起审批 */
-export function fetchStartInstance(data: StartInstanceRequest) {
-  return request<ApprovalInstance>({ url: `${MODULE}/instance/start`, method: 'post', data });
+export function fetchStartInstance(data: Api.Approval.StartInstanceParams) {
+  return request<Api.Approval.Instance>({ url: `${MODULE}/instance/start`, method: 'post', data });
 }
 
 /** 审批通过 */
-export function fetchApproveInstance(data: ApproveRequest) {
+export function fetchApproveInstance(data: Api.Approval.ApproveParams) {
   return request({ url: `${MODULE}/instance/approve`, method: 'post', data });
 }
 
 /** 驳回 */
-export function fetchRejectInstance(data: RejectRequest) {
+export function fetchRejectInstance(data: Api.Approval.RejectParams) {
   return request({ url: `${MODULE}/instance/reject`, method: 'post', data });
 }
 
 /** 转办 */
-export function fetchTransferInstance(data: TransferRequest) {
+export function fetchTransferInstance(data: Api.Approval.TransferParams) {
   return request({ url: `${MODULE}/instance/transfer`, method: 'post', data });
 }
 
 /** 撤回 */
-export function fetchCancelInstance(data: CancelInstanceRequest) {
+export function fetchCancelInstance(data: Api.Approval.CancelInstanceParams) {
   return request({ url: `${MODULE}/instance/cancel`, method: 'post', data });
 }
 
 /** 实例详情 */
-export function fetchInstanceDetail(params: { id: number }) {
-  return request<InstanceDetail>({ url: `${MODULE}/instance/detail`, method: 'get', params });
+export function fetchInstanceDetail(params: Api.Approval.InstanceDetailParams) {
+  return request<Api.Approval.InstanceDetail>({ url: `${MODULE}/instance/detail`, method: 'get', params });
 }
 
 /** 我的待办 */
-export function fetchMyPending(params?: { page?: number; pageSize?: number; business_type?: string }) {
+export function fetchMyPending(params?: Api.Approval.TaskListParams) {
   return request({ url: `${MODULE}/instance/my-pending`, method: 'get', params });
 }
 
 /** 我的已办 */
-export function fetchMyDone(params?: { page?: number; pageSize?: number; business_type?: string }) {
+export function fetchMyDone(params?: Api.Approval.TaskListParams) {
   return request({ url: `${MODULE}/instance/my-done`, method: 'get', params });
 }
 
 /** 我发起的 */
-export function fetchMyInitiated(params?: { page?: number; pageSize?: number; status?: string; business_type?: string }) {
+export function fetchMyInitiated(params?: Api.Approval.InitiatedListParams) {
   return request({ url: `${MODULE}/instance/my-initiated`, method: 'get', params });
 }

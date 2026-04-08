@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElCard, ElTimeline, ElTimelineItem, ElTag, ElEmpty } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { ElCard, ElEmpty, ElTag, ElTimeline, ElTimelineItem } from 'element-plus';
 
 defineOptions({ name: 'AlertTimelineCard' });
 
@@ -43,7 +43,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full overflow-auto" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full overflow-auto">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">告警时间线</span>

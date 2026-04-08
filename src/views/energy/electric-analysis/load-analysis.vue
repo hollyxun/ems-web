@@ -57,7 +57,7 @@ const fetchData = async () => {
     const { data: res } = await fetchElectricLoadAnalysis(queryParams.value);
     chartData.value = res || null;
     updateChart();
-  } catch (_error) {
+  } catch {
     ElMessage.error('查询失败');
   } finally {
     loading.value = false;

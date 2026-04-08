@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { ElCard, ElCol, ElEmpty, ElRow } from 'element-plus';
 import { use } from 'echarts/core';
 import { GaugeChart } from 'echarts/charts';
 import { TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
-import { ElCard, ElRow, ElCol, ElEmpty } from 'element-plus';
 
 use([GaugeChart, TooltipComponent, CanvasRenderer]);
 
@@ -39,24 +39,33 @@ async function loadData() {
 
 function createGaugeOption(name: string, value: number, min: number, max: number, unit: string) {
   return {
-    series: [{
-      name,
-      type: 'gauge',
-      center: ['50%', '70%'],
-      radius: '90%',
-      min,
-      max,
-      splitNumber: 10,
-      axisLine: {
-        lineStyle: { width: 6, color: [[0.6, '#10B981'], [0.8, '#F59E0B'], [1, '#EF4444']] }
-      },
-      pointer: { itemStyle: { color: 'auto' } },
-      axisTick: { distance: -6, length: 4, lineStyle: { color: '#fff', width: 1 } },
-      splitLine: { distance: -6, length: 10, lineStyle: { color: '#fff', width: 2 } },
-      axisLabel: { color: 'inherit', distance: 12, fontSize: 10 },
-      detail: { valueAnimation: true, formatter: `{value} ${unit}`, color: 'inherit', fontSize: 14 },
-      data: [{ value: Math.round(value * 10) / 10, name }]
-    }]
+    series: [
+      {
+        name,
+        type: 'gauge',
+        center: ['50%', '70%'],
+        radius: '90%',
+        min,
+        max,
+        splitNumber: 10,
+        axisLine: {
+          lineStyle: {
+            width: 6,
+            color: [
+              [0.6, '#10B981'],
+              [0.8, '#F59E0B'],
+              [1, '#EF4444']
+            ]
+          }
+        },
+        pointer: { itemStyle: { color: 'auto' } },
+        axisTick: { distance: -6, length: 4, lineStyle: { color: '#fff', width: 1 } },
+        splitLine: { distance: -6, length: 10, lineStyle: { color: '#fff', width: 2 } },
+        axisLabel: { color: 'inherit', distance: 12, fontSize: 10 },
+        detail: { valueAnimation: true, formatter: `{value} ${unit}`, color: 'inherit', fontSize: 14 },
+        data: [{ value: Math.round(value * 10) / 10, name }]
+      }
+    ]
   };
 }
 
@@ -71,11 +80,11 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">实时指标</span>
-        <span class="text-xs text-green-500 animate-pulse">实时</span>
+        <span class="animate-pulse text-xs text-green-500">实时</span>
       </div>
     </template>
     <ElRow v-if="!loading" :gutter="16" class="h-full">

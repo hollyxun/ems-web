@@ -539,7 +539,163 @@ pnpm eslint . 2>&1 | grep -E "^\s+[0-9]+:[0-9]+\s+error"
 
 ---
 
-## 21. 代码修改后必检规范（CRITICAL）
+## 22. 遗留 ESLint 问题（非本次修复范围）
+
+以下 ESLint 错误为项目已存在质量问题：
+- `no-console` 警告（多处 console 语句）
+- `@typescript-eslint/no-unused-vars`（未使用变量）
+- `default-case`（缺少 default 分支）
+- `no-warning-comments`（TODO 注释）
+- `vue/no-mutating-props`（直接修改 props）
+
+---
+
+## 23. tsconfig.json skipLibCheck 配置（CRITICAL）
+
+### 问题
+
+第三方库类型定义问题导致构建失败：
+
+```
+node_modules/.pnpm/@amap+amap-jsapi-types@0.0.15/.../index.d.ts(1078,18): error TS2304: Cannot find name 'Resource'.
+node_modules/.pnpm/@antv+g-lite@2.3.2/.../Camera.d.ts(21,5): error TS2416: Property 'canvas' ...
+```
+
+### 原因
+
+第三方库（如 `@amap/amap-jsapi-types`、`@antv/g-lite`）的类型定义存在内部问题，项目无法控制。
+
+### 解决方案
+
+在 `tsconfig.json` 中启用 `skipLibCheck`：
+
+```json
+{
+  "compilerOptions": {
+    "skipLibCheck": true
+  }
+}
+```
+
+### 效果
+
+- 跳过对所有 `node_modules/**/*.d.ts` 的类型检查
+- 仅检查项目源码的类型正确性
+- 不影响项目自身代码的类型检查严格性
+
+---
+
+## 24. Vue 模板内联颜色值问题（CRITICAL）
+
+### 问题
+
+`vue-tsc` 解析模板中的内联颜色值时报错：
+
+```vue
+<!-- ❌ 错误：TS1127 Invalid character at position 101 -->
+<ElProgress :color="#10B981">
+  <template #default="{ percentage }">
+    {{ percentage }}%
+  </template>
+</ElProgress>
+```
+
+### 原因
+
+模板中的 `#` 字符在 vue-tsc 生成的中间代码中被错误解析。
+
+### 解决方案
+
+将颜色值提取为变量：
+
+```vue
+<script setup lang="ts">
+// ✅ 正确：颜色值提取为常量
+const greenColor = '#10B981';
+const yellowColor = '#F59E0B';
+const redColor = '#EF4444';
+
+const healthColor = computed(() =>
+  healthRate.value >= 90 ? greenColor : healthRate.value >= 70 ? yellowColor : redColor
+);
+</script>
+
+<template>
+  <!-- ✅ 正确：使用变量绑定 -->
+  <ElProgress :color="greenColor">
+    <template #default="slotProps">
+      {{ slotProps.percentage }}%
+    </template>
+  </ElProgress>
+</template>
+```
+
+### 适用场景
+
+- `ElProgress` 的 `:color` 属性
+- `ElTag` 的 `:color` 属性
+- 其他需要颜色值的组件属性
+
+---
+
+## 25. try-catch 参数缺失问题
+
+### 问题
+
+`catch` 块缺少参数但使用了 `_error` 变量：
+
+```typescript
+// ❌ 错误：_error 未定义
+try {
+  await fetchData();
+} catch {
+  console.error('获取数据失败:', _error);
+}
+```
+
+### 解决方案
+
+添加 `error` 参数：
+
+```typescript
+// ✅ 正确：添加 error 参数
+try {
+  await fetchData();
+} catch (error) {
+  console.error('获取数据失败:', error);
+}
+```
+
+---
+
+## 26. Element Plus TabPaneName 类型兼容
+
+### 问题
+
+`@tab-change` 回调参数类型不匹配：
+
+```typescript
+// ❌ 错误：TS2322 Type '(tab: string) => void' is not assignable to type '(name: TabPaneName) => any'
+function handleTabChange(tab: string) {
+  // ...
+}
+```
+
+### 解决方案
+
+参数类型改为 `string | number`：
+
+```typescript
+// ✅ 正确：兼容 TabPaneName 类型
+function handleTabChange(tab: string | number) {
+  const tabStr = String(tab);
+  // 使用 tabStr 进行字符串比较
+}
+```
+
+---
+
+## 27. 代码修改后必检规范（CRITICAL）
 
 ### 强制要求
 
@@ -584,4 +740,4 @@ pnpm vue-tsc --noEmit 2>&1 | grep "^src/" | wc -l
 
 ---
 
-**最后更新**: 2026-04-07
+**最后更新**: 2026-04-08

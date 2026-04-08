@@ -153,6 +153,50 @@ declare namespace Api.Dashboard {
     pageSize: number;
   }
 
+  // ============ 自定义看板类型 ============
+
+  /** 保存看板配置请求 */
+  interface SaveDashboardConfigParams {
+    id?: number;
+    code?: string;
+    name?: string;
+    layout?: string;
+    owner_type?: string;
+    owner_id?: string;
+    is_default?: boolean;
+  }
+
+  /** 获取看板配置请求 */
+  interface GetDashboardConfigParams {
+    id?: number;
+    code?: string;
+    owner_type?: string;
+    owner_id?: string;
+  }
+
+  /** 删除看板配置请求 */
+  interface DeleteDashboardConfigParams {
+    id: number;
+  }
+
+  /** 设为默认看板请求 */
+  interface SetDefaultDashboardParams {
+    id: number;
+  }
+
+  /** 看板配置列表查询参数 */
+  interface DashboardConfigListParams {
+    page?: number;
+    pageSize?: number;
+    owner_type?: string;
+  }
+
+  /** 看板数据代理请求 */
+  interface DashboardDataParams {
+    component_type: string;
+    data_source: string;
+  }
+
   // ============ Peak/Valley Distribution Types ============
 
   /** Distribution segment */

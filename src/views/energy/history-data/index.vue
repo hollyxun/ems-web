@@ -55,7 +55,7 @@ const fetchData = async () => {
     const { data: res } = await fetchHistoricalData(queryParams.value);
     tableData.value = res?.data || [];
     indexName.value = res?.indexName || '';
-  } catch (_error) {
+  } catch {
     ElMessage.error('查询失败');
     tableData.value = [];
   } finally {
@@ -83,7 +83,7 @@ const handleExport = async () => {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
     ElMessage.success('导出成功');
-  } catch (error) {
+  } catch (_error) {
     ElMessage.error('导出失败');
   } finally {
     exportLoading.value = false;

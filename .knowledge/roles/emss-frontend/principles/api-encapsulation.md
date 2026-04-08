@@ -406,14 +406,131 @@ onUnmounted(() => {
 
 ---
 
+---
+
+## API 类型定义规范（CRITICAL）
+
+### Namespace 风格统一
+
+**所有 API 类型必须定义在 `src/typings/api/*.d.ts` 中，使用 `declare namespace Api` 风格。**
+
+```typescript
+// ✅ 正确：src/typings/api/approval.d.ts
+declare namespace Api.Approval {
+  // 实体类型
+  interface Definition {
+    id: number;
+    name: string;
+    // ...
+  }
+
+  // 请求参数类型
+  interface CreateDefinitionParams {
+    name: string;
+    code: string;
+    // ...
+  }
+
+  // 列表查询参数类型
+  interface DefinitionListParams {
+    page?: number;
+    pageSize?: number;
+    keyword?: string;
+  }
+}
+```
+
+```typescript
+// ❌ 错误：直接导出接口（与项目风格不一致）
+export interface ApprovalDefinition { ... }
+export interface CreateDefinitionRequest { ... }
+```
+
+### 参数类型必须抽离（CRITICAL）
+
+**禁止在 API 函数参数中内联定义类型，必须抽离到 typings 文件。**
+
+```typescript
+// ❌ 错误：内联定义参数类型
+export function fetchActivateDefinition(data: { id: number; version?: number }) {
+  return request({ url: '/approval/definition/activate', method: 'post', data });
+}
+
+export function fetchDefinitionList(params?: {
+  page?: number;
+  pageSize?: number;
+  category?: string;
+  status?: string;
+  keyword?: string;
+}) {
+  return request({ url: '/approval/definition/list', method: 'get', params });
+}
+```
+
+```typescript
+// ✅ 正确：参数类型抽离到 typings
+
+// src/typings/api/approval.d.ts
+declare namespace Api.Approval {
+  interface ActivateDefinitionParams {
+    id: number;
+    version?: number;
+  }
+
+  interface DefinitionListParams {
+    page?: number;
+    pageSize?: number;
+    category?: string;
+    status?: string;
+    keyword?: string;
+  }
+}
+
+// src/service/api/approval.ts
+export function fetchActivateDefinition(data: Api.Approval.ActivateDefinitionParams) {
+  return request({ url: '/approval/definition/activate', method: 'post', data });
+}
+
+export function fetchDefinitionList(params?: Api.Approval.DefinitionListParams) {
+  return request({ url: '/approval/definition/list', method: 'get', params });
+}
+```
+
+### 参数类型命名规范
+
+| 用途 | 命名后缀 | 示例 |
+|------|---------|------|
+| 创建请求 | `Params` | `CreateDefinitionParams` |
+| 更新请求 | `Params` | `UpdateDefinitionParams` |
+| 删除请求 | `Params` | `DeleteDefinitionParams` |
+| GET 查询参数 | `Params` | `DefinitionListParams` |
+| 单条查询参数 | `Params` | `GetDefinitionParams` |
+
+### API 函数中使用全局类型
+
+```typescript
+// ✅ 正确：直接使用全局命名空间 Api，无需导入
+export function fetchCreateDefinition(data: Api.Approval.CreateDefinitionParams) {
+  return request<Api.Approval.Definition>({ ... });
+}
+
+// ❌ 错误：导入全局类型
+import type { ApprovalDefinition } from '@/typings/api/approval';
+export function fetchCreateDefinition(data: CreateDefinitionRequest) { ... }
+```
+
+---
+
 ## 检查清单
 
 封装 API 时检查：
 
+- [ ] **参数类型已抽离到 `src/typings/api/*.d.ts`**
+- [ ] **使用 `declare namespace Api.Xxx` 风格定义类型**
+- [ ] **API 函数直接使用 `Api.Xxx.TypeName`，无需导入**
 - [ ] 使用 TypeScript 定义完整的请求/响应类型
 - [ ] 添加完整的 JSDoc 注释
 - [ ] 函数命名符合规范（get/create/update/delete）
-- [ ] 导出类型供外部使用
 - [ ] 统一的错误处理在拦截器中实现
 - [ ] 组件中捕获特定错误做额外处理
 - [ ] API 路径与后端 Router 路径一致

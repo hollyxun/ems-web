@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElCard, ElCalendar, ElTag, ElEmpty } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { ElCalendar, ElCard, ElEmpty, ElTag } from 'element-plus';
 
 defineOptions({ name: 'ScheduleCalendarCard' });
 
@@ -23,9 +23,8 @@ async function loadData() {
       { type: 'shift', content: '班组A - 白班' },
       { type: 'shift', content: '班组B - 夜班' }
     ],
-    [`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate() + 1).padStart(2, '0')}`]: [
-      { type: 'maintenance', content: '设备巡检' }
-    ]
+    [`${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate() + 1).padStart(2, '0')}`]:
+      [{ type: 'maintenance', content: '设备巡检' }]
   };
   loading.value = false;
 }
@@ -41,7 +40,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full overflow-auto" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full overflow-auto">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">排班日历</span>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElCard, ElButton, ElEmpty, ElText } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { ElButton, ElCard, ElText } from 'element-plus';
 
 defineOptions({ name: 'QuickActionsCard' });
 

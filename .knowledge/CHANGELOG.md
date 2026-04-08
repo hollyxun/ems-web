@@ -6,6 +6,50 @@
 
 ## 2026-04-08
 
+### TypeScript 类型修复与参数抽离规范
+
+**背景**：运行 `vue-tsc --noEmit` 发现第三方库类型错误和项目代码类型问题。
+
+#### tsconfig.json 配置
+
+添加 `skipLibCheck: true`，跳过第三方库类型检查，避免 `@amap/amap-jsapi-types`、`@antv/g-lite` 等库的类型定义问题影响构建。
+
+#### API 参数类型抽离（CRITICAL）
+
+**规范**：所有 API 参数类型必须在 `src/typings/api/*.d.ts` 中定义，使用 `declare namespace Api.Xxx` 风格。
+
+**修复文件**：
+- `src/typings/api/approval.d.ts` - 重构为 namespace 风格，添加所有参数类型
+- `src/typings/api/dashboard.d.ts` - 添加看板相关参数类型
+- `src/service/api/approval.ts` - 使用抽离的参数类型
+- `src/service/api/dashboard.ts` - 使用抽离的参数类型
+
+#### Vue 模板修复
+
+**问题**：`vue-tsc` 解析模板中内联颜色值 `#xxxxxx` 时报 `TS1127 Invalid character`。
+
+**修复**：将颜色值提取为变量，避免模板中的 `#` 字符解析问题。
+
+**相关文件**：`src/views/dashboard/custom/components/device-status.vue`
+
+#### 其他类型修复
+
+| 文件 | 问题 | 修复 |
+|------|------|------|
+| `analysis/comprehensive/index.vue` | `catch` 缺少参数 | 添加 `error` 参数 |
+| `analysis/consumption/index.vue` | `catch` 缺少参数 | 添加 `error` 参数 |
+| `approval/workspace/index.vue` | `TabPaneName` 类型不兼容 | 参数改为 `string \| number` |
+| `dashboard/custom/index.vue` | `Object.keys()` 无法索引类型化对象 | 创建类型化数组 |
+| `developer/function/*.vue` | 路由名称错误 | 改为 `developer_function_*` 格式 |
+
+#### 规范更新
+
+- `principles/typescript-constraints.md` - 添加第 23-27 节（skipLibCheck、内联颜色值、catch 参数等）
+- `principles/api-encapsulation.md` - 添加参数类型抽离规范章节
+- `experience/typescript-param-extraction-2026-04-08.md` - 新建经验文档
+
+---
+
 ### 路由菜单整合（重大变更）
 
 **背景**：一级菜单过多（35+ 个），存在大量重复和分散的功能模块。

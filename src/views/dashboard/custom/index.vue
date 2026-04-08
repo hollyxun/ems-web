@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, shallowRef } from 'vue';
-import { ElCard, ElButton, ElEmpty, ElTag, ElMessage, ElDropdown, ElDropdownMenu, ElDropdownItem, ElIcon } from 'element-plus';
+import { computed, onMounted, ref, shallowRef } from 'vue';
+import { ElButton, ElDropdown, ElDropdownItem, ElDropdownMenu, ElEmpty, ElIcon, ElMessage, ElTag } from 'element-plus';
 import { fetchGetDashboardConfig, fetchSaveDashboardConfig } from '@/service/api/dashboard';
-import { builtinComponents, componentsByCategory, categoryNames, getComponent, type DashboardComponentType } from './components/index';
+import {
+  type ComponentCategory,
+  type DashboardComponentType,
+  categoryNames,
+  componentsByCategory,
+  getComponent
+} from './components/index';
 import ComponentConfigDrawer from './modules/component-config-drawer.vue';
 
 defineOptions({ name: 'CustomDashboard' });
@@ -28,6 +34,9 @@ const dashboardId = ref<number | null>(null);
 
 // 组件实例引用（用于刷新）
 const componentRefs = shallowRef<Record<string, any>>({});
+
+// 类别列表（带类型）
+const categories = Object.keys(componentsByCategory) as ComponentCategory[];
 
 const gridCols = 12;
 const rowHeight = 80;
@@ -122,8 +131,8 @@ function handleResetLayout() {
 
 // 刷新所有组件
 function refreshAllComponents() {
-  Object.values(componentRefs.value).forEach((ref: any) => {
-    if (ref?.refresh) ref.refresh();
+  Object.values(componentRefs.value).forEach((componentRef: any) => {
+    if (componentRef?.refresh) componentRef.refresh();
   });
   ElMessage.success('已刷新所有组件');
 }
@@ -140,9 +149,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-full flex flex-col" style="background: #1E2028; color: #e5e7eb;">
+  <div class="h-full flex flex-col" style="background: #1e2028; color: #e5e7eb">
     <!-- 顶部工具栏 -->
-    <div class="flex items-center justify-between px-4 py-3 border-b" style="border-color: rgba(255,255,255,0.06);">
+    <div class="flex items-center justify-between border-b px-4 py-3" style="border-color: rgba(255, 255, 255, 0.06)">
       <div class="flex items-center gap-3">
         <h2 class="text-lg font-semibold">{{ dashboardName }}</h2>
         <ElTag v-if="isEditing" size="small" type="warning">编辑中</ElTag>
@@ -158,13 +167,9 @@ onMounted(() => {
             <template #dropdown>
               <ElDropdownMenu>
                 <!-- 按类别分组 -->
-                <template v-for="category in Object.keys(componentsByCategory)" :key="category">
+                <template v-for="category in categories" :key="category">
                   <div class="px-3 py-1 text-xs text-gray-400 font-medium">{{ categoryNames[category] }}</div>
-                  <ElDropdownItem
-                    v-for="comp in componentsByCategory[category]"
-                    :key="comp.id"
-                    :command="comp.id"
-                  >
+                  <ElDropdownItem v-for="comp in componentsByCategory[category]" :key="comp.id" :command="comp.id">
                     <div class="flex items-center gap-2">
                       <ElIcon>
                         <icon-mdi:chart-bar v-if="comp.icon === 'mdi:chart-bar'" />
@@ -201,12 +206,17 @@ onMounted(() => {
     </div>
 
     <!-- 看板内容区 -->
-    <div class="flex-1 overflow-auto p-4 relative" :style="{ minHeight: containerHeight }">
+    <div class="relative flex-1 overflow-auto p-4" :style="{ minHeight: containerHeight }">
       <!-- 编辑态网格辅助线 -->
       <div
         v-if="isEditing"
-        class="absolute inset-0 pointer-events-none opacity-10"
-        style="background-image: linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px); background-size: calc(100% / 12) 80px;"
+        class="pointer-events-none absolute inset-0 opacity-10"
+        style="
+          background-image:
+            linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+          background-size: calc(100% / 12) 80px;
+        "
       />
 
       <!-- 空状态 -->
@@ -219,7 +229,7 @@ onMounted(() => {
         v-for="item in layoutItems"
         :key="item.id"
         class="dashboard-widget"
-        :class="{ 'editing': isEditing }"
+        :class="{ editing: isEditing }"
         :style="getComponentStyle(item)"
         @click="handleComponentClick(item)"
       >
@@ -235,7 +245,7 @@ onMounted(() => {
           <!-- 动态渲染实际组件 -->
           <component
             :is="getComponent(item.componentId)?.component"
-            :ref="(el: any) => componentRefs[item.id] = el"
+            :ref="(el: any) => (componentRefs[item.id] = el)"
             :config="item.config"
             :refresh-interval="item.config.refreshInterval"
           />
@@ -270,7 +280,7 @@ onMounted(() => {
 }
 
 .dashboard-widget.editing:hover {
-  box-shadow: 0 0 0 2px #F59E0B;
+  box-shadow: 0 0 0 2px #f59e0b;
 }
 
 .widget-header {

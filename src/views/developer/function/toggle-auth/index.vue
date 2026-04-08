@@ -62,7 +62,7 @@ async function handleToggleAccount(account: Account) {
 
 <template>
   <ElSpace direction="vertical" fill :size="16">
-    <ElCard :header="$t('route.function_toggle-auth')" class="card-wrapper">
+    <ElCard :header="$t('route.developer_function_toggle-auth')" class="card-wrapper">
       <ElDescriptions direction="vertical" border :column="1">
         <ElDescriptionsItem :label="$t('page.manage.user.userRole')">
           <ElSpace>

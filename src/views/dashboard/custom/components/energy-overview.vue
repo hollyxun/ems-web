@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import { ElCard, ElEmpty, ElStatistic } from 'element-plus';
 import { use } from 'echarts/core';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, LegendComponent } from 'echarts/components';
+import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import VChart from 'vue-echarts';
-import { ElCard, ElStatistic, ElProgress, ElEmpty } from 'element-plus';
 
 use([BarChart, LineChart, PieChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
 
@@ -45,29 +45,33 @@ const trendOption = ref({
   grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
   xAxis: { type: 'category', data: [] as string[] },
   yAxis: { type: 'value' },
-  series: [{
-    name: '能耗',
-    type: 'line',
-    smooth: true,
-    areaStyle: { opacity: 0.3 },
-    data: [] as number[]
-  }]
+  series: [
+    {
+      name: '能耗',
+      type: 'line',
+      smooth: true,
+      areaStyle: { opacity: 0.3 },
+      data: [] as number[]
+    }
+  ]
 });
 
 const pieOption = ref({
   tooltip: { trigger: 'item' },
   legend: { bottom: '5%', left: 'center' },
-  series: [{
-    name: '能源类型',
-    type: 'pie',
-    radius: ['40%', '70%'],
-    avoidLabelOverlap: false,
-    itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
-    label: { show: false, position: 'center' },
-    emphasis: { label: { show: true, fontSize: 14, fontWeight: 'bold' } },
-    labelLine: { show: false },
-    data: [] as { name: string; value: number }[]
-  }]
+  series: [
+    {
+      name: '能源类型',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: { borderRadius: 10, borderColor: '#fff', borderWidth: 2 },
+      label: { show: false, position: 'center' },
+      emphasis: { label: { show: true, fontSize: 14, fontWeight: 'bold' } },
+      labelLine: { show: false },
+      data: [] as { name: string; value: number }[]
+    }
+  ]
 });
 
 onMounted(async () => {
@@ -81,7 +85,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">能源概览</span>

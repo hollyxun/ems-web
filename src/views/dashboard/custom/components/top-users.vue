@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { ElCard, ElAvatar, ElBadge, ElEmpty, ElTag } from 'element-plus';
+import { onMounted, ref } from 'vue';
+import { ElAvatar, ElBadge, ElCard, ElEmpty, ElTag } from 'element-plus';
 
 defineOptions({ name: 'TopUsersCard' });
 
@@ -10,7 +10,9 @@ const props = defineProps<{
 }>();
 
 const loading = ref(true);
-const topUsers = ref<{ rank: number; name: string; avatar: string; department: string; energy: number; trend: number }[]>([]);
+const topUsers = ref<
+  { rank: number; name: string; avatar: string; department: string; energy: number; trend: number }[]
+>([]);
 
 async function loadData() {
   loading.value = true;
@@ -32,7 +34,7 @@ defineExpose({ refresh: loadData });
 </script>
 
 <template>
-  <ElCard shadow="never" class="h-full" v-loading="loading">
+  <ElCard v-loading="loading" shadow="never" class="h-full">
     <template #header>
       <div class="flex items-center justify-between">
         <span class="font-medium">能耗 Top5</span>
@@ -40,11 +42,7 @@ defineExpose({ refresh: loadData });
       </div>
     </template>
     <div v-if="!loading && topUsers.length" class="flex flex-col gap-3">
-      <div
-        v-for="user in topUsers"
-        :key="user.rank"
-        class="flex items-center justify-between p-2 rounded-lg"
-      >
+      <div v-for="user in topUsers" :key="user.rank" class="flex items-center justify-between rounded-lg p-2">
         <div class="flex items-center gap-3">
           <ElBadge :value="user.rank" :type="user.rank <= 2 ? 'danger' : user.rank <= 4 ? 'warning' : 'info'">
             <ElAvatar size="small" class="bg-blue-500">
@@ -59,8 +57,8 @@ defineExpose({ refresh: loadData });
         <div class="flex items-center gap-2">
           <span class="text-sm font-medium">{{ user.energy }} kWh</span>
           <div class="flex items-center">
-            <icon-mdi:arrow-down v-if="user.trend < 0" class="text-green-500 text-xs" />
-            <icon-mdi:arrow-up v-else class="text-red-500 text-xs" />
+            <icon-mdi:arrow-down v-if="user.trend < 0" class="text-xs text-green-500" />
+            <icon-mdi:arrow-up v-else class="text-xs text-red-500" />
             <span :class="user.trend < 0 ? 'text-green-500' : 'text-red-500'" class="text-xs">
               {{ Math.abs(user.trend) }}%
             </span>

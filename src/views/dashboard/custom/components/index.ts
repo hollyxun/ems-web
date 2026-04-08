@@ -127,8 +127,11 @@ export const builtinComponents: DashboardComponentType[] = [
   }
 ];
 
+// 组件类别类型
+export type ComponentCategory = 'energy' | 'device' | 'approval' | 'schedule' | 'other';
+
 // 按类别分组
-export const componentsByCategory = {
+export const componentsByCategory: Record<ComponentCategory, DashboardComponentType[]> = {
   energy: builtinComponents.filter(c => c.category === 'energy'),
   device: builtinComponents.filter(c => c.category === 'device'),
   approval: builtinComponents.filter(c => c.category === 'approval'),
