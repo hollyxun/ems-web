@@ -4,6 +4,60 @@
 
 ---
 
+## 2026-04-09
+
+### 审计日志与策略管理模块
+
+#### 新增页面
+
+- **`src/views/manage/audit-log/index.vue`** - 审计日志管理页面
+  - 日志列表展示（分页、筛选）
+  - 按模块/操作类型/用户筛选
+  - 日志详情查看
+  - 过期日志清理
+
+- **`src/views/manage/policy/`** - Casbin 策略管理页面
+  - `index.vue` - 策略列表
+  - `modules/policy-operate-drawer.vue` - 策略编辑抽屉
+  - `modules/policy-search.vue` - 策略搜索组件
+
+#### 新增 API 封装
+
+- **`src/service/api/audit.ts`** - 审计日志 API
+  - `fetchGetAuditLogList` - 获取日志列表
+  - `fetchGetAuditLogById` - 获取日志详情
+  - `fetchGetAuditStatistics` - 获取统计数据
+  - `fetchCleanupAuditLogs` - 清理过期日志
+  - `fetchGetAuditCategories` - 获取分类列表
+  - `fetchGetAuditActions` - 获取操作类型列表
+  - `fetchExportAuditLogs` - 导出日志
+
+- **`src/service/api/casbin.ts`** - Casbin 策略 API
+  - `fetchGetPolicyList` - 获取策略列表
+  - `fetchCreatePolicy` - 创建策略
+  - `fetchUpdatePolicy` - 更新策略
+  - `fetchDeletePolicy` - 删除策略
+
+#### 新增类型定义
+
+- **`src/typings/api/audit.d.ts`** - 审计日志类型
+- **`src/typings/api/casbin.d.ts`** - Casbin 策略类型
+
+#### 移除废弃模块
+
+- `src/views/manage/department/` - 部门管理（后端已删除）
+- `src/views/manage/advanced-permission/` - 高级权限（由 Casbin 策略替代）
+- `src/views/manage/operation-record/` - 操作记录（由审计日志替代）
+- `src/service/api/advanced-permission.ts`
+- `src/typings/api/advanced-permission.d.ts`
+
+#### 国际化更新
+
+- `src/locales/langs/zh-cn.ts` - 添加 audit-log/policy 相关翻译
+- `src/locales/langs/en-us.ts` - 同步英文翻译
+
+---
+
 ## 2026-04-08
 
 ### TypeScript 类型修复与参数抽离规范
