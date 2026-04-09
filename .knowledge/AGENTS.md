@@ -77,7 +77,8 @@ question → experience → skill / principle / insight
 
 ```
 web/src/
-├── api/                # API 接口封装
+├── service/            # 请求封装 (Axios)
+│   └── api/            # API 接口封装
 ├── assets/             # 静态资源
 ├── components/         # 公共组件
 │   ├── advanced/       # 高级组件
@@ -167,4 +168,4 @@ web/src/
 
 ---
 
-**最后更新**: 2026-04-08
+**最后更新**: 2026-04-09

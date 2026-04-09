@@ -256,6 +256,8 @@ pnpm build
 | `skills/route-sync-development.md` | 路由同步开发流程 | 开发路由同步功能时 |
 | `skills/button-permission.md` | 按钮权限使用指南 | 使用按钮权限控制时 |
 | `skills/api-type-architecture.md` | API 类型定义架构规范 | 新增/重构 API 模块时 |
+| `skills/audit-log-module.md` | 审计日志前端模块 | 开发审计日志相关功能时 |
+| `skills/casbin-policy-module.md` | Casbin 策略管理前端模块 | 开发权限策略管理功能时 |
 
 ### Insights（规律性认知）
 
@@ -315,9 +317,9 @@ pnpm build
 ## 参考资源
 
 - 项目根目录 `.claude/rules/project_rules.md`：完整项目规则
-- 示例页面 `views/system/user/index.vue`：经典实现范例
+- 示例页面 `views/manage/user/index.vue`：经典实现范例
 - 示例组件 `components/common/DataTable.vue`：组件封装范例
 
 ---
 
-**最后更新**: 2026-04-08
+**最后更新**: 2026-04-09

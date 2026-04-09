@@ -291,48 +291,6 @@ declare namespace Api {
     /** api list response */
     type ApiList = Common.PageResult<ApiItem>;
 
-    /** operation record */
-    type OperationRecord = {
-      /** record id */
-      id: number;
-      /** created at */
-      createdAt: string;
-      /** updated at */
-      updatedAt: string;
-      /** ip address */
-      ip: string;
-      /** request method */
-      method: string;
-      /** request path */
-      path: string;
-      /** response status code */
-      status: number;
-      /** response time in ms */
-      latency: number;
-      /** user agent */
-      agent: string;
-      /** error message */
-      errorMessage: string;
-      /** request body */
-      body: string;
-      /** response body */
-      resp: string;
-      /** user id */
-      userId: number;
-    };
-
-    /** operation record search params */
-    type OperationRecordSearchParams = {
-      page: number;
-      pageSize: number;
-      path?: string;
-      method?: string;
-      status?: number;
-    };
-
-    /** operation record list response */
-    type OperationRecordList = Common.PageResult<OperationRecord>;
-
     /** dictionary */
     type Dictionary = {
       /** record id */

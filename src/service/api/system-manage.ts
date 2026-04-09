@@ -350,37 +350,6 @@ export function fetchBatchDeleteApis(ids: number[]) {
 }
 
 /**
- * Operation Record API
- */
-
-/** get operation record list */
-export function fetchGetOperationRecordList(params?: Api.SystemManage.OperationRecordSearchParams) {
-  return request<Api.SystemManage.OperationRecordList>({
-    url: '/api/v1/operationRecord/list',
-    method: 'get',
-    params
-  });
-}
-
-/** delete operation record */
-export function fetchDeleteOperationRecord(id: number) {
-  return request<boolean>({
-    url: '/api/v1/operationRecord/delete',
-    method: 'delete',
-    params: { id }
-  });
-}
-
-/** batch delete operation records */
-export function fetchBatchDeleteOperationRecords(ids: number[]) {
-  return request<boolean>({
-    url: '/api/v1/operationRecord/deleteByIds',
-    method: 'delete',
-    data: { ids }
-  });
-}
-
-/**
  * Dictionary API
  */
 

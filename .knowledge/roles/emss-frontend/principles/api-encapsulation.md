@@ -12,21 +12,21 @@ triggers:
 
 ## 核心原则
 
-**所有后端 API 调用必须通过 `src/api/` 目录封装，使用 TypeScript 定义完整的请求/响应类型。**
+**所有后端 API 调用必须通过 `src/service/api/` 目录封装，使用 TypeScript 定义完整的请求/响应类型。**
 
 ---
 
 ## 目录结构
 
 ```
-api/
-├── system/            # 系统模块 API
-│   ├── user.ts
-│   ├── menu.ts
-│   └── auth.ts
-├── monitor/           # 监控模块 API
-│   └── ...
-└── ...
+service/
+├── request/           # 请求封装 (Axios)
+│   └── index.ts
+└── api/               # API 接口封装
+    ├── system/        # 系统模块 API
+    │   ├── user.ts
+    │   └── auth.ts
+    └── ...            # 其他模块
 ```
 
 ---
@@ -36,7 +36,7 @@ api/
 ### 完整示例
 
 ```typescript
-// api/system/user.ts
+// service/api/system-manage.ts
 import request from '@/service/request'
 
 // ========== 类型定义 ==========
@@ -595,4 +595,4 @@ interface AlarmItem {
 
 ---
 
-**最后更新**: 2026-04-06
+**最后更新**: 2026-04-09

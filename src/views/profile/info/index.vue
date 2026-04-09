@@ -21,7 +21,7 @@ const userForm = ref({
   headerImg: '',
   phone: '',
   email: '',
-  department: null as any,
+  organization: null as any,
   roles: [] as any[]
 });
 
@@ -144,8 +144,8 @@ onMounted(() => {
                   </ElFormItem>
                 </ElCol>
                 <ElCol :xs="24" :sm="12" :md="12" :lg="12">
-                  <ElFormItem :label="$t('page.profile.info.department')">
-                    <ElInput :value="userForm.department?.name || $t('page.profile.info.noDepartment')" disabled>
+                  <ElFormItem :label="$t('page.profile.info.organization')">
+                    <ElInput :value="userForm.organization?.name || $t('page.profile.info.noOrganization')" disabled>
                       <template #prefix>
                         <SvgIcon icon="carbon:building" class="text-gray-400" />
                       </template>

@@ -19,10 +19,10 @@ triggers:
 
 ### Step 1: API 封装
 
-创建 `src/api/[module].ts` 文件，定义所有接口。
+创建 `src/service/api/[module].ts` 文件，定义所有接口。
 
 ```typescript
-// api/system/user.ts
+// service/api/system-manage.ts
 import request from '@/service/request'
 
 // 类型定义
@@ -70,9 +70,9 @@ export function deleteUser(id: number) {
 如果逻辑较复杂，创建组合式函数。
 
 ```typescript
-// views/system/user/hooks/useUserTable.ts
+// views/manage/user/hooks/useUserTable.ts
 import { ref, reactive } from 'vue'
-import { getUserList, deleteUser, type UserInfo, type UserSearchParams } from '@/api/system/user'
+import { getUserList, deleteUser, type UserInfo, type UserSearchParams } from '@/service/api/system-manage'
 
 export function useUserTable() {
   // 状态
@@ -273,10 +273,10 @@ onMounted(() => {
 
 ### Step 4: 子组件（如需要）
 
-创建 `src/views/[page]/components/` 目录。
+创建 `src/views/[page]/modules/` 目录存放子组件。
 
 ```vue
-<!-- views/system/user/components/UserFormDialog.vue -->
+<!-- views/manage/user/modules/user-operate-drawer.vue -->
 <template>
   <el-dialog
     v-model="visible"
@@ -319,7 +319,7 @@ onMounted(() => {
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
-import { createUser, updateUser, type UserInfo } from '@/api/system/user'
+import { createUser, updateUser, type UserInfo } from '@/service/api/system-manage'
 
 interface Props {
   visible: boolean
@@ -395,29 +395,31 @@ const handleClosed = () => {
 
 ---
 
-### Step 5: 路由配置
+### Step 5: 路由配置（自动生成）
 
-在 `src/router/routes/` 中添加路由。
+项目使用 elegant-router 自动生成路由，在 `src/views/` 下创建目录即可自动识别：
+
+```
+views/
+├── manage/
+│   └── user/
+│       └── index.vue    → 自动生成路由：/manage/user
+```
+
+**路由命名规则**：
+- 目录结构决定路由路径
+- `views/manage/user/index.vue` → 路由路径 `/manage/user`
+- 需要在 `src/locales/langs/zh-cn.ts` 和 `en-us.ts` 中添加对应的 i18n 翻译
 
 ```typescript
-// router/routes/modules/system.ts
-import type { RouteRecordRaw } from 'vue-router'
-
-const systemRoutes: RouteRecordRaw[] = [
-  {
-    path: 'user',
-    name: 'User',
-    component: () => import('@/views/system/user/index.vue'),
-    meta: {
-      title: '用户管理',
-      icon: 'i-carbon-user',
-      keepAlive: true
-    }
-  }
-]
-
-export default systemRoutes
+// locales/langs/zh-cn.ts
+route: {
+  manage_user: '用户管理',
+  // ...
+}
 ```
+
+**详细路由开发流程**：参考 `skills/route-sync-development.md`
 
 ---
 
@@ -470,4 +472,4 @@ export default systemRoutes
 
 ---
 
-**最后更新**: 2026-04-06
+**最后更新**: 2026-04-09
