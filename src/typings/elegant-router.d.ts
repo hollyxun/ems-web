@@ -138,14 +138,16 @@ declare module "@elegant-router/types" {
     "knowledge": "/knowledge";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "manage": "/manage";
-    "manage_advanced-permission": "/manage/advanced-permission";
+    "manage_announcement": "/manage/announcement";
     "manage_api": "/manage/api";
-    "manage_department": "/manage/department";
+    "manage_approval-definition": "/manage/approval-definition";
+    "manage_audit-log": "/manage/audit-log";
     "manage_dictionary": "/manage/dictionary";
     "manage_menu": "/manage/menu";
-    "manage_operation-record": "/manage/operation-record";
+    "manage_notification-center": "/manage/notification-center";
     "manage_organization": "/manage/organization";
     "manage_password-change": "/manage/password-change";
+    "manage_policy": "/manage/policy";
     "manage_role": "/manage/role";
     "manage_route-menu-obsolete": "/manage/route-menu-obsolete";
     "manage_user": "/manage/user";
@@ -336,14 +338,16 @@ declare module "@elegant-router/types" {
     | "gatewaysetting"
     | "home"
     | "knowledge"
-    | "manage_advanced-permission"
+    | "manage_announcement"
     | "manage_api"
-    | "manage_department"
+    | "manage_approval-definition"
+    | "manage_audit-log"
     | "manage_dictionary"
     | "manage_menu"
-    | "manage_operation-record"
+    | "manage_notification-center"
     | "manage_organization"
     | "manage_password-change"
+    | "manage_policy"
     | "manage_role"
     | "manage_route-menu-obsolete"
     | "manage_user-detail"

@@ -111,8 +111,8 @@ onMounted(() => {
       </div>
 
       <!-- 内容区 -->
-      <ElCard class="flex-1">
-        <div class="whitespace-pre-wrap">{{ announcement.content }}</div>
+      <ElCard class="flex-1 overflow-hidden">
+        <div class="announcement-content prose max-w-none overflow-auto" v-html="announcement.content"></div>
       </ElCard>
     </div>
 
@@ -124,3 +124,96 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.announcement-content {
+  padding: 16px;
+  min-height: 200px;
+}
+
+/* WangEditor 富文本样式 */
+.announcement-content :deep(h1) {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+
+.announcement-content :deep(h2) {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 14px 0 6px;
+}
+
+.announcement-content :deep(h3) {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 12px 0 4px;
+}
+
+.announcement-content :deep(p) {
+  margin: 8px 0;
+}
+
+.announcement-content :deep(ul),
+.announcement-content :deep(ol) {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.announcement-content :deep(li) {
+  margin: 4px 0;
+}
+
+.announcement-content :deep(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.announcement-content :deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.announcement-content :deep(th),
+.announcement-content :deep(td) {
+  border: 1px solid var(--el-border-color);
+  padding: 8px 12px;
+}
+
+.announcement-content :deep(th) {
+  background: var(--el-fill-color-light);
+  font-weight: 600;
+}
+
+.announcement-content :deep(a) {
+  color: var(--el-color-primary);
+  text-decoration: none;
+}
+
+.announcement-content :deep(a:hover) {
+  text-decoration: underline;
+}
+
+.announcement-content :deep(code) {
+  background: var(--el-fill-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+.announcement-content :deep(pre) {
+  background: var(--el-fill-color);
+  padding: 12px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.announcement-content :deep(blockquote) {
+  border-left: 4px solid var(--el-border-color);
+  padding-left: 16px;
+  margin: 12px 0;
+  color: var(--el-text-color-secondary);
+}
+</style>

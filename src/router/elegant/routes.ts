@@ -1031,14 +1031,12 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
-        name: 'manage_advanced-permission',
-        path: '/manage/advanced-permission',
-        component: 'view.manage_advanced-permission',
+        name: 'manage_announcement',
+        path: '/manage/announcement',
+        component: 'view.manage_announcement',
         meta: {
-          title: 'manage_advanced-permission',
-          i18nKey: 'route.manage_advanced-permission',
-          icon: 'mdi:shield-lock',
-          roles: ['R_ADMIN']
+          title: 'manage_announcement',
+          i18nKey: 'route.manage_announcement'
         }
       },
       {
@@ -1051,12 +1049,21 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'manage_department',
-        path: '/manage/department',
-        component: 'view.manage_department',
+        name: 'manage_approval-definition',
+        path: '/manage/approval-definition',
+        component: 'view.manage_approval-definition',
         meta: {
-          title: 'manage_department',
-          i18nKey: 'route.manage_department'
+          title: 'manage_approval-definition',
+          i18nKey: 'route.manage_approval-definition'
+        }
+      },
+      {
+        name: 'manage_audit-log',
+        path: '/manage/audit-log',
+        component: 'view.manage_audit-log',
+        meta: {
+          title: 'manage_audit-log',
+          i18nKey: 'route.manage_audit-log'
         }
       },
       {
@@ -1082,12 +1089,12 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'manage_operation-record',
-        path: '/manage/operation-record',
-        component: 'view.manage_operation-record',
+        name: 'manage_notification-center',
+        path: '/manage/notification-center',
+        component: 'view.manage_notification-center',
         meta: {
-          title: 'manage_operation-record',
-          i18nKey: 'route.manage_operation-record'
+          title: 'manage_notification-center',
+          i18nKey: 'route.manage_notification-center'
         }
       },
       {
@@ -1106,6 +1113,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'manage_password-change',
           i18nKey: 'route.manage_password-change'
+        }
+      },
+      {
+        name: 'manage_policy',
+        path: '/manage/policy',
+        component: 'view.manage_policy',
+        meta: {
+          title: 'manage_policy',
+          i18nKey: 'route.manage_policy'
         }
       },
       {
