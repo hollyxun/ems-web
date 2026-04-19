@@ -127,6 +127,18 @@ export function useSSEConnection(options: UseSSEConnectionOptions): UseSSEConnec
           break;
         }
 
+        case 'announcement_notify': {
+          // 公告通知 - 广播给所有在线用户
+          const announcementData = message.data as {
+            announcementId: number;
+            title: string;
+            priority: number;
+            publisherName: string;
+          };
+          window.console.log('[SSE Announcement]', announcementData);
+          break;
+        }
+
         default:
           window.console.debug('[SSE] Unknown event type:', message.eventType);
       }

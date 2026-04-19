@@ -7,6 +7,7 @@ import LineChart from './modules/line-chart.vue';
 import PieChart from './modules/pie-chart.vue';
 import ProjectNews from './modules/project-news.vue';
 import CreativityBanner from './modules/creativity-banner.vue';
+import AnnouncementCard from './modules/announcement-card.vue';
 
 const appStore = useAppStore();
 
@@ -16,7 +17,14 @@ const gap = computed(() => (appStore.isMobile ? 0 : 16));
 <template>
   <ElSpace direction="vertical" fill class="full-space pb-0" :size="0">
     <HeaderBanner class="mb-16px" />
-    <CardData class="mb-16px" />
+    <ElRow :gutter="gap" class="mb-16px w-full">
+      <ElCol :lg="12" :sm="24">
+        <CardData />
+      </ElCol>
+      <ElCol :lg="12" :sm="24">
+        <AnnouncementCard />
+      </ElCol>
+    </ElRow>
     <ElRow :gutter="gap" class="w-full">
       <ElCol :lg="14" :sm="24" class="mb-16px">
         <LineChart />

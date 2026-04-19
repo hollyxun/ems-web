@@ -309,7 +309,16 @@ declare namespace Api.Energy {
   /** SSE实时数据命名空间 */
   namespace Realtime {
     /** SSE事件类型 */
-    type SSEEventType = 'data_update' | 'meter_status' | 'alert' | 'heartbeat' | 'connection_ack';
+    type SSEEventType =
+      | 'data_update'
+      | 'meter_status'
+      | 'alert'
+      | 'heartbeat'
+      | 'connection_ack'
+      | 'approval_notify'
+      | 'system_message'
+      | 'dashboard_refresh'
+      | 'announcement_notify';
 
     /** SSE消息结构 */
     interface SSEMessage<T = unknown> {
