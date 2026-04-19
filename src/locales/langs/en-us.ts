@@ -204,6 +204,9 @@ const local: App.I18n.Schema = {
     manage_organization: 'Organization',
     'manage_password-change': 'Change Password',
     'manage_user-lock': 'User Lock Management',
+    'manage_approval-definition': 'Approval Definition',
+    'manage_notification-center': 'Notification Center',
+    manage_announcement: 'Announcement',
     profile: 'Profile',
     profile_info: 'Profile Info',
     profile_password: 'Change Password',
@@ -600,6 +603,42 @@ const local: App.I18n.Schema = {
           iconify: 'Iconify Icon',
           local: 'Local Icon'
         }
+      },
+      announcement: {
+        title: 'Announcement Management',
+        createAnnouncement: 'Create Announcement',
+        editAnnouncement: 'Edit Announcement',
+        publishAnnouncement: 'Publish Announcement',
+        withdrawAnnouncement: 'Withdraw Announcement',
+        pinAnnouncement: 'Pin Announcement',
+        unpinAnnouncement: 'Unpin Announcement',
+        status: {
+          draft: 'Draft',
+          published: 'Published',
+          withdrawn: 'Withdrawn',
+          expired: 'Expired'
+        },
+        priority: {
+          normal: 'Normal',
+          important: 'Important',
+          urgent: 'Urgent'
+        },
+        form: {
+          title: 'Title',
+          titlePlaceholder: 'Please enter announcement title',
+          content: 'Content',
+          contentPlaceholder: 'Please enter announcement content',
+          priority: 'Priority',
+          expireAt: 'Expire Time',
+          expireAtPlaceholder: 'Select expire time'
+        },
+        confirmPublish: 'Confirm to publish announcement?',
+        confirmWithdraw: 'Confirm to withdraw announcement?',
+        publishSuccess: 'Published successfully',
+        withdrawSuccess: 'Withdrawn successfully',
+        pinSuccess: 'Pinned successfully',
+        unpinSuccess: 'Unpinned successfully',
+        createSuccess: 'Created successfully'
       }
     },
     profile: {
@@ -609,6 +648,8 @@ const local: App.I18n.Schema = {
         changeAvatar: 'Change Avatar',
         userId: 'User ID',
         username: 'Username',
+        department: 'Department',
+        noDepartment: 'Not Assigned',
         organization: 'Organization',
         noOrganization: 'Not Assigned',
         roles: 'Roles',

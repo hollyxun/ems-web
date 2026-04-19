@@ -695,6 +695,42 @@ declare namespace App {
               local: string;
             };
           };
+          announcement: {
+            title: string;
+            createAnnouncement: string;
+            editAnnouncement: string;
+            publishAnnouncement: string;
+            withdrawAnnouncement: string;
+            pinAnnouncement: string;
+            unpinAnnouncement: string;
+            status: {
+              draft: string;
+              published: string;
+              withdrawn: string;
+              expired: string;
+            };
+            priority: {
+              normal: string;
+              important: string;
+              urgent: string;
+            };
+            form: {
+              title: string;
+              titlePlaceholder: string;
+              content: string;
+              contentPlaceholder: string;
+              priority: string;
+              expireAt: string;
+              expireAtPlaceholder: string;
+            };
+            confirmPublish: string;
+            confirmWithdraw: string;
+            publishSuccess: string;
+            withdrawSuccess: string;
+            pinSuccess: string;
+            unpinSuccess: string;
+            createSuccess: string;
+          };
         };
         profile: {
           info: {
@@ -705,6 +741,8 @@ declare namespace App {
             username: string;
             department: string;
             noDepartment: string;
+            organization: string;
+            noOrganization: string;
             roles: string;
             noRole: string;
             editableInfo: string;

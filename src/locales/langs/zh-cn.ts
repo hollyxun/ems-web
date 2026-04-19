@@ -203,6 +203,9 @@ const local: App.I18n.Schema = {
     manage_organization: '组织架构',
     'manage_password-change': '修改密码',
     'manage_user-lock': '用户锁定管理',
+    'manage_approval-definition': '审批定义管理',
+    'manage_notification-center': '通知中心',
+    manage_announcement: '公告管理',
     // 个人中心
     profile: '个人中心',
     profile_info: '个人信息',
@@ -600,6 +603,42 @@ const local: App.I18n.Schema = {
           iconify: 'iconify图标',
           local: '本地图标'
         }
+      },
+      announcement: {
+        title: '公告管理',
+        createAnnouncement: '新建公告',
+        editAnnouncement: '编辑公告',
+        publishAnnouncement: '发布公告',
+        withdrawAnnouncement: '撤回公告',
+        pinAnnouncement: '置顶公告',
+        unpinAnnouncement: '取消置顶',
+        status: {
+          draft: '草稿',
+          published: '已发布',
+          withdrawn: '已撤回',
+          expired: '已过期'
+        },
+        priority: {
+          normal: '普通',
+          important: '重要',
+          urgent: '紧急'
+        },
+        form: {
+          title: '公告标题',
+          titlePlaceholder: '请输入公告标题',
+          content: '公告内容',
+          contentPlaceholder: '请输入公告内容',
+          priority: '优先级',
+          expireAt: '过期时间',
+          expireAtPlaceholder: '选择过期时间'
+        },
+        confirmPublish: '确认发布公告？',
+        confirmWithdraw: '确认撤回公告？',
+        publishSuccess: '发布成功',
+        withdrawSuccess: '撤回成功',
+        pinSuccess: '置顶成功',
+        unpinSuccess: '取消置顶成功',
+        createSuccess: '创建成功'
       }
     },
     profile: {
@@ -609,6 +648,8 @@ const local: App.I18n.Schema = {
         changeAvatar: '修改头像',
         userId: '用户ID',
         username: '用户名',
+        department: '部门',
+        noDepartment: '未分配',
         organization: '所属组织',
         noOrganization: '未分配',
         roles: '角色',
