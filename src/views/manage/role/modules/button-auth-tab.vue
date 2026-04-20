@@ -13,7 +13,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const tree = shallowRef<Api.SystemManage.Menu[]>([]);
+const tree = shallowRef<Api.SystemManage.MenuWithButtons[]>([]);
 const loading = shallowRef(false);
 
 // 将菜单按钮树转换为树形数据格式
@@ -71,7 +71,7 @@ async function handleSubmit() {
 // 全选按钮
 function handleSelectAll() {
   const allIds: number[] = [];
-  function traverse(nodes: Api.SystemManage.Menu[]) {
+  function traverse(nodes: Api.SystemManage.MenuWithButtons[]) {
     for (const node of nodes) {
       if (node.buttons) {
         for (const btn of node.buttons) {
@@ -151,11 +151,11 @@ watch(
         <div class="w-full flex items-center justify-between pr-8px">
           <div class="flex items-center gap-8px">
             <!-- 菜单节点 -->
-            <span v-if="!data.buttons" class="font-medium">{{ data.title || data.name }}</span>
+            <span v-if="!data.buttons" class="font-medium">{{ data.title || data.routeName }}</span>
             <!-- 按钮节点 -->
             <template v-else>
               <span class="text-gray-600">{{ data.title }}</span>
-              <ElTag size="small" type="info">{{ data.name }}</ElTag>
+              <ElTag size="small" type="info">{{ data.routeName }}</ElTag>
             </template>
           </div>
         </div>

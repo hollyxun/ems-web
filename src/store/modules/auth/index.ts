@@ -337,6 +337,19 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     return false;
   }
 
+  /** Initialize user info without blocking on button permissions (for parallel execution) */
+  async function initUserInfoWithoutButtons() {
+    const hasToken = getToken();
+
+    if (hasToken) {
+      const pass = await getUserInfo();
+
+      if (!pass) {
+        resetStore();
+      }
+    }
+  }
+
   async function initUserInfo() {
     const hasToken = getToken();
 
@@ -396,6 +409,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     logout,
     login,
     initUserInfo,
+    initUserInfoWithoutButtons,
     initDebugUser,
     fetchButtonPermissions,
     checkPasswordStatus

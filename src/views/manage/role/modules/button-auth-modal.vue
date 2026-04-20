@@ -31,8 +31,8 @@ const title = computed(() => $t('common.edit') + $t('page.manage.role.buttonAuth
 interface ButtonConfig {
   id: number;
   label: string;
-  name: string;
-  parentId: string;
+  routeName: string;
+  parentMenuId: number;
   title: string;
 }
 
@@ -47,8 +47,8 @@ async function getAllButtons() {
     tree.value = (data || []).map(btn => ({
       id: btn.id,
       label: btn.title,
-      name: btn.name,
-      parentId: btn.parentId,
+      routeName: btn.routeName,
+      parentMenuId: btn.parentMenuId,
       title: btn.title
     }));
   } finally {
@@ -201,7 +201,7 @@ watch(visible, val => {
         <div class="w-full flex items-center justify-between pr-16px">
           <div class="flex items-center gap-8px">
             <span>{{ data.label }}</span>
-            <span class="text-xs text-gray-400">[{{ data.name }}]</span>
+            <span class="text-xs text-gray-400">[{{ data.routeName }}]</span>
           </div>
           <div class="flex items-center gap-8px">
             <!-- 继承来源标签 -->

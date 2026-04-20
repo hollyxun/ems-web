@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, h, ref, watch } from 'vue';
-import { fetchUpdateRoute } from '@/service/api';
+import { fetchUpdateMenu } from '@/service/api';
 import { useForm, useFormRules } from '@/hooks/common/form';
 import { getLocalIcons } from '@/utils/icon';
 import { $t } from '@/locales';
@@ -14,7 +14,7 @@ interface Props {
   /** the type of operation */
   operateType: OperateType;
   /** the edit menu data */
-  rowData?: Api.RouteMenu.RouteMenu | null;
+  rowData?: Api.SystemManage.MenuTree | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -39,20 +39,18 @@ const title = computed(() => {
     add: $t('page.manage.menu.addMenu'),
     edit: $t('page.manage.menu.editMenu')
   };
-  return titles[props.operateType] || '编辑路由菜单';
+  return titles[props.operateType] || '编辑菜单';
 });
 
 interface Model {
   id: number;
-  name: string;
-  path: string;
-  component?: string;
-  parentName?: string;
-  title?: string;
-  icon?: string;
+  routeName: string;
+  parentMenuId: number;
+  title: string;
+  icon: string;
   sort: number;
-  isConstant: boolean;
-  status: Api.RouteMenu.RouteMenuStatus;
+  status: Api.SystemManage.MenuStatus;
+  isFolder: boolean;
 }
 
 const model = ref<Model>(createDefaultModel());
@@ -60,15 +58,13 @@ const model = ref<Model>(createDefaultModel());
 function createDefaultModel(): Model {
   return {
     id: 0,
-    name: '',
-    path: '',
-    component: '',
-    parentName: '',
+    routeName: '',
+    parentMenuId: 0,
     title: '',
     icon: '',
     sort: 1,
-    isConstant: false,
-    status: 1
+    status: 1,
+    isFolder: false
   };
 }
 
@@ -78,8 +74,7 @@ const rules = {
 
 const statusOptions = [
   { label: $t('page.manage.common.status.enable'), value: 1 },
-  { label: $t('page.manage.common.status.disable'), value: 2 },
-  { label: $t('page.manage.route.obsolete'), value: 3 }
+  { label: $t('page.manage.route.obsolete'), value: 2 }
 ];
 
 const localIcons = getLocalIcons();
@@ -105,15 +100,13 @@ function handleInitModel() {
     const row = props.rowData;
     model.value = {
       id: row.id,
-      name: row.name,
-      path: row.path,
-      component: row.component,
-      parentName: row.parentName,
+      routeName: row.routeName,
+      parentMenuId: row.parentMenuId,
       title: row.title,
       icon: row.icon,
       sort: row.sort,
-      isConstant: row.isConstant,
-      status: row.status
+      status: row.status,
+      isFolder: row.isFolder
     };
   }
 }
@@ -127,7 +120,7 @@ async function handleSubmit() {
 
   loading.value = true;
   try {
-    const { error } = await fetchUpdateRoute({
+    const { error } = await fetchUpdateMenu({
       id: model.value.id,
       title: model.value.title,
       icon: model.value.icon,
@@ -162,38 +155,20 @@ watch(visible, () => {
           <ElCol :span="24">
             <ElFormItem :label="$t('page.manage.menu.routeName')">
               <ElInput
-                v-model="model.name"
+                v-model="model.routeName"
                 disabled
                 :placeholder="$t('page.manage.menu.routeName') + $t('page.manage.menu.readOnly')"
               />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
-            <ElFormItem :label="$t('page.manage.menu.routePath')">
-              <ElInput
-                v-model="model.path"
-                disabled
-                :placeholder="$t('page.manage.menu.routePath') + $t('page.manage.menu.readOnly')"
-              />
+            <ElFormItem label="父级菜单ID">
+              <ElInput v-model="model.parentMenuId" disabled placeholder="父级菜单ID（只读）" />
             </ElFormItem>
           </ElCol>
           <ElCol :span="24">
-            <ElFormItem :label="$t('page.manage.menu.componentPath')">
-              <ElInput
-                v-model="model.component"
-                disabled
-                :placeholder="$t('page.manage.menu.componentPath') + $t('page.manage.menu.readOnly')"
-              />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="24">
-            <ElFormItem label="父级路由">
-              <ElInput v-model="model.parentName" disabled placeholder="父级路由名称（只读）" />
-            </ElFormItem>
-          </ElCol>
-          <ElCol :span="24">
-            <ElFormItem :label="$t('page.manage.menu.constant')">
-              <ElRadioGroup v-model="model.isConstant" disabled>
+            <ElFormItem label="是否文件夹">
+              <ElRadioGroup v-model="model.isFolder" disabled>
                 <ElRadio :value="true">{{ $t('common.yesOrNo.yes') }}</ElRadio>
                 <ElRadio :value="false">{{ $t('common.yesOrNo.no') }}</ElRadio>
               </ElRadioGroup>

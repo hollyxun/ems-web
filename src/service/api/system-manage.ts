@@ -286,6 +286,33 @@ export function fetchDeleteMenu(id: number) {
   });
 }
 
+/** move menu (change parent) */
+export function fetchMoveMenu(data: { id: number; parentMenuId: number | null }) {
+  return request<boolean>({
+    url: '/api/v1/menu/move',
+    method: 'put',
+    data
+  });
+}
+
+/** get role menu ids */
+export function fetchGetRoleMenuIds(roleId: number) {
+  return request<number[]>({
+    url: '/api/v1/menu/role-menu-ids',
+    method: 'get',
+    params: { roleId }
+  });
+}
+
+/** batch assign menus to role */
+export function fetchBatchAssignMenus(data: { roleId: number; menuIds: number[]; action?: 'add' | 'remove' }) {
+  return request<{ affectedCount: number; message: string }>({
+    url: '/api/v1/menu/batch-assign',
+    method: 'post',
+    data
+  });
+}
+
 /**
  * API Management
  */
@@ -474,7 +501,7 @@ export function fetchSetRoleButtons(data: Api.SystemManage.SetRoleButtonsParams)
 
 /** get all menu buttons (for permission config) */
 export function fetchGetMenuButtons() {
-  return request<Api.SystemManage.Menu[]>({
+  return request<Api.SystemManage.MenuWithButtons[]>({
     url: '/api/v1/button/menu-buttons',
     method: 'get'
   });

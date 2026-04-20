@@ -13,7 +13,6 @@ import type {
 import { router } from '@/router';
 import {
   fetchGetConstantRoutes,
-  fetchGetRouteVersion,
   fetchGetUserAuthorizedRoutes,
   fetchIsRouteExist,
   fetchSyncRoutes
@@ -352,29 +351,14 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       const allRoutes = [...routes, ...collectedConstantRoutes];
       const currentVersion = calculateRouteVersion(allRoutes);
 
-      // 3. 检查本地缓存版本
+      // 3. 检查本地缓存版本，如果一致则跳过同步
       const cachedVersion = getCachedRouteVersion();
       if (cachedVersion === currentVersion) {
         console.log('[RouteSync] Version match, skip sync');
         return;
       }
 
-      // 4. 获取后端版本号
-      const { data: backendVersion, error: versionError } = await fetchGetRouteVersion();
-
-      if (versionError) {
-        console.warn('[RouteSync] Failed to get backend version:', versionError);
-        // 继续执行同步，不阻塞流程
-      }
-
-      // 5. 如果版本一致，跳过同步
-      if (backendVersion === currentVersion) {
-        console.log('[RouteSync] Backend version match, skip sync');
-        setCachedRouteVersion(currentVersion);
-        return;
-      }
-
-      // 6. 执行同步（包含常量路由）
+      // 4. 执行同步（包含常量路由）
       console.log('[RouteSync] Syncing routes...');
       const { data: syncResult, error: syncError } = await fetchSyncRoutes({
         version: currentVersion,

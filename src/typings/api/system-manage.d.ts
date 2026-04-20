@@ -173,14 +173,73 @@ declare namespace Api {
     type DataScopeType = '1' | '2' | '3' | '4' | '5';
 
     /**
-     * menu type
+     * menu status
      *
-     * - "dir": directory
-     * - "menu": menu
-     * - "button": button
+     * - "1": active
+     * - "2": deprecated
      */
-    type MenuType = 'dir' | 'menu' | 'button';
+    type MenuStatus = 1 | 2;
 
+    /**
+     * menu (new architecture - route/menu decoupled)
+     * menus define display and hierarchy, routes define url and component
+     */
+    type Menu = {
+      /** record id */
+      id: number;
+      /** created at */
+      createdAt: string;
+      /** updated at */
+      updatedAt: string;
+      /** route name reference (links to sys_routes.name) */
+      routeName: string;
+      /** parent menu id for tree structure */
+      parentMenuId: number;
+      /** menu title for display */
+      title: string;
+      /** menu icon for display */
+      icon: string;
+      /** sort order */
+      sort: number;
+      /** status (1: active, 2: deprecated) */
+      status: MenuStatus;
+      /** is folder (true: has children, false: leaf node) */
+      isFolder: boolean;
+      /** children menus */
+      children?: Menu[];
+    };
+
+    /** menu list response */
+    type MenuList = Common.PageResult<Menu>;
+
+    /**
+     * menu tree node (for tree display)
+     * extends Menu with additional display properties
+     */
+    type MenuTree = {
+      /** menu id */
+      id: number;
+      /** display label (title) */
+      title: string;
+      /** route name reference */
+      routeName: string;
+      /** parent menu id */
+      parentMenuId: number;
+      /** icon */
+      icon: string;
+      /** sort order */
+      sort: number;
+      /** status */
+      status: MenuStatus;
+      /** is folder */
+      isFolder: boolean;
+      /** children menu tree nodes */
+      children?: MenuTree[];
+    };
+
+    /**
+     * menu button (for button permission)
+     */
     type MenuButton = {
       /** button id */
       id: number;
@@ -204,59 +263,31 @@ declare namespace Api {
      */
     type IconType = '1' | '2';
 
-    /** menu */
-    type Menu = {
-      /** record id */
+    /**
+     * menu with buttons (for button permission display)
+     * returned by /api/v1/button/menu-buttons
+     */
+    type MenuWithButtons = {
+      /** menu id */
       id: number;
-      /** created at */
-      createdAt: string;
-      /** updated at */
-      updatedAt: string;
-      /** menu level */
-      menuLevel: number;
-      /** parent menu id */
-      parentId: string;
-      /** route path */
-      path: string;
       /** route name */
-      name: string;
-      /** hidden status (0: visible, 1: hidden) */
-      hidden: number;
-      /** component path */
-      component: string;
-      /** sort order */
-      sort: number;
-      /** keep alive (0: no, 1: yes) */
-      keepAlive: number;
+      routeName: string;
       /** menu title */
       title: string;
-      /** menu icon */
+      /** parent menu id */
+      parentMenuId: number;
+      /** icon */
       icon: string;
-      /** menu type (dir/menu/button) */
-      menuType: string;
-      /** is frame (0: no, 1: yes) */
-      isFrame: number;
-      /** single layout */
-      singleLayout?: string;
-      /** parameters */
-      parameters: string;
-      /** status (1: enabled, 2: disabled) */
-      status: number;
+      /** sort order */
+      sort: number;
+      /** status */
+      status: MenuStatus;
+      /** is folder */
+      isFolder: boolean;
       /** children menus */
-      children?: Menu[];
+      children?: MenuWithButtons[];
       /** buttons on this menu */
       buttons?: MenuButton[];
-    };
-
-    /** menu list response */
-    type MenuList = Common.PageResult<Menu>;
-
-    /** menu tree node */
-    type MenuTree = {
-      id: number;
-      label: string;
-      pId: number;
-      children?: MenuTree[];
     };
 
     /** api */

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, watch } from 'vue';
 import type { ElTree } from 'element-plus';
-import { fetchBindRoleRoutes, fetchGetRoleRouteIds, fetchGetRouteTree } from '@/service/api';
+import { fetchGetMenuTree, fetchGetRoleMenuIds, fetchBatchAssignMenus } from '@/service/api';
 import { $t } from '@/locales';
 import ButtonAuthTab from './button-auth-tab.vue';
 
@@ -28,44 +28,44 @@ const title = computed(() => $t('common.edit') + $t('page.manage.role.menuAuth')
 const activeTab = ref<'menu' | 'button'>('menu');
 
 // 树形数据
-const tree = shallowRef<Api.RouteMenu.RouteMenu[]>([]);
+const tree = shallowRef<Api.SystemManage.MenuTree[]>([]);
 const loading = shallowRef(false);
 
-// 获取路由树
+// 获取菜单树
 async function getTree() {
   loading.value = true;
   try {
-    const { data } = await fetchGetRouteTree();
+    const { data } = await fetchGetMenuTree();
     tree.value = data || [];
   } finally {
     loading.value = false;
   }
 }
 
-// 选中的路由ID
+// 选中的菜单ID
 const checks = shallowRef<number[]>([]);
 const checksLoading = shallowRef(false);
 
 // 树组件引用
 const treeRef = ref<InstanceType<typeof ElTree>>();
 
-// 获取角色已绑定的路由ID
+// 获取角色已绑定的菜单ID
 async function getChecks() {
   if (!props.roleId) return;
 
   checksLoading.value = true;
   try {
-    const { data } = await fetchGetRoleRouteIds(props.roleId);
+    const { data } = await fetchGetRoleMenuIds(props.roleId);
     checks.value = data || [];
   } finally {
     checksLoading.value = false;
   }
 }
 
-// 获取所有路由ID（扁平化）
-function getAllRouteIds(routes: Api.RouteMenu.RouteMenu[]): number[] {
+// 获取所有菜单ID（扁平化）
+function getAllMenuIds(menus: Api.SystemManage.MenuTree[]): number[] {
   const ids: number[] = [];
-  function traverse(nodes: Api.RouteMenu.RouteMenu[]) {
+  function traverse(nodes: Api.SystemManage.MenuTree[]) {
     for (const node of nodes) {
       ids.push(node.id);
       if (node.children?.length) {
@@ -73,20 +73,20 @@ function getAllRouteIds(routes: Api.RouteMenu.RouteMenu[]): number[] {
       }
     }
   }
-  traverse(routes);
+  traverse(menus);
   return ids;
 }
 
 // 全选
 function handleSelectAll() {
-  const allIds = getAllRouteIds(tree.value);
+  const allIds = getAllMenuIds(tree.value);
   checks.value = allIds;
   treeRef.value?.setCheckedKeys(allIds, false);
 }
 
 // 反选
 function handleInvertSelection() {
-  const allIds = getAllRouteIds(tree.value);
+  const allIds = getAllMenuIds(tree.value);
   const currentChecks = (treeRef.value?.getCheckedKeys(false) as number[]) || [];
   const invertedIds = allIds.filter(id => !currentChecks.includes(id));
   checks.value = invertedIds;
@@ -101,9 +101,9 @@ function handleClearSelection() {
 
 // 按模块选择
 interface ModuleNode {
-  name: string;
+  id: number;
   title: string;
-  children: Api.RouteMenu.RouteMenu[];
+  children: Api.SystemManage.MenuTree[];
 }
 
 // 获取模块列表（一级目录）
@@ -111,16 +111,16 @@ const modules = computed<ModuleNode[]>(() => {
   return tree.value
     .filter(node => node.children && node.children.length > 0)
     .map(node => ({
-      name: node.name,
-      title: node.title || node.name,
+      id: node.id,
+      title: node.title || String(node.id),
       children: node.children || []
     }));
 });
 
-// 选中指定模块的所有路由
+// 选中指定模块的所有菜单
 function handleSelectModule(module: ModuleNode) {
   const moduleIds: number[] = [];
-  function traverse(nodes: Api.RouteMenu.RouteMenu[]) {
+  function traverse(nodes: Api.SystemManage.MenuTree[]) {
     for (const node of nodes) {
       moduleIds.push(node.id);
       if (node.children?.length) {
@@ -144,12 +144,13 @@ async function handleSubmit() {
 
   submitting.value = true;
   try {
-    // 获取选中的路由ID
+    // 获取选中的菜单ID
     const checkedKeys = (treeRef.value?.getCheckedKeys(false) as number[]) || [];
 
-    const { error } = await fetchBindRoleRoutes({
+    const { error } = await fetchBatchAssignMenus({
       roleId: props.roleId,
-      routeMenuIds: checkedKeys
+      menuIds: checkedKeys,
+      action: 'add'
     });
 
     if (error) throw error;
@@ -202,7 +203,7 @@ watch(visible, val => {
           <div class="flex flex-wrap gap-8px">
             <ElButton
               v-for="module in modules"
-              :key="module.name"
+              :key="module.id"
               size="small"
               type="info"
               plain

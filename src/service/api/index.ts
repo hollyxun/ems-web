@@ -1,6 +1,7 @@
 export * from './auth';
 export * from './route';
-export * from './route-menu';
+// route-menu 已废弃，功能迁移到 route.ts + system-manage.ts
+// export * from './route-menu';
 export * from './system-manage';
 export * from './casbin';
 export * from './scheduling';

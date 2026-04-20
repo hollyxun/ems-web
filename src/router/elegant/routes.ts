@@ -47,7 +47,8 @@ export const generatedRoutes: GeneratedRoute[] = [
       title: 'about',
       i18nKey: 'route.about',
       icon: 'fluent:book-information-24-regular',
-      order: 10
+      order: 10,
+      hideInMenu: true
     }
   },
   {
@@ -56,7 +57,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'alarm',
-      i18nKey: 'route.alarm'
+      i18nKey: 'route.alarm',
+      icon: 'mdi:alert-outline',
+      order: 50
     },
     children: [
       {
@@ -65,7 +68,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.alarm_history',
         meta: {
           title: 'alarm_history',
-          i18nKey: 'route.alarm_history'
+          i18nKey: 'route.alarm_history',
+          icon: 'mdi:history',
+          order: 2
         }
       },
       {
@@ -74,7 +79,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.alarm_item',
         meta: {
           title: 'alarm_item',
-          i18nKey: 'route.alarm_item'
+          i18nKey: 'route.alarm_item',
+          icon: 'mdi:bell-cog-outline',
+          order: 1
         }
       },
       {
@@ -83,7 +90,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.alarm_limit-type',
         meta: {
           title: 'alarm_limit-type',
-          i18nKey: 'route.alarm_limit-type'
+          i18nKey: 'route.alarm_limit-type',
+          icon: 'mdi:format-list-bulleted-type',
+          order: 3
         }
       }
     ]
@@ -94,7 +103,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'analysis',
-      i18nKey: 'route.analysis'
+      i18nKey: 'route.analysis',
+      icon: 'ant-design:bar-chart-outlined',
+      order: 75
     },
     children: [
       {
@@ -103,7 +114,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_benchmark',
         meta: {
           title: 'analysis_benchmark',
-          i18nKey: 'route.analysis_benchmark'
+          i18nKey: 'route.analysis_benchmark',
+          icon: 'ant-design:aim-outlined',
+          order: 1
         }
       },
       {
@@ -112,7 +125,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_branch',
         meta: {
           title: 'analysis_branch',
-          i18nKey: 'route.analysis_branch'
+          i18nKey: 'route.analysis_branch',
+          icon: 'ant-design:branches-outlined',
+          order: 2
         }
       },
       {
@@ -121,7 +136,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_comprehensive',
         meta: {
           title: 'analysis_comprehensive',
-          i18nKey: 'route.analysis_comprehensive'
+          i18nKey: 'route.analysis_comprehensive',
+          icon: 'ant-design:pie-chart-outlined',
+          order: 3
         }
       },
       {
@@ -130,7 +147,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_consumption',
         meta: {
           title: 'analysis_consumption',
-          i18nKey: 'route.analysis_consumption'
+          i18nKey: 'route.analysis_consumption',
+          icon: 'ant-design:line-chart-outlined',
+          order: 4
         }
       },
       {
@@ -139,7 +158,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_consumption-detail',
         meta: {
           title: 'analysis_consumption-detail',
-          i18nKey: 'route.analysis_consumption-detail'
+          i18nKey: 'route.analysis_consumption-detail',
+          hideInMenu: true,
+          icon: 'ant-design:file-search-outlined',
+          order: 5
         }
       },
       {
@@ -147,7 +169,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: '/analysis/energy',
         meta: {
           title: 'analysis_energy',
-          i18nKey: 'route.analysis_energy'
+          i18nKey: 'route.analysis_energy',
+          icon: 'ant-design:pie-chart-outlined',
+          order: 15
         },
         children: [
           {
@@ -164,7 +188,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_energy_comprehensive_daily',
                 meta: {
                   title: 'analysis_energy_comprehensive_daily',
-                  i18nKey: 'route.analysis_energy_comprehensive_daily'
+                  i18nKey: 'route.analysis_energy_comprehensive_daily',
+                  hideInMenu: true
                 }
               },
               {
@@ -173,7 +198,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_energy_comprehensive_monthly',
                 meta: {
                   title: 'analysis_energy_comprehensive_monthly',
-                  i18nKey: 'route.analysis_energy_comprehensive_monthly'
+                  i18nKey: 'route.analysis_energy_comprehensive_monthly',
+                  hideInMenu: true
                 }
               },
               {
@@ -182,7 +208,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_energy_comprehensive_statistics',
                 meta: {
                   title: 'analysis_energy_comprehensive_statistics',
-                  i18nKey: 'route.analysis_energy_comprehensive_statistics'
+                  i18nKey: 'route.analysis_energy_comprehensive_statistics',
+                  hideInMenu: true
                 }
               },
               {
@@ -191,7 +218,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_energy_comprehensive_year',
                 meta: {
                   title: 'analysis_energy_comprehensive_year',
-                  i18nKey: 'route.analysis_energy_comprehensive_year'
+                  i18nKey: 'route.analysis_energy_comprehensive_year',
+                  hideInMenu: true
                 }
               }
             ]
@@ -204,7 +232,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_indicators',
         meta: {
           title: 'analysis_indicators',
-          i18nKey: 'route.analysis_indicators'
+          i18nKey: 'route.analysis_indicators',
+          icon: 'ant-design:dashboard-outlined',
+          order: 6
         }
       },
       {
@@ -213,7 +243,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_itemized',
         meta: {
           title: 'analysis_itemized',
-          i18nKey: 'route.analysis_itemized'
+          i18nKey: 'route.analysis_itemized',
+          icon: 'ant-design:appstore-outlined',
+          order: 7
         }
       },
       {
@@ -222,7 +254,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_itemized-detail',
         meta: {
           title: 'analysis_itemized-detail',
-          i18nKey: 'route.analysis_itemized-detail'
+          i18nKey: 'route.analysis_itemized-detail',
+          hideInMenu: true,
+          icon: 'ant-design:file-search-outlined',
+          order: 8
         }
       },
       {
@@ -230,7 +265,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: '/analysis/key-equipment',
         meta: {
           title: 'analysis_key-equipment',
-          i18nKey: 'route.analysis_key-equipment'
+          i18nKey: 'route.analysis_key-equipment',
+          icon: 'ant-design:dashboard-outlined',
+          order: 13
         },
         children: [
           {
@@ -239,7 +276,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.analysis_key-equipment_daily',
             meta: {
               title: 'analysis_key-equipment_daily',
-              i18nKey: 'route.analysis_key-equipment_daily'
+              i18nKey: 'route.analysis_key-equipment_daily',
+              hideInMenu: true
             }
           },
           {
@@ -248,7 +286,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.analysis_key-equipment_monthly',
             meta: {
               title: 'analysis_key-equipment_monthly',
-              i18nKey: 'route.analysis_key-equipment_monthly'
+              i18nKey: 'route.analysis_key-equipment_monthly',
+              hideInMenu: true
             }
           },
           {
@@ -257,7 +296,8 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.analysis_key-equipment_year',
             meta: {
               title: 'analysis_key-equipment_year',
-              i18nKey: 'route.analysis_key-equipment_year'
+              i18nKey: 'route.analysis_key-equipment_year',
+              hideInMenu: true
             }
           }
         ]
@@ -268,7 +308,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_peak-valley',
         meta: {
           title: 'analysis_peak-valley',
-          i18nKey: 'route.analysis_peak-valley'
+          i18nKey: 'route.analysis_peak-valley',
+          icon: 'ant-design:rise-outlined',
+          order: 9
         }
       },
       {
@@ -277,7 +319,10 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_peak-valley-detail',
         meta: {
           title: 'analysis_peak-valley-detail',
-          i18nKey: 'route.analysis_peak-valley-detail'
+          i18nKey: 'route.analysis_peak-valley-detail',
+          hideInMenu: true,
+          icon: 'ant-design:file-search-outlined',
+          order: 10
         }
       },
       {
@@ -286,7 +331,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_peak-valley-scheme',
         meta: {
           title: 'analysis_peak-valley-scheme',
-          i18nKey: 'route.analysis_peak-valley-scheme'
+          i18nKey: 'route.analysis_peak-valley-scheme',
+          icon: 'ant-design:setting-outlined',
+          order: 11
         }
       },
       {
@@ -294,7 +341,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: '/analysis/process-energy',
         meta: {
           title: 'analysis_process-energy',
-          i18nKey: 'route.analysis_process-energy'
+          i18nKey: 'route.analysis_process-energy',
+          icon: 'ant-design:cluster-outlined',
+          order: 14
         },
         children: [
           {
@@ -311,7 +360,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_process-energy_statistics_daily',
                 meta: {
                   title: 'analysis_process-energy_statistics_daily',
-                  i18nKey: 'route.analysis_process-energy_statistics_daily'
+                  i18nKey: 'route.analysis_process-energy_statistics_daily',
+                  hideInMenu: true
                 }
               },
               {
@@ -320,7 +370,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_process-energy_statistics_monthly',
                 meta: {
                   title: 'analysis_process-energy_statistics_monthly',
-                  i18nKey: 'route.analysis_process-energy_statistics_monthly'
+                  i18nKey: 'route.analysis_process-energy_statistics_monthly',
+                  hideInMenu: true
                 }
               },
               {
@@ -329,7 +380,8 @@ export const generatedRoutes: GeneratedRoute[] = [
                 component: 'view.analysis_process-energy_statistics_year',
                 meta: {
                   title: 'analysis_process-energy_statistics_year',
-                  i18nKey: 'route.analysis_process-energy_statistics_year'
+                  i18nKey: 'route.analysis_process-energy_statistics_year',
+                  hideInMenu: true
                 }
               }
             ]
@@ -342,7 +394,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.analysis_product-output',
         meta: {
           title: 'analysis_product-output',
-          i18nKey: 'route.analysis_product-output'
+          i18nKey: 'route.analysis_product-output',
+          icon: 'ant-design:boxplot-outlined',
+          order: 12
         }
       },
       {
@@ -350,7 +404,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: '/analysis/statistical',
         meta: {
           title: 'analysis_statistical',
-          i18nKey: 'route.analysis_statistical'
+          i18nKey: 'route.analysis_statistical',
+          icon: 'ant-design:bar-chart-outlined',
+          order: 16
         },
         children: [
           {
@@ -359,7 +415,10 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.analysis_statistical_cost',
             meta: {
               title: 'analysis_statistical_cost',
-              i18nKey: 'route.analysis_statistical_cost'
+              i18nKey: 'route.analysis_statistical_cost',
+              hideInMenu: true,
+              icon: 'ant-design:dollar-outlined',
+              order: 17
             }
           },
           {
@@ -368,7 +427,10 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.analysis_statistical_flow',
             meta: {
               title: 'analysis_statistical_flow',
-              i18nKey: 'route.analysis_statistical_flow'
+              i18nKey: 'route.analysis_statistical_flow',
+              hideInMenu: true,
+              icon: 'ant-design:branches-outlined',
+              order: 18
             }
           },
           {
@@ -377,7 +439,10 @@ export const generatedRoutes: GeneratedRoute[] = [
             component: 'view.analysis_statistical_yoy-mom',
             meta: {
               title: 'analysis_statistical_yoy-mom',
-              i18nKey: 'route.analysis_statistical_yoy-mom'
+              i18nKey: 'route.analysis_statistical_yoy-mom',
+              hideInMenu: true,
+              icon: 'ant-design:stock-outlined',
+              order: 19
             }
           }
         ]
@@ -390,7 +455,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'approval',
-      i18nKey: 'route.approval'
+      i18nKey: 'route.approval',
+      icon: 'ant-design:audit-outlined',
+      order: 80
     },
     children: [
       {
@@ -399,7 +466,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.approval_flow-designer',
         meta: {
           title: 'approval_flow-designer',
-          i18nKey: 'route.approval_flow-designer'
+          i18nKey: 'route.approval_flow-designer',
+          icon: 'ant-design:branches-outlined',
+          order: 1
         }
       },
       {
@@ -408,7 +477,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.approval_workspace',
         meta: {
           title: 'approval_workspace',
-          i18nKey: 'route.approval_workspace'
+          i18nKey: 'route.approval_workspace',
+          icon: 'ant-design:desktop-outlined',
+          order: 2
         }
       }
     ]
@@ -419,7 +490,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'base-data',
-      i18nKey: 'route.base-data'
+      i18nKey: 'route.base-data',
+      icon: 'ant-design:database-outlined',
+      order: 40
     },
     children: [
       {
@@ -428,7 +501,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_coefficient',
         meta: {
           title: 'base-data_coefficient',
-          i18nKey: 'route.base-data_coefficient'
+          i18nKey: 'route.base-data_coefficient',
+          icon: 'ant-design:calculator-outlined',
+          order: 3
         }
       },
       {
@@ -437,7 +512,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_home',
         meta: {
           title: 'base-data_home',
-          i18nKey: 'route.base-data_home'
+          i18nKey: 'route.base-data_home',
+          icon: 'ant-design:home-outlined',
+          order: 0
         }
       },
       {
@@ -446,7 +523,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_medium',
         meta: {
           title: 'base-data_medium',
-          i18nKey: 'route.base-data_medium'
+          i18nKey: 'route.base-data_medium',
+          icon: 'ant-design:appstore-outlined',
+          order: 1
         }
       },
       {
@@ -455,7 +534,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_meter',
         meta: {
           title: 'base-data_meter',
-          i18nKey: 'route.base-data_meter'
+          i18nKey: 'route.base-data_meter',
+          icon: 'ant-design:dashboard-outlined',
+          order: 4
         }
       },
       {
@@ -464,7 +545,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_power-distribution',
         meta: {
           title: 'base-data_power-distribution',
-          i18nKey: 'route.base-data_power-distribution'
+          i18nKey: 'route.base-data_power-distribution',
+          icon: 'ant-design:electrical-service-outlined',
+          order: 7
         }
       },
       {
@@ -473,7 +556,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_tou',
         meta: {
           title: 'base-data_tou',
-          i18nKey: 'route.base-data_tou'
+          i18nKey: 'route.base-data_tou',
+          icon: 'ant-design:clock-circle-outlined',
+          order: 5
         }
       },
       {
@@ -482,7 +567,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_unit',
         meta: {
           title: 'base-data_unit',
-          i18nKey: 'route.base-data_unit'
+          i18nKey: 'route.base-data_unit',
+          icon: 'ant-design:swap-outlined',
+          order: 2
         }
       },
       {
@@ -491,7 +578,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.base-data_virtual-meter',
         meta: {
           title: 'base-data_virtual-meter',
-          i18nKey: 'route.base-data_virtual-meter'
+          i18nKey: 'route.base-data_virtual-meter',
+          icon: 'ant-design:build-outlined',
+          order: 6
         }
       }
     ]
@@ -502,7 +591,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'cost',
-      i18nKey: 'route.cost'
+      i18nKey: 'route.cost',
+      icon: 'ant-design:dollar-outlined',
+      order: 60
     },
     children: [
       {
@@ -511,7 +602,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.cost_electricity',
         meta: {
           title: 'cost_electricity',
-          i18nKey: 'route.cost_electricity'
+          i18nKey: 'route.cost_electricity',
+          icon: 'ant-design:flash-outlined',
+          order: 1
         }
       },
       {
@@ -520,7 +613,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.cost_tactics',
         meta: {
           title: 'cost_tactics',
-          i18nKey: 'route.cost_tactics'
+          i18nKey: 'route.cost_tactics',
+          icon: 'ant-design:bulb-outlined',
+          order: 2
         }
       },
       {
@@ -529,7 +624,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.cost_trend',
         meta: {
           title: 'cost_trend',
-          i18nKey: 'route.cost_trend'
+          i18nKey: 'route.cost_trend',
+          icon: 'ant-design:line-chart-outlined',
+          order: 3
         }
       }
     ]
@@ -540,7 +637,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'dashboard',
-      i18nKey: 'route.dashboard'
+      i18nKey: 'route.dashboard',
+      icon: 'ant-design:dashboard-outlined',
+      order: 15
     },
     children: [
       {
@@ -549,7 +648,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.dashboard_custom',
         meta: {
           title: 'dashboard_custom',
-          i18nKey: 'route.dashboard_custom'
+          i18nKey: 'route.dashboard_custom',
+          icon: 'ic:baseline-dashboard-customize',
+          order: 1
         }
       }
     ]
@@ -560,7 +661,8 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'developer',
-      i18nKey: 'route.developer'
+      i18nKey: 'route.developer',
+      hideInMenu: true
     },
     children: [
       {
@@ -568,7 +670,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: '/developer/function',
         meta: {
           title: 'developer_function',
-          i18nKey: 'route.developer_function'
+          i18nKey: 'route.developer_function',
+          hideInMenu: true
         },
         children: [
           {
@@ -660,7 +763,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         path: '/developer/plugin',
         meta: {
           title: 'developer_plugin',
-          i18nKey: 'route.developer_plugin'
+          i18nKey: 'route.developer_plugin',
+          hideInMenu: true
         },
         children: [
           {
@@ -884,7 +988,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'energy',
-      i18nKey: 'route.energy'
+      i18nKey: 'route.energy',
+      icon: 'ant-design:thunderbolt-outlined',
+      order: 20
     },
     children: [
       {
@@ -893,7 +999,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.energy_branch-analysis',
         meta: {
           title: 'energy_branch-analysis',
-          i18nKey: 'route.energy_branch-analysis'
+          i18nKey: 'route.energy_branch-analysis',
+          icon: 'ant-design:branches-outlined',
+          order: 8
         }
       },
       {
@@ -903,7 +1011,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'energy_comparison',
           i18nKey: 'route.energy_comparison',
-          icon: 'carbon:compare'
+          icon: 'carbon:compare',
+          order: 3
         }
       },
       {
@@ -912,7 +1021,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.energy_dashboard',
         meta: {
           title: 'energy_dashboard',
-          i18nKey: 'route.energy_dashboard'
+          i18nKey: 'route.energy_dashboard',
+          icon: 'mdi:monitor-dashboard',
+          order: 1
         }
       },
       {
@@ -921,7 +1032,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.energy_electric-analysis',
         meta: {
           title: 'energy_electric-analysis',
-          i18nKey: 'route.energy_electric-analysis'
+          i18nKey: 'route.energy_electric-analysis',
+          icon: 'ant-design:flash-outlined',
+          order: 6
         }
       },
       {
@@ -931,7 +1044,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'energy_flow',
           i18nKey: 'route.energy_flow',
-          icon: 'mdi:chart-sankey'
+          icon: 'mdi:chart-sankey',
+          order: 2
         }
       },
       {
@@ -940,7 +1054,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.energy_history-data',
         meta: {
           title: 'energy_history-data',
-          i18nKey: 'route.energy_history-data'
+          i18nKey: 'route.energy_history-data',
+          icon: 'mdi:history',
+          order: 7
         }
       },
       {
@@ -950,7 +1066,8 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'energy_ranking',
           i18nKey: 'route.energy_ranking',
-          icon: 'carbon:chart-radar'
+          icon: 'carbon:chart-radar',
+          order: 4
         }
       },
       {
@@ -959,7 +1076,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.energy_report',
         meta: {
           title: 'energy_report',
-          i18nKey: 'route.energy_report'
+          i18nKey: 'route.energy_report',
+          icon: 'ant-design:file-text-outlined',
+          order: 5
         }
       }
     ]
@@ -970,7 +1089,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.gatewaysetting',
     meta: {
       title: 'gatewaysetting',
-      i18nKey: 'route.gatewaysetting'
+      i18nKey: 'route.gatewaysetting',
+      icon: 'mdi:router-wireless',
+      order: 110
     }
   },
   {
@@ -1003,7 +1124,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base$view.knowledge',
     meta: {
       title: 'knowledge',
-      i18nKey: 'route.knowledge'
+      i18nKey: 'route.knowledge',
+      icon: 'mdi:book-open-page-variant',
+      order: 100
     }
   },
   {
@@ -1036,7 +1159,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_announcement',
         meta: {
           title: 'manage_announcement',
-          i18nKey: 'route.manage_announcement'
+          i18nKey: 'route.manage_announcement',
+          icon: 'ant-design:notification-outlined',
+          order: 12
         }
       },
       {
@@ -1045,7 +1170,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_api',
         meta: {
           title: 'manage_api',
-          i18nKey: 'route.manage_api'
+          i18nKey: 'route.manage_api',
+          icon: 'ant-design:api-outlined',
+          order: 4
         }
       },
       {
@@ -1054,7 +1181,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_approval-definition',
         meta: {
           title: 'manage_approval-definition',
-          i18nKey: 'route.manage_approval-definition'
+          i18nKey: 'route.manage_approval-definition',
+          icon: 'ant-design:audit-outlined',
+          order: 10
         }
       },
       {
@@ -1063,7 +1192,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_audit-log',
         meta: {
           title: 'manage_audit-log',
-          i18nKey: 'route.manage_audit-log'
+          i18nKey: 'route.manage_audit-log',
+          icon: 'ant-design:file-text-outlined',
+          order: 5
         }
       },
       {
@@ -1072,7 +1203,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_dictionary',
         meta: {
           title: 'manage_dictionary',
-          i18nKey: 'route.manage_dictionary'
+          i18nKey: 'route.manage_dictionary',
+          icon: 'ant-design:book-outlined',
+          order: 6
         }
       },
       {
@@ -1094,7 +1227,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_notification-center',
         meta: {
           title: 'manage_notification-center',
-          i18nKey: 'route.manage_notification-center'
+          i18nKey: 'route.manage_notification-center',
+          icon: 'ant-design:notification-outlined',
+          order: 11
         }
       },
       {
@@ -1103,7 +1238,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_organization',
         meta: {
           title: 'manage_organization',
-          i18nKey: 'route.manage_organization'
+          i18nKey: 'route.manage_organization',
+          icon: 'ant-design:apartment-outlined',
+          order: 7
         }
       },
       {
@@ -1112,7 +1249,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_password-change',
         meta: {
           title: 'manage_password-change',
-          i18nKey: 'route.manage_password-change'
+          i18nKey: 'route.manage_password-change',
+          icon: 'ant-design:lock-outlined',
+          order: 8
         }
       },
       {
@@ -1121,7 +1260,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_policy',
         meta: {
           title: 'manage_policy',
-          i18nKey: 'route.manage_policy'
+          i18nKey: 'route.manage_policy',
+          icon: 'ant-design:safety-outlined',
+          order: 13
         }
       },
       {
@@ -1134,15 +1275,6 @@ export const generatedRoutes: GeneratedRoute[] = [
           icon: 'carbon:user-role',
           order: 2,
           roles: ['R_SUPER']
-        }
-      },
-      {
-        name: 'manage_route-menu-obsolete',
-        path: '/manage/route-menu-obsolete',
-        component: 'view.manage_route-menu-obsolete',
-        meta: {
-          title: 'manage_route-menu-obsolete',
-          i18nKey: 'route.manage_route-menu-obsolete'
         }
       },
       {
@@ -1176,7 +1308,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.manage_user-lock',
         meta: {
           title: 'manage_user-lock',
-          i18nKey: 'route.manage_user-lock'
+          i18nKey: 'route.manage_user-lock',
+          icon: 'ant-design:user-delete-outlined',
+          order: 9
         }
       }
     ]
@@ -1187,7 +1321,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'profile',
-      i18nKey: 'route.profile'
+      i18nKey: 'route.profile',
+      icon: 'ant-design:user-outlined',
+      order: 120
     },
     children: [
       {
@@ -1196,7 +1332,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.profile_info',
         meta: {
           title: 'profile_info',
-          i18nKey: 'route.profile_info'
+          i18nKey: 'route.profile_info',
+          icon: 'ant-design:user-outlined',
+          order: 1
         }
       },
       {
@@ -1205,7 +1343,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.profile_password',
         meta: {
           title: 'profile_password',
-          i18nKey: 'route.profile_password'
+          i18nKey: 'route.profile_password',
+          icon: 'ant-design:lock-outlined',
+          order: 2
         }
       }
     ]
@@ -1216,7 +1356,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'scheduling',
-      i18nKey: 'route.scheduling'
+      i18nKey: 'route.scheduling',
+      icon: 'ant-design:schedule-outlined',
+      order: 30
     },
     children: [
       {
@@ -1225,7 +1367,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_calendar',
         meta: {
           title: 'scheduling_calendar',
-          i18nKey: 'route.scheduling_calendar'
+          i18nKey: 'route.scheduling_calendar',
+          icon: 'ant-design:calendar-outlined',
+          order: 4
         }
       },
       {
@@ -1234,7 +1378,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_factory-calendar',
         meta: {
           title: 'scheduling_factory-calendar',
-          i18nKey: 'route.scheduling_factory-calendar'
+          i18nKey: 'route.scheduling_factory-calendar',
+          icon: 'ant-design:calendar-outlined',
+          order: 5
         }
       },
       {
@@ -1243,7 +1389,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_rule-config',
         meta: {
           title: 'scheduling_rule-config',
-          i18nKey: 'route.scheduling_rule-config'
+          i18nKey: 'route.scheduling_rule-config',
+          icon: 'ant-design:setting-outlined',
+          order: 6
         }
       },
       {
@@ -1252,7 +1400,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_rule-template',
         meta: {
           title: 'scheduling_rule-template',
-          i18nKey: 'route.scheduling_rule-template'
+          i18nKey: 'route.scheduling_rule-template',
+          icon: 'ant-design:copy-outlined',
+          order: 8
         }
       },
       {
@@ -1261,7 +1411,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_rule-version',
         meta: {
           title: 'scheduling_rule-version',
-          i18nKey: 'route.scheduling_rule-version'
+          i18nKey: 'route.scheduling_rule-version',
+          icon: 'ant-design:history-outlined',
+          order: 7
         }
       },
       {
@@ -1270,7 +1422,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_shift',
         meta: {
           title: 'scheduling_shift',
-          i18nKey: 'route.scheduling_shift'
+          i18nKey: 'route.scheduling_shift',
+          icon: 'ant-design:clock-circle-outlined',
+          order: 2
         }
       },
       {
@@ -1279,7 +1433,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_shift-pattern',
         meta: {
           title: 'scheduling_shift-pattern',
-          i18nKey: 'route.scheduling_shift-pattern'
+          i18nKey: 'route.scheduling_shift-pattern',
+          icon: 'ant-design:sync-outlined',
+          order: 3
         }
       },
       {
@@ -1288,7 +1444,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.scheduling_team',
         meta: {
           title: 'scheduling_team',
-          i18nKey: 'route.scheduling_team'
+          i18nKey: 'route.scheduling_team',
+          icon: 'ant-design:team-outlined',
+          order: 1
         }
       }
     ]
@@ -1299,7 +1457,9 @@ export const generatedRoutes: GeneratedRoute[] = [
     component: 'layout.base',
     meta: {
       title: 'sustainability',
-      i18nKey: 'route.sustainability'
+      i18nKey: 'route.sustainability',
+      icon: 'mdi:leaf',
+      order: 70
     },
     children: [
       {
@@ -1308,7 +1468,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.sustainability_carbon-calculate',
         meta: {
           title: 'sustainability_carbon-calculate',
-          i18nKey: 'route.sustainability_carbon-calculate'
+          i18nKey: 'route.sustainability_carbon-calculate',
+          icon: 'mdi:molecule-co2',
+          order: 3
         }
       },
       {
@@ -1317,7 +1479,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.sustainability_policy',
         meta: {
           title: 'sustainability_policy',
-          i18nKey: 'route.sustainability_policy'
+          i18nKey: 'route.sustainability_policy',
+          icon: 'mdi:file-document-outline',
+          order: 2
         }
       },
       {
@@ -1326,7 +1490,9 @@ export const generatedRoutes: GeneratedRoute[] = [
         component: 'view.sustainability_program',
         meta: {
           title: 'sustainability_program',
-          i18nKey: 'route.sustainability_program'
+          i18nKey: 'route.sustainability_program',
+          icon: 'mdi:lightbulb-outline',
+          order: 1
         }
       }
     ]
