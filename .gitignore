@@ -236,4 +236,5 @@ server/uploads/
 *.exe~
 
 .helloagents/
+.knowledge/
 .omc/
