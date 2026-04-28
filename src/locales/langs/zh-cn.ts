@@ -187,7 +187,6 @@ const local: App.I18n.Schema = {
     manage_dictionary: '字典管理',
     manage_policy: '策略管理',
     manage_organization: '组织架构',
-    'manage_password-change': '修改密码',
     'manage_user-lock': '用户锁定管理',
     'manage_approval-definition': '审批定义管理',
     'manage_notification-center': '通知中心',

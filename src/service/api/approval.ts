@@ -227,11 +227,19 @@ export async function fetchStartInstance(data: Api.Approval.StartInstanceParams)
 }
 
 export function fetchApproveInstance(data: Api.Approval.ApproveParams) {
-  return request({ url: `${INSTANCE_MODULE}/approve`, method: 'post', data: { taskId: data.task_id, comment: data.comment } });
+  return request({
+    url: `${INSTANCE_MODULE}/approve`,
+    method: 'post',
+    data: { taskId: data.task_id, comment: data.comment }
+  });
 }
 
 export function fetchRejectInstance(data: Api.Approval.RejectParams) {
-  return request({ url: `${INSTANCE_MODULE}/reject`, method: 'post', data: { taskId: data.task_id, comment: data.comment } });
+  return request({
+    url: `${INSTANCE_MODULE}/reject`,
+    method: 'post',
+    data: { taskId: data.task_id, comment: data.comment }
+  });
 }
 
 export function fetchTransferInstance(data: Api.Approval.TransferParams) {

@@ -234,3 +234,6 @@ server/uploads/
 *.bin
 *.exe
 *.exe~
+
+.helloagents/
+.omc/

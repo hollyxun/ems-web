@@ -22,6 +22,7 @@ const routeMetaConfig: Partial<Record<RouteKey, { icon?: string; order?: number;
   knowledge: { icon: 'mdi:book-open-page-variant', order: 100 },
   gatewaysetting: { icon: 'mdi:router-wireless', order: 110 },
   profile: { icon: 'ant-design:user-outlined', order: 120 },
+  about: { icon: 'mdi:information-outline', order: 999 }, // 关于放在最下面
 
   // energy 子菜单
   energy_dashboard: { icon: 'mdi:monitor-dashboard', order: 1 },
@@ -51,7 +52,7 @@ const routeMetaConfig: Partial<Record<RouteKey, { icon?: string; order?: number;
   'base-data_meter': { icon: 'ant-design:dashboard-outlined', order: 4 },
   'base-data_tou': { icon: 'ant-design:clock-circle-outlined', order: 5 },
   'base-data_virtual-meter': { icon: 'ant-design:build-outlined', order: 6 },
-  'base-data_power-distribution': { icon: 'ant-design:electrical-service-outlined', order: 7 },
+  'base-data_power-distribution': { icon: 'mdi:flash-circle', order: 7 },
 
   // alarm 子菜单
   alarm_item: { icon: 'mdi:bell-cog-outline', order: 1 },
@@ -85,8 +86,8 @@ const routeMetaConfig: Partial<Record<RouteKey, { icon?: string; order?: number;
   'analysis_process-energy': { icon: 'ant-design:cluster-outlined', order: 14 },
   analysis_energy: { icon: 'ant-design:pie-chart-outlined', order: 15 },
   analysis_statistical: { icon: 'ant-design:bar-chart-outlined', order: 16 },
-  'analysis_statistical_cost': { icon: 'ant-design:dollar-outlined', order: 17 },
-  'analysis_statistical_flow': { icon: 'ant-design:branches-outlined', order: 18 },
+  analysis_statistical_cost: { icon: 'ant-design:dollar-outlined', order: 17 },
+  analysis_statistical_flow: { icon: 'ant-design:branches-outlined', order: 18 },
   'analysis_statistical_yoy-mom': { icon: 'ant-design:stock-outlined', order: 19 },
 
   // approval 子菜单
@@ -101,7 +102,6 @@ const routeMetaConfig: Partial<Record<RouteKey, { icon?: string; order?: number;
   'manage_audit-log': { icon: 'ant-design:file-text-outlined', order: 5 },
   manage_dictionary: { icon: 'ant-design:book-outlined', order: 6 },
   manage_organization: { icon: 'ant-design:apartment-outlined', order: 7 },
-  'manage_password-change': { icon: 'ant-design:lock-outlined', order: 8 },
   'manage_user-lock': { icon: 'ant-design:user-delete-outlined', order: 9 },
   'manage_approval-definition': { icon: 'ant-design:audit-outlined', order: 10 },
   'manage_notification-center': { icon: 'ant-design:notification-outlined', order: 11 },
@@ -117,10 +117,10 @@ const routeMetaConfig: Partial<Record<RouteKey, { icon?: string; order?: number;
 
   // 隐藏的详情页面（不显示在菜单中）
   'manage_user-detail': { hideInMenu: true },
-  'analysis_energy_comprehensive_daily': { hideInMenu: true },
-  'analysis_energy_comprehensive_monthly': { hideInMenu: true },
-  'analysis_energy_comprehensive_statistics': { hideInMenu: true },
-  'analysis_energy_comprehensive_year': { hideInMenu: true },
+  analysis_energy_comprehensive_daily: { hideInMenu: true },
+  analysis_energy_comprehensive_monthly: { hideInMenu: true },
+  analysis_energy_comprehensive_statistics: { hideInMenu: true },
+  analysis_energy_comprehensive_year: { hideInMenu: true },
   'analysis_key-equipment_daily': { hideInMenu: true },
   'analysis_key-equipment_monthly': { hideInMenu: true },
   'analysis_key-equipment_year': { hideInMenu: true },
@@ -129,10 +129,9 @@ const routeMetaConfig: Partial<Record<RouteKey, { icon?: string; order?: number;
   'analysis_process-energy_statistics_year': { hideInMenu: true },
 
   // 框架示例路由（隐藏）
-  about: { hideInMenu: true },
   developer: { hideInMenu: true },
-  'developer_function': { hideInMenu: true },
-  'developer_plugin': { hideInMenu: true }
+  developer_function: { hideInMenu: true },
+  developer_plugin: { hideInMenu: true }
 };
 
 export function setupElegantRouter() {

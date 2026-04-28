@@ -189,7 +189,6 @@ const local: App.I18n.Schema = {
     manage_dictionary: 'Dictionary Manage',
     manage_policy: 'Policy Manage',
     manage_organization: 'Organization',
-    'manage_password-change': 'Change Password',
     'manage_user-lock': 'User Lock Management',
     'manage_approval-definition': 'Approval Definition',
     'manage_notification-center': 'Notification Center',
