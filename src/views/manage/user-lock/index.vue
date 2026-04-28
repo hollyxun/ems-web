@@ -68,7 +68,7 @@ const { columns, columnChecks, data, getData, loading, mobilePagination } = useU
   ]
 });
 
-const { checkedRowKeys } = useTableOperate(data, 'id', getData);
+const { checkedRowKeys: _checkedRowKeys } = useTableOperate(data, 'id', getData);
 
 // 解锁用户
 async function handleUnlock(userId: number) {
@@ -92,7 +92,7 @@ function formatDateTime(dateStr: string) {
   });
 }
 
-function resetSearchParams() {
+function _resetSearchParams() {
   searchParams.value = getInitSearchParams();
 }
 </script>

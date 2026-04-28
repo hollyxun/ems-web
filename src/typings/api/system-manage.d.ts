@@ -96,10 +96,6 @@ declare namespace Api {
       /** user status (1: enabled, 2: disabled) */
       enabled?: number;
       status?: number;
-      /** department id */
-      departmentId: number;
-      /** department info */
-      department?: Department;
       /** organization id for data scoping */
       organizationId?: number;
       /** organization info */
@@ -131,43 +127,6 @@ declare namespace Api {
 
     /** user list response */
     type UserList = Common.PageResult<User>;
-
-    /** department */
-    type Department = {
-      /** record id */
-      id: number;
-      /** created at */
-      createdAt: string;
-      /** updated at */
-      updatedAt: string;
-      /** parent department id */
-      parentId: number;
-      /** department name */
-      name: string;
-      /** leader id */
-      leaderId: number;
-      /** phone */
-      phone: string;
-      /** email */
-      email: string;
-      /** sort order */
-      sort: number;
-      /** status (1: enabled, 2: disabled) */
-      status: number;
-      /** children departments */
-      children?: Department[];
-    };
-
-    /** department search params */
-    type DepartmentSearchParams = CommonType.RecordNullable<{
-      name?: string;
-      status?: number;
-      page: number;
-      pageSize: number;
-    }>;
-
-    /** department list response */
-    type DepartmentList = Common.PageResult<Department>;
 
     /** data scope type */
     type DataScopeType = '1' | '2' | '3' | '4' | '5';
@@ -205,6 +164,8 @@ declare namespace Api {
       status: MenuStatus;
       /** is folder (true: has children, false: leaf node) */
       isFolder: boolean;
+      /** hide in menu (not displayed in navigation) */
+      hideInMenu: boolean;
       /** children menus */
       children?: Menu[];
     };
@@ -233,6 +194,8 @@ declare namespace Api {
       status: MenuStatus;
       /** is folder */
       isFolder: boolean;
+      /** hide in menu (not displayed in navigation) */
+      hideInMenu: boolean;
       /** children menu tree nodes */
       children?: MenuTree[];
     };

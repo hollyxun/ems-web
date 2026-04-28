@@ -1,15 +1,10 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchCreateDictionary,
-  fetchDeleteDictionary,
-  fetchGetDictionaryByType,
-  fetchGetDictionaryList,
-  fetchUpdateDictionary
-} from '@/service/api';
+import { fetchDeleteDictionary, fetchGetDictionaryByType, fetchGetDictionaryList } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
+import { hasPermission } from '@/directives/permission';
 import DictionaryOperateDrawer from './modules/dictionary-operate-drawer.vue';
 
 defineOptions({ name: 'DictionaryManage' });
@@ -67,26 +62,33 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
           <ElButton type="primary" plain size="small" onClick={() => viewData(row)}>
             数据
           </ElButton>
-          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{
-              reference: () => (
-                <ElButton type="danger" plain size="small">
-                  {$t('common.delete')}
-                </ElButton>
-              )
-            }}
-          </ElPopconfirm>
+          {hasPermission('dictionary:update') && (
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
+          )}
+          {hasPermission('dictionary:delete') && (
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
+            </ElPopconfirm>
+          )}
         </div>
       )
     }
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onDeleted } = useTableOperate(
+  data,
+  'id',
+  getData
+);
 
 /** dictionary data drawer */
 const dataDrawerVisible = ref(false);
@@ -178,7 +180,24 @@ function edit(id: number) {
             @add="handleAdd"
             @delete="handleBatchDelete"
             @refresh="getData"
-          />
+          >
+            <template #add-btn>
+              <ElButton v-permission="'dictionary:create'" type="primary" plain @click="handleAdd">
+                {{ $t('common.add') }}
+              </ElButton>
+            </template>
+            <template #delete-btn>
+              <ElButton
+                v-permission="'dictionary:delete'"
+                type="danger"
+                plain
+                :disabled="checkedRowKeys.length === 0"
+                @click="handleBatchDelete"
+              >
+                {{ $t('common.batchDelete') }}
+              </ElButton>
+            </template>
+          </TableHeaderOperation>
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">

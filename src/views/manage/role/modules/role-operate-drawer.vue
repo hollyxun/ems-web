@@ -4,12 +4,9 @@ import { useBoolean } from '@sa/hooks';
 import {
   fetchCheckCircularReference,
   fetchCreateRole,
-  fetchGetDepartmentTree,
-  fetchGetRoleDepartments,
   fetchGetRoleDetail,
   fetchGetRoleHierarchyDepth,
   fetchGetRoleTree,
-  fetchSetRoleDepartments,
   fetchUpdateRole
 } from '@/service/api';
 import { useForm, useFormRules } from '@/hooks/common/form';
@@ -59,7 +56,6 @@ interface Model {
   defaultRouter: string;
   dataScope: string;
   status: number;
-  customDepartmentIds: number[];
 }
 
 const model = ref<Model>(createDefaultModel());
@@ -71,8 +67,7 @@ function createDefaultModel(): Model {
     authorityName: '',
     defaultRouter: '',
     dataScope: '1',
-    status: 1,
-    customDepartmentIds: []
+    status: 1
   };
 }
 
@@ -91,12 +86,6 @@ const checkLoading = ref(false);
 /** all roles for parent selection */
 const allRoles = ref<Api.SystemManage.Role[]>([]);
 
-/** all departments for custom data permission */
-const allDepartments = ref<Api.SystemManage.Department[]>([]);
-
-/** show custom department selection when dataScope is '2' (自定义数据) */
-const showCustomDepartment = computed(() => model.value.dataScope === '2');
-
 /** circular reference warning */
 const circularWarning = ref('');
 
@@ -109,21 +98,6 @@ const MAX_DEPTH = 5;
 async function getRoleTree() {
   const { data } = await fetchGetRoleTree();
   allRoles.value = data || [];
-}
-
-async function getDepartmentTree() {
-  const { data } = await fetchGetDepartmentTree();
-  allDepartments.value = data || [];
-}
-
-async function getRoleDepartments() {
-  if (!props.rowData?.id) return;
-  try {
-    const { data: departmentIds } = await fetchGetRoleDepartments(props.rowData.id);
-    model.value.customDepartmentIds = departmentIds || [];
-  } catch {
-    // Silently ignore role department fetch errors
-  }
 }
 
 async function getRoleDetail() {
@@ -204,13 +178,10 @@ function handleInitModel() {
       authorityName: rowData.authorityName || rowData.roleName || '',
       defaultRouter: rowData.defaultRouter || '',
       dataScope: rowData.dataScope || '1',
-      status: rowData.status || 1,
-      customDepartmentIds: []
+      status: rowData.status || 1
     };
     // Load role detail with parentIds
     getRoleDetail();
-    // Load role custom department permissions
-    getRoleDepartments();
   }
 }
 
@@ -234,7 +205,7 @@ async function handleSubmit() {
   loading.value = true;
   try {
     if (props.operateType === 'add') {
-      const { error, data: newRoleId } = await fetchCreateRole({
+      const { error } = await fetchCreateRole({
         parentIds: model.value.parentIds,
         authorityName: model.value.authorityName,
         authorityId: model.value.authorityId,
@@ -243,13 +214,6 @@ async function handleSubmit() {
         status: model.value.status
       });
       if (!error) {
-        // If custom data scope is selected, set department permissions
-        if (model.value.dataScope === '2' && model.value.customDepartmentIds.length > 0 && newRoleId) {
-          await fetchSetRoleDepartments({
-            roleId: newRoleId as number,
-            departmentIds: model.value.customDepartmentIds
-          });
-        }
         window.$message?.success($t('common.addSuccess'));
         closeDrawer();
         emit('submitted');
@@ -264,13 +228,6 @@ async function handleSubmit() {
         status: model.value.status
       });
       if (!error) {
-        // Update role custom department permissions
-        if (model.value.dataScope === '2' && model.value.id) {
-          await fetchSetRoleDepartments({
-            roleId: model.value.id,
-            departmentIds: model.value.customDepartmentIds
-          });
-        }
         window.$message?.success($t('common.updateSuccess'));
         closeDrawer();
         emit('submitted');
@@ -293,12 +250,11 @@ watch(
   { deep: true }
 );
 
-// Data scope options
+// Data scope options (removed department-related options)
 const dataScopeOptions = [
   { label: '全部数据', value: '1' },
-  { label: '自定义数据', value: '2' },
-  { label: '本部门数据', value: '3' },
-  { label: '本部门及以下数据', value: '4' },
+  { label: '本组织数据', value: '3' },
+  { label: '本组织及以下数据', value: '4' },
   { label: '仅本人数据', value: '5' }
 ];
 
@@ -307,7 +263,6 @@ watch(visible, () => {
     handleInitModel();
     restoreValidation();
     getRoleTree();
-    getDepartmentTree();
   }
 });
 </script>
@@ -353,20 +308,6 @@ watch(visible, () => {
           />
         </ElSelect>
         <div class="mt-4px text-12px text-gray-500">控制角色可查看的数据范围</div>
-      </ElFormItem>
-      <ElFormItem v-if="showCustomDepartment" label="自定义部门权限" prop="customDepartmentIds">
-        <ElTreeSelect
-          v-model="model.customDepartmentIds"
-          :data="allDepartments"
-          :props="{ label: 'name', value: 'id', children: 'children' } as any"
-          multiple
-          check-strictly
-          collapse-tags
-          collapse-tags-tooltip
-          placeholder="请选择可访问的部门"
-          class="w-full"
-        />
-        <div class="mt-4px text-12px text-gray-500">选择该角色可以访问的部门数据</div>
       </ElFormItem>
       <ElFormItem label="状态" prop="status">
         <ElRadioGroup v-model="model.status">

@@ -51,6 +51,7 @@ interface Model {
   sort: number;
   status: Api.SystemManage.MenuStatus;
   isFolder: boolean;
+  hideInMenu: boolean;
 }
 
 const model = ref<Model>(createDefaultModel());
@@ -64,7 +65,8 @@ function createDefaultModel(): Model {
     icon: '',
     sort: 1,
     status: 1,
-    isFolder: false
+    isFolder: false,
+    hideInMenu: false
   };
 }
 
@@ -106,7 +108,8 @@ function handleInitModel() {
       icon: row.icon,
       sort: row.sort,
       status: row.status,
-      isFolder: row.isFolder
+      isFolder: row.isFolder,
+      hideInMenu: row.hideInMenu || false
     };
   }
 }
@@ -125,7 +128,8 @@ async function handleSubmit() {
       title: model.value.title,
       icon: model.value.icon,
       sort: model.value.sort,
-      status: model.value.status
+      status: model.value.status,
+      hideInMenu: model.value.hideInMenu
     });
 
     if (!error) {
@@ -215,6 +219,15 @@ watch(visible, () => {
               <ElRadioGroup v-model="model.status">
                 <ElRadio v-for="item in statusOptions" :key="item.value" :value="item.value" :label="item.label" />
               </ElRadioGroup>
+            </ElFormItem>
+          </ElCol>
+          <ElCol :span="12">
+            <ElFormItem label="隐藏菜单" prop="hideInMenu">
+              <ElRadioGroup v-model="model.hideInMenu">
+                <ElRadio :value="true">{{ $t('common.yesOrNo.yes') }}</ElRadio>
+                <ElRadio :value="false">{{ $t('common.yesOrNo.no') }}</ElRadio>
+              </ElRadioGroup>
+              <div class="mt-4px text-12px text-gray-500">隐藏后不在导航菜单中显示，但路由仍可访问</div>
             </ElFormItem>
           </ElCol>
         </ElRow>

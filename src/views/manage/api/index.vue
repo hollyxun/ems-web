@@ -1,9 +1,10 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
-import { fetchBatchDeleteApis, fetchCreateApi, fetchDeleteApi, fetchGetApiList, fetchUpdateApi } from '@/service/api';
+import { fetchBatchDeleteApis, fetchDeleteApi, fetchGetApiList } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
+import { hasPermission } from '@/directives/permission';
 import ApiOperateDrawer from './modules/api-operate-drawer.vue';
 
 defineOptions({ name: 'ApiManage' });
@@ -75,18 +76,22 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       width: 130,
       formatter: row => (
         <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{
-              reference: () => (
-                <ElButton type="danger" plain size="small">
-                  {$t('common.delete')}
-                </ElButton>
-              )
-            }}
-          </ElPopconfirm>
+          {hasPermission('api:update') && (
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
+          )}
+          {hasPermission('api:delete') && (
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
+            </ElPopconfirm>
+          )}
         </div>
       )
     }
@@ -182,7 +187,24 @@ function edit(id: number) {
             @add="handleAdd"
             @delete="handleBatchDelete"
             @refresh="getData"
-          />
+          >
+            <template #add-btn>
+              <ElButton v-permission="'api:create'" type="primary" plain @click="handleAdd">
+                {{ $t('common.add') }}
+              </ElButton>
+            </template>
+            <template #delete-btn>
+              <ElButton
+                v-permission="'api:delete'"
+                type="danger"
+                plain
+                :disabled="checkedRowKeys.length === 0"
+                @click="handleBatchDelete"
+              >
+                {{ $t('common.batchDelete') }}
+              </ElButton>
+            </template>
+          </TableHeaderOperation>
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">

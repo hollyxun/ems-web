@@ -1,24 +1,38 @@
 <script setup lang="tsx">
 import { computed, ref } from 'vue';
 import type { Ref } from 'vue';
-import { ElButton, ElMessage, ElPopconfirm, ElTag, ElTree } from 'element-plus';
+import {
+  ElButton,
+  ElMessage,
+  ElPopconfirm,
+  ElRadioButton,
+  ElRadioGroup,
+  ElTable,
+  ElTableColumn,
+  ElTag,
+  ElTree
+} from 'element-plus';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetMenuTree, fetchMoveMenu, fetchUpdateMenu } from '@/service/api';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
+import { getRoutePath } from '@/router/elegant/transform';
 import MenuOperateModal, { type OperateType } from './modules/menu-operate-modal.vue';
 
 const { bool: visible, setTrue: openModal } = useBoolean();
 
-const wrapperRef = ref<HTMLElement | null>(null);
 const loading = ref(false);
 const data: Ref<Api.SystemManage.MenuTree[]> = ref([]);
 const treeRef = ref<InstanceType<typeof ElTree> | null>(null);
+const tableRef = ref<InstanceType<typeof ElTable> | null>(null);
 
 /** the edit menu data or the parent menu data when adding a child menu */
 const editingData: Ref<Api.SystemManage.MenuTree | null> = ref(null);
 
 const operateType = ref<OperateType>('edit');
+
+// 视图模式：tree | table
+const viewMode = ref<'tree' | 'table'>('tree');
 
 // 状态筛选
 const statusFilter = ref<Api.SystemManage.MenuStatus | undefined>(undefined);
@@ -97,51 +111,20 @@ const statusTextMap: Record<number, string> = {
   2: $t('page.manage.route.obsolete')
 };
 
-// 是否文件夹颜色映射
-const isFolderTagMap: Record<string, UI.ThemeColor> = {
-  true: 'primary',
-  false: 'info'
-};
+// 获取路由路径
+function getRoutePathDisplay(routeName: string): string {
+  if (!routeName) return '';
+  try {
+    return getRoutePath(routeName as any) || '';
+  } catch {
+    return '';
+  }
+}
 
-// ElTree 节点渲染内容
-function renderNodeContent(h: any, { node, data }: { node: any; data: Api.SystemManage.MenuTree }) {
-  const menuData = data;
-  return h('div', { class: 'flex items-center justify-between w-full pr-8px' }, [
-    // 左侧：图标 + 标题
-    h('div', { class: 'flex items-center gap-8px' }, [
-      h(SvgIcon, { icon: menuData.icon, class: 'text-icon' }),
-      h('span', { class: 'font-medium' }, menuData.title || menuData.routeName),
-      menuData.isFolder
-        ? h(ElTag, { type: 'primary', size: 'small', class: 'ml-4px' }, $t('common.yesOrNo.yes'))
-        : null
-    ]),
-    // 右侧：routeName + 状态 + 操作按钮
-    h('div', { class: 'flex items-center gap-8px' }, [
-      h('span', { class: 'text-gray-500 text-sm' }, menuData.routeName || '(纯目录)'),
-      h(ElTag, { type: statusTagMap[menuData.status] || 'info', size: 'small' }, statusTextMap[menuData.status] || String(menuData.status)),
-      h('span', { class: 'text-gray-400 text-sm' }, `#${menuData.sort}`),
-      // 编辑按钮
-      h(ElButton, {
-        type: 'primary',
-        plain: true,
-        size: 'small',
-        onClick: () => handleEdit(menuData)
-      }, $t('common.edit')),
-      // 状态切换按钮
-      menuData.status !== 2
-        ? h(ElPopconfirm, {
-            title: menuData.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable'),
-            onConfirm: () => handleToggleStatus(menuData)
-          }, {
-            reference: () => h(ElButton, {
-              type: menuData.status === 1 ? 'warning' : 'success',
-              plain: true,
-              size: 'small'
-            }, menuData.status === 1 ? $t('page.manage.common.status.disable') : $t('page.manage.common.status.enable'))
-          })
-        : null
-    ])
-  ]);
+// 获取 i18n 翻译（使用 any 类型绕过严格类型检查）
+function getRouteI18n(routeName: string): string {
+  const i18nKey = `route.${routeName}` as any;
+  return $t(i18nKey) || routeName;
 }
 
 function handleEdit(item: Api.SystemManage.MenuTree) {
@@ -215,7 +198,7 @@ async function handleDrop(draggingNode: any, dropNode: any, dropType: string) {
 }
 
 // 允许拖拽判断
-function allowDrag(draggingNode: any) {
+function allowDrag(_draggingNode: any) {
   return true; // 所有节点都允许拖拽
 }
 
@@ -237,12 +220,23 @@ init();
 </script>
 
 <template>
-  <div ref="wrapperRef" class="flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
+  <div class="flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <ElCard class="card-wrapper sm:flex-1-hidden">
       <template #header>
         <div class="flex items-center justify-between">
           <p>{{ $t('page.manage.menu.title') }} ({{ totalCount }})</p>
           <div class="flex items-center gap-12px">
+            <!-- 视图模式切换 -->
+            <ElRadioGroup v-model="viewMode" size="small">
+              <ElRadioButton value="tree">
+                <icon-ic-round-account-tree class="mr-4px" />
+                树形
+              </ElRadioButton>
+              <ElRadioButton value="table">
+                <icon-ic-round-table-chart class="mr-4px" />
+                表格
+              </ElRadioButton>
+            </ElRadioGroup>
             <ElSelect
               v-model="statusFilter"
               :placeholder="$t('page.manage.menu.statusFilter')"
@@ -266,67 +260,163 @@ init();
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">
-        <!-- 提示：拖拽可调整菜单层级 -->
-        <div class="mb-8px text-gray-500 text-sm">
-          <icon-ic-round-info class="text-icon mr-4px" />
-          拖拽菜单可调整层级结构
-        </div>
-        <ElTree
-          ref="treeRef"
-          v-loading="loading"
-          :data="filteredData"
-          :props="{ children: 'children', label: 'title' }"
-          node-key="id"
-          default-expand-all
-          draggable
-          :allow-drag="allowDrag"
-          :allow-drop="allowDrop"
-          @node-drop="handleDrop"
-          class="menu-tree"
-        >
-          <template #default="{ node, data }">
-            <div class="flex items-center justify-between w-full pr-8px py-4px">
-              <!-- 左侧：图标 + 标题 -->
-              <div class="flex items-center gap-8px">
-                <SvgIcon v-if="data.icon" :icon="data.icon" class="text-icon" />
-                <span class="font-medium">{{ data.title || data.routeName }}</span>
-                <ElTag v-if="data.isFolder" type="primary" size="small" class="ml-4px">
-                  {{ $t('common.yesOrNo.yes') }}
-                </ElTag>
+        <!-- Tree 视图 -->
+        <template v-if="viewMode === 'tree'">
+          <!-- 提示：拖拽可调整菜单层级 -->
+          <div class="mb-8px text-sm text-gray-500">
+            <icon-ic-round-info class="mr-4px text-icon" />
+            拖拽菜单可调整层级结构
+          </div>
+          <ElTree
+            ref="treeRef"
+            v-loading="loading"
+            :data="filteredData"
+            :props="{ children: 'children', label: 'title' }"
+            node-key="id"
+            default-expand-all
+            draggable
+            :allow-drag="allowDrag"
+            :allow-drop="allowDrop"
+            class="menu-tree"
+            @node-drop="handleDrop"
+          >
+            <template #default="{ data }">
+              <div class="w-full flex items-center justify-between py-4px pr-8px">
+                <!-- 左侧：图标 + 标题 -->
+                <div class="flex items-center gap-8px">
+                  <SvgIcon v-if="data.icon" :icon="data.icon" class="text-icon" />
+                  <span class="font-medium">{{ data.title || getRouteI18n(data.routeName) || data.routeName }}</span>
+                  <ElTag v-if="data.isFolder" type="primary" size="small" class="ml-4px">
+                    {{ $t('common.yesOrNo.yes') }}
+                  </ElTag>
+                </div>
+                <!-- 右侧：路由信息 + 状态 + 操作按钮 -->
+                <div class="flex items-center gap-8px">
+                  <span v-if="getRoutePathDisplay(data.routeName)" class="text-sm text-gray-400">
+                    {{ getRoutePathDisplay(data.routeName) }}
+                  </span>
+                  <span class="text-sm text-gray-500">{{ data.routeName || '(纯目录)' }}</span>
+                  <span v-if="data.title" class="text-sm text-primary">{{ getRouteI18n(data.routeName) }}</span>
+                  <ElTag v-if="data.hideInMenu" type="warning" size="small">隐藏</ElTag>
+                  <ElTag :type="statusTagMap[data.status] || 'info'" size="small">
+                    {{ statusTextMap[data.status] || data.status }}
+                  </ElTag>
+                  <span class="text-sm text-gray-400">#{{ data.sort }}</span>
+                  <ElButton v-permission="'menu:update'" type="primary" plain size="small" @click="handleEdit(data)">
+                    {{ $t('common.edit') }}
+                  </ElButton>
+                  <ElPopconfirm
+                    v-if="data.status !== 2"
+                    v-permission="'menu:update'"
+                    :title="
+                      data.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable')
+                    "
+                    @confirm="handleToggleStatus(data)"
+                  >
+                    <template #reference>
+                      <ElButton :type="data.status === 1 ? 'warning' : 'success'" plain size="small">
+                        {{
+                          data.status === 1
+                            ? $t('page.manage.common.status.disable')
+                            : $t('page.manage.common.status.enable')
+                        }}
+                      </ElButton>
+                    </template>
+                  </ElPopconfirm>
+                </div>
               </div>
-              <!-- 右侧：routeName + 状态 + 操作按钮 -->
-              <div class="flex items-center gap-8px">
-                <span class="text-gray-500 text-sm">{{ data.routeName || '(纯目录)' }}</span>
-                <ElTag :type="statusTagMap[data.status] || 'info'" size="small">
-                  {{ statusTextMap[data.status] || data.status }}
+            </template>
+          </ElTree>
+        </template>
+
+        <!-- Table 视图（树形表格） -->
+        <template v-else>
+          <ElTable
+            ref="tableRef"
+            v-loading="loading"
+            :data="filteredData"
+            border
+            stripe
+            height="100%"
+            row-key="id"
+            :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+            default-expand-all
+          >
+            <ElTableColumn label="菜单名称" min-width="150">
+              <template #default="{ row }">
+                <div class="flex items-center gap-4px">
+                  <SvgIcon v-if="row.icon" :icon="row.icon" class="text-icon" />
+                  <span class="font-medium">
+                    {{ row.title || getRouteI18n(row.routeName) || row.routeName }}
+                  </span>
+                  <ElTag v-if="row.isFolder" type="primary" size="small">
+                    {{ $t('common.yesOrNo.yes') }}
+                  </ElTag>
+                </div>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="routeName" label="路由名称" min-width="120" show-overflow-tooltip>
+              <template #default="{ row }">
+                <span class="text-gray-600">{{ row.routeName || '(纯目录)' }}</span>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn label="路由路径" min-width="150" show-overflow-tooltip>
+              <template #default="{ row }">
+                <span class="text-gray-400">{{ getRoutePathDisplay(row.routeName) }}</span>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn label="i18n 翻译" min-width="120" show-overflow-tooltip>
+              <template #default="{ row }">
+                <span class="text-primary">{{ getRouteI18n(row.routeName) }}</span>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="sort" label="排序" width="80" align="center">
+              <template #default="{ row }">
+                <span class="text-gray-400">#{{ row.sort }}</span>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn prop="status" label="状态" width="100" align="center">
+              <template #default="{ row }">
+                <ElTag :type="statusTagMap[row.status] || 'info'" size="small">
+                  {{ statusTextMap[row.status] || row.status }}
                 </ElTag>
-                <span class="text-gray-400 text-sm">#{{ data.sort }}</span>
-                <!-- 编辑按钮 -->
-                <ElButton type="primary" plain size="small" @click="handleEdit(data)">
-                  {{ $t('common.edit') }}
-                </ElButton>
-                <!-- 状态切换按钮 -->
-                <ElPopconfirm
-                  v-if="data.status !== 2"
-                  :title="
-                    data.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable')
-                  "
-                  @confirm="handleToggleStatus(data)"
-                >
-                  <template #reference>
-                    <ElButton :type="data.status === 1 ? 'warning' : 'success'" plain size="small">
-                      {{
-                        data.status === 1
-                          ? $t('page.manage.common.status.disable')
-                          : $t('page.manage.common.status.enable')
-                      }}
-                    </ElButton>
-                  </template>
-                </ElPopconfirm>
-              </div>
-            </div>
-          </template>
-        </ElTree>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn label="隐藏" width="80" align="center">
+              <template #default="{ row }">
+                <ElTag v-if="row.hideInMenu" type="warning" size="small">隐藏</ElTag>
+                <span v-else class="text-gray-400">-</span>
+              </template>
+            </ElTableColumn>
+            <ElTableColumn label="操作" width="140" align="center" fixed="right">
+              <template #default="{ row }">
+                <div class="flex-center gap-4px">
+                  <ElButton v-permission="'menu:update'" type="primary" plain size="small" @click="handleEdit(row)">
+                    {{ $t('common.edit') }}
+                  </ElButton>
+                  <ElPopconfirm
+                    v-if="row.status !== 2"
+                    v-permission="'menu:update'"
+                    :title="
+                      row.status === 1 ? $t('page.manage.menu.confirmDisable') : $t('page.manage.menu.confirmEnable')
+                    "
+                    @confirm="handleToggleStatus(row)"
+                  >
+                    <template #reference>
+                      <ElButton :type="row.status === 1 ? 'warning' : 'success'" plain size="small">
+                        {{
+                          row.status === 1
+                            ? $t('page.manage.common.status.disable')
+                            : $t('page.manage.common.status.enable')
+                        }}
+                      </ElButton>
+                    </template>
+                  </ElPopconfirm>
+                </div>
+              </template>
+            </ElTableColumn>
+          </ElTable>
+        </template>
       </div>
       <MenuOperateModal
         v-model:visible="visible"

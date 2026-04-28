@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, shallowRef, watch } from 'vue';
 import type { ElTree } from 'element-plus';
-import { fetchGetMenuTree, fetchGetRoleMenuIds, fetchBatchAssignMenus } from '@/service/api';
+import { fetchBatchAssignMenus, fetchGetMenuTree, fetchGetRoleMenuIds } from '@/service/api';
 import { $t } from '@/locales';
 import ButtonAuthTab from './button-auth-tab.vue';
 

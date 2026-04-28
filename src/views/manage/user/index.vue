@@ -1,15 +1,10 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchBatchDeleteUsers,
-  fetchDeleteUser,
-  fetchGetAllRoles,
-  fetchGetDepartmentTree,
-  fetchGetUserList
-} from '@/service/api';
+import { fetchBatchDeleteUsers, fetchDeleteUser, fetchGetAllRoles, fetchGetUserList } from '@/service/api';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
+import { hasPermission } from '@/directives/permission';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
@@ -55,12 +50,6 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       formatter: row => <span>{row.organization?.name || '-'}</span>
     },
     {
-      prop: 'department',
-      label: '所属部门',
-      minWidth: 120,
-      formatter: row => <span>{row.department?.name || '-'}</span>
-    },
-    {
       prop: 'roles',
       label: '角色',
       minWidth: 150,
@@ -102,18 +91,22 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       width: 130,
       formatter: row => (
         <div class="flex-center">
-          <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
-            {$t('common.edit')}
-          </ElButton>
-          <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
-            {{
-              reference: () => (
-                <ElButton type="danger" plain size="small">
-                  {$t('common.delete')}
-                </ElButton>
-              )
-            }}
-          </ElPopconfirm>
+          {hasPermission('user:update') && (
+            <ElButton type="primary" plain size="small" onClick={() => edit(row.id)}>
+              {$t('common.edit')}
+            </ElButton>
+          )}
+          {hasPermission('user:delete') && (
+            <ElPopconfirm title={$t('common.confirmDelete')} onConfirm={() => handleDelete(row.id)}>
+              {{
+                reference: () => (
+                  <ElButton type="danger" plain size="small">
+                    {$t('common.delete')}
+                  </ElButton>
+                )
+              }}
+            </ElPopconfirm>
+          )}
         </div>
       )
     }
@@ -126,17 +119,9 @@ const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedR
 /** all roles for selection */
 const allRoles = ref<Api.SystemManage.Role[]>([]);
 
-/** all departments for selection */
-const allDepartments = ref<Api.SystemManage.Department[]>([]);
-
 async function getAllRoles() {
   const { data: roles } = await fetchGetAllRoles();
   allRoles.value = roles || [];
-}
-
-async function getAllDepartments() {
-  const { data: departments } = await fetchGetDepartmentTree();
-  allDepartments.value = departments || [];
 }
 
 async function handleBatchDelete() {
@@ -166,7 +151,6 @@ function edit(id: number) {
 
 // init
 getAllRoles();
-getAllDepartments();
 </script>
 
 <template>
@@ -183,7 +167,24 @@ getAllDepartments();
             @add="handleAdd"
             @delete="handleBatchDelete"
             @refresh="getData"
-          />
+          >
+            <template #add-btn>
+              <ElButton v-permission="'user:create'" type="primary" plain @click="handleAdd">
+                {{ $t('common.add') }}
+              </ElButton>
+            </template>
+            <template #delete-btn>
+              <ElButton
+                v-permission="'user:delete'"
+                type="danger"
+                plain
+                :disabled="checkedRowKeys.length === 0"
+                @click="handleBatchDelete"
+              >
+                {{ $t('common.batchDelete') }}
+              </ElButton>
+            </template>
+          </TableHeaderOperation>
         </div>
       </template>
       <div class="h-[calc(100%-52px)]">

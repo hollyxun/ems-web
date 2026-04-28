@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
-import {
-  fetchActivateDefinition,
-  fetchDefinitionList,
-  fetchDeleteDefinition,
-  fetchGetDefinition
-} from '@/service/api/approval';
+import { fetchActivateDefinition, fetchDefinitionList, fetchDeleteDefinition } from '@/service/api/approval';
 
 defineOptions({ name: 'ApprovalDefinitionManage' });
 

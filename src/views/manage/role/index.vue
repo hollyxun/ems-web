@@ -158,11 +158,16 @@ getRoleTree();
             <ElInput v-model="filterText" placeholder="搜索角色名称" clearable class="w-200px" />
           </div>
           <div class="flex items-center gap-8px">
-            <ElButton type="primary" :disabled="selectedRoleIds.length === 0" @click="handleBatchSetParent">
+            <ElButton
+              v-permission="'role:update'"
+              type="primary"
+              :disabled="selectedRoleIds.length === 0"
+              @click="handleBatchSetParent"
+            >
               批量设置父角色
               <span v-if="selectedRoleIds.length > 0" class="ml-4px">({{ selectedRoleIds.length }})</span>
             </ElButton>
-            <ElButton type="primary" @click="handleAdd">
+            <ElButton v-permission="'role:create'" type="primary" @click="handleAdd">
               {{ $t('common.add') }}
             </ElButton>
             <ElButton @click="getRoleTree">
@@ -190,11 +195,23 @@ getRoleTree();
                 <ElTag v-if="data.status === 2" size="small" type="danger">禁用</ElTag>
               </div>
               <div class="flex items-center gap-8px" @click.stop>
-                <ElButton type="success" link size="small" @click="handleConfigPermission(data)">配置权限</ElButton>
-                <ElButton type="primary" link size="small" @click="handleEdit(data)">
+                <ElButton
+                  v-permission="'role:update'"
+                  type="success"
+                  link
+                  size="small"
+                  @click="handleConfigPermission(data)"
+                >
+                  配置权限
+                </ElButton>
+                <ElButton v-permission="'role:update'" type="primary" link size="small" @click="handleEdit(data)">
                   {{ $t('common.edit') }}
                 </ElButton>
-                <ElPopconfirm :title="$t('common.confirmDelete')" @confirm="handleDelete(data.id)">
+                <ElPopconfirm
+                  v-permission="'role:delete'"
+                  :title="$t('common.confirmDelete')"
+                  @confirm="handleDelete(data.id)"
+                >
                   <template #reference>
                     <ElButton type="danger" link size="small">
                       {{ $t('common.delete') }}

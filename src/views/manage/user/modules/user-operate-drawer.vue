@@ -2,7 +2,6 @@
 import { computed, ref, watch } from 'vue';
 import {
   fetchCreateUser,
-  fetchGetDepartmentTree,
   fetchGetUserRoles,
   fetchOrganizationTree,
   fetchSetUserRoles,
@@ -56,7 +55,6 @@ interface Model {
   phone: string;
   email: string;
   enabled: number;
-  departmentId: number;
   organizationId: number;
   roleIds: number[];
 }
@@ -71,7 +69,6 @@ function createDefaultModel(): Model {
     phone: '',
     email: '',
     enabled: 1,
-    departmentId: 0,
     organizationId: 0,
     roleIds: []
   };
@@ -86,16 +83,8 @@ const rules = computed(() => ({
 
 const loading = ref(false);
 
-/** all departments for selection */
-const allDepartments = ref<Api.SystemManage.Department[]>([]);
-
 /** all organizations for selection */
 const allOrganizations = ref<Api.Organization.OrganizationItem[]>([]);
-
-async function getDepartmentTree() {
-  const { data } = await fetchGetDepartmentTree();
-  allDepartments.value = data || [];
-}
 
 async function getOrganizationTree() {
   const { data } = await fetchOrganizationTree();
@@ -114,7 +103,6 @@ async function handleInitModel() {
       phone: rowData.phone || '',
       email: rowData.email || '',
       enabled: rowData.enabled ?? 1,
-      departmentId: rowData.departmentId || 0,
       organizationId: rowData.organizationId || 0,
       roleIds: []
     };
@@ -146,7 +134,6 @@ async function handleSubmit() {
         phone: model.value.phone,
         email: model.value.email,
         enabled: model.value.enabled,
-        departmentId: model.value.departmentId,
         organizationId: model.value.organizationId
       });
       if (!error) {
@@ -166,7 +153,6 @@ async function handleSubmit() {
         phone: model.value.phone,
         email: model.value.email,
         enabled: model.value.enabled,
-        departmentId: model.value.departmentId,
         organizationId: model.value.organizationId
       });
       if (!error) {
@@ -188,7 +174,6 @@ watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
-    getDepartmentTree();
     getOrganizationTree();
   }
 });
@@ -224,17 +209,6 @@ watch(visible, () => {
           check-strictly
           clearable
           placeholder="请选择所属组织"
-          class="w-full"
-        />
-      </ElFormItem>
-      <ElFormItem label="所属部门" prop="departmentId">
-        <ElTreeSelect
-          v-model="model.departmentId"
-          :data="allDepartments"
-          :props="{ label: 'name', value: 'id', children: 'children' } as any"
-          check-strictly
-          clearable
-          placeholder="请选择所属部门"
           class="w-full"
         />
       </ElFormItem>

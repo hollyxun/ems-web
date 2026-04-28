@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { ElButton, ElCard, ElPopconfirm, ElTag, ElTree } from 'element-plus';
 import { fetchDeleteOrganization, fetchOrganizationTree } from '@/service/api';
 import { $t } from '@/locales';
+import { hasPermission } from '@/directives/permission';
 import OrganizationOperateDrawer from './modules/organization-operate-drawer.vue';
 
 defineOptions({ name: 'OrganizationManage' });
@@ -133,7 +134,9 @@ getOrganizationTree();
           <div class="flex items-center gap-8px">
             <ElButton @click="handleExpandAll">展开全部</ElButton>
             <ElButton @click="handleCollapseAll">收起全部</ElButton>
-            <ElButton type="primary" @click="handleAddRoot">{{ $t('common.add') }}根组织</ElButton>
+            <ElButton v-permission="'organization:create'" type="primary" @click="handleAddRoot">
+              {{ $t('common.add') }}根组织
+            </ElButton>
             <ElButton @click="getOrganizationTree">
               {{ $t('common.refresh') }}
             </ElButton>
@@ -164,13 +167,26 @@ getOrganizationTree();
                 <ElTag v-if="data.status === 2" size="small" type="danger">禁用</ElTag>
               </div>
               <div class="flex items-center gap-8px" @click.stop>
-                <ElButton v-if="data.level < 4" type="primary" link size="small" @click="handleAddChild(data)">
+                <ElButton
+                  v-if="data.level < 4 && hasPermission('organization:create')"
+                  type="primary"
+                  link
+                  size="small"
+                  @click="handleAddChild(data)"
+                >
                   添加子组织
                 </ElButton>
-                <ElButton type="primary" link size="small" @click="handleEdit(data)">
+                <ElButton
+                  v-permission="'organization:update'"
+                  type="primary"
+                  link
+                  size="small"
+                  @click="handleEdit(data)"
+                >
                   {{ $t('common.edit') }}
                 </ElButton>
                 <ElPopconfirm
+                  v-permission="'organization:delete'"
                   title="确定要删除该组织吗？删除后不可恢复，子组织也会被删除。"
                   @confirm="handleDelete(data.id)"
                 >
