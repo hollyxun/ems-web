@@ -8,14 +8,14 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # === Dependency directories ===
-node_modules
-/web/node_modules
+node_modules/
+packages/*/node_modules/
 
 # === Build outputs ===
-dist
-dist-ssr
-/web/dist
-coverage
+dist/
+dist-ssr/
+packages/*/dist/
+coverage/
 
 # === Local env files ===
 *.local
@@ -24,14 +24,16 @@ coverage
 .env.*.local
 !.env.example
 
-# === Lock files（根据团队习惯选择保留或忽略）===
+# === Lock files ===
+# pnpm-lock.yaml 保持跟踪，确保依赖版本一致
 package-lock.json
 yarn.lock
-/web/pnpm-lock.yaml
 
 # === Testing ===
 /cypress/videos/
 /cypress/screenshots/
+test-results/
+.nyc_output/
 
 # === Editor directories and files ===
 # VS Code
@@ -215,6 +217,17 @@ desktop.ini
 *.bak
 *.backup
 *.old
+
+# === Vite 缓存 ===
+.vite/
+vite.config.*.timestamp*
+
+# === TypeScript 编译输出 ===
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# === 测试相关 ===
+vitest.config.*.timestamp*
 
 # === 项目特定（Go 后端相关）===
 rm_file/
