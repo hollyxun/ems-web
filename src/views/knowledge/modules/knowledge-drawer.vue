@@ -3,7 +3,6 @@ import { computed, ref, watch } from 'vue';
 import { ElMessage } from 'element-plus';
 import type { FormInstance, FormRules } from 'element-plus';
 import { fetchCreateKnowledge, fetchKnowledgeById, fetchUpdateKnowledge } from '@/service/api/knowledge';
-import { $t } from '@/locales';
 
 defineOptions({ name: 'KnowledgeDrawer' });
 

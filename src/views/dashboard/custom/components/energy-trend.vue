@@ -11,7 +11,7 @@ use([LineChart, GridComponent, TooltipComponent, DataZoomComponent, CanvasRender
 
 defineOptions({ name: 'EnergyTrendCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

@@ -4,7 +4,7 @@ import { ElCard, ElCol, ElEmpty, ElProgress, ElRow, ElStatistic } from 'element-
 
 defineOptions({ name: 'QuickStatsCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

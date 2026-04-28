@@ -11,7 +11,7 @@ use([GaugeChart, TooltipComponent, CanvasRenderer]);
 
 defineOptions({ name: 'RealtimeMetricsCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

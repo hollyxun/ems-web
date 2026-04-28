@@ -5,8 +5,7 @@ import WangEditor from 'wangeditor';
 import {
   fetchCreateAnnouncement,
   fetchGetAnnouncementDetail,
-  fetchPublishAnnouncement,
-  fetchWithdrawAnnouncement
+  fetchPublishAnnouncement
 } from '@/service/api/announcement';
 import { useRouterPush } from '@/hooks/common/router';
 

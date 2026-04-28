@@ -4,7 +4,7 @@ import { ElCard, ElEmpty, ElTag, ElTimeline, ElTimelineItem } from 'element-plus
 
 defineOptions({ name: 'AlertTimelineCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

@@ -11,7 +11,7 @@ use([BarChart, GridComponent, TooltipComponent, CanvasRenderer]);
 
 defineOptions({ name: 'TeamRankingCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

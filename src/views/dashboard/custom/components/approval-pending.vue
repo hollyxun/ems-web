@@ -4,7 +4,7 @@ import { ElAvatar, ElBadge, ElButton, ElCard, ElEmpty, ElTag } from 'element-plu
 
 defineOptions({ name: 'ApprovalPendingCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

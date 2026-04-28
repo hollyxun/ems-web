@@ -4,7 +4,7 @@ import { ElAvatar, ElBadge, ElCard, ElEmpty, ElTag } from 'element-plus';
 
 defineOptions({ name: 'TopUsersCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

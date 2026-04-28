@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed } from 'vue';
 import { ElButton, ElDialog, ElIcon, ElTag } from 'element-plus';
 import type { UploadFile } from 'element-plus';
 import { Document as ElIconDocument } from '@element-plus/icons-vue';
@@ -11,10 +11,8 @@ const props = defineProps<{
   title: string;
   content: string;
   priority: Api.Announcement.Priority;
-  categoryId: number | null;
   categoryName: string;
   targetType: Api.Announcement.TargetType;
-  targetIds: number[];
   expireAt: string;
   pendingFiles: UploadFile[];
   targetUserCount: number;

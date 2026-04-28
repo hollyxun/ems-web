@@ -83,7 +83,7 @@ const handleExport = async () => {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
     ElMessage.success('导出成功');
-  } catch (_error) {
+  } catch {
     ElMessage.error('导出失败');
   } finally {
     exportLoading.value = false;

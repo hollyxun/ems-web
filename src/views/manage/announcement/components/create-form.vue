@@ -179,12 +179,12 @@ function initEditor() {
 }
 
 // 文件选择处理
-function handleFileChange(file: UploadFile, fileList: UploadFile[]) {
+function handleFileChange(_file: UploadFile, fileList: UploadFile[]) {
   pendingFiles.value = fileList;
 }
 
 // 文件移除处理
-function handleFileRemove(file: UploadFile, fileList: UploadFile[]) {
+function handleFileRemove(_file: UploadFile, fileList: UploadFile[]) {
   pendingFiles.value = fileList;
 }
 

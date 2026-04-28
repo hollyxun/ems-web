@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { fetchGetAnnouncementList, fetchGetAnnouncementUnreadCount } from '@/service/api/announcement';
-import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useSSEConnection } from '@/hooks/business/use-sse-connection';
 
 defineOptions({ name: 'AnnouncementCard' });
 
 const { routerPushByKey } = useRouterPush();
-const authStore = useAuthStore();
 
 const loading = ref(false);
 const announcements = ref<Api.Announcement.Announcement[]>([]);

@@ -4,7 +4,7 @@ import { ElCalendar, ElCard, ElEmpty, ElTag } from 'element-plus';
 
 defineOptions({ name: 'ScheduleCalendarCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

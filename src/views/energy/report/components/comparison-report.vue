@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import { exportComparisonExcel, fetchComparisonReportData } from '@/service/api/energy';
+import { fetchGetAllShifts, fetchGetAllTeams } from '@/service/api/scheduling';
 
 defineOptions({ name: 'ComparisonReport' });
 
@@ -33,18 +34,38 @@ const timeBEnd = ref<string>();
 const energyType = ref<string | undefined>();
 const dimensions = ref<string[]>(['能耗', '单耗', '成本']);
 
-// Team options (TODO: load from API)
-const teamOptions = [
-  { id: 1, name: '甲班' },
-  { id: 2, name: '乙班' },
-  { id: 3, name: '丙班' }
-];
+// Team options (loaded from API)
+const teamOptions = ref<{ id: number; name: string }[]>([]);
 
-const shiftOptions = [
-  { value: '早班', label: '早班' },
-  { value: '中班', label: '中班' },
-  { value: '晚班', label: '晚班' }
-];
+// Shift options (loaded from API)
+const shiftOptions = ref<{ value: string; label: string }[]>([]);
+
+// Load teams and shifts on mount
+onMounted(async () => {
+  try {
+    const { data: teams } = await fetchGetAllTeams();
+    if (teams) {
+      teamOptions.value = teams.map(t => ({ id: t.id, name: t.name }));
+    }
+
+    const { data: shifts } = await fetchGetAllShifts();
+    if (shifts) {
+      shiftOptions.value = shifts.map(s => ({ value: s.name, label: s.name }));
+    }
+  } catch {
+    // Use fallback defaults if API fails
+    teamOptions.value = [
+      { id: 1, name: '甲班' },
+      { id: 2, name: '乙班' },
+      { id: 3, name: '丙班' }
+    ];
+    shiftOptions.value = [
+      { value: '早班', label: '早班' },
+      { value: '中班', label: '中班' },
+      { value: '晚班', label: '晚班' }
+    ];
+  }
+});
 
 // Build request params
 const buildParams = (): Api.Energy.Report.ComparisonReportParams => {

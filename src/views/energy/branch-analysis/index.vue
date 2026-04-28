@@ -49,18 +49,18 @@ const timeLabels = computed(() => {
 
   if (timeType === 'day') {
     // 日：24小时
-    for (let i = 1; i <= 24; i++) {
+    for (let i = 1; i <= 24; i += 1) {
       labels.push(`${i}时`);
     }
   } else if (timeType === 'month') {
     // 月：当月天数
     const daysInMonth = dayjs(dataTime).daysInMonth();
-    for (let i = 1; i <= daysInMonth; i++) {
+    for (let i = 1; i <= daysInMonth; i += 1) {
       labels.push(`${i}日`);
     }
   } else {
     // 年：12个月
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 12; i += 1) {
       labels.push(`${i}月`);
     }
   }
@@ -108,7 +108,7 @@ async function handleExport(format: 'excel' | 'pdf') {
     return;
   }
   ElMessage.info(`正在导出${format === 'excel' ? 'Excel' : 'PDF'}文件...`);
-  // TODO: 实现实际的导出功能
+  // 后续实现实际的导出功能
 }
 
 // 监听时间类型变化，更新时间格式

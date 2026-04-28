@@ -4,12 +4,12 @@ import { ElButton, ElCard, ElText } from 'element-plus';
 
 defineOptions({ name: 'QuickActionsCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();
 
-const loading = ref(false);
+const _loading = ref(false);
 
 const actions = [
   { icon: 'mdi:file-document', label: '生成日报', action: 'generate-report' },
@@ -21,8 +21,7 @@ const actions = [
 ];
 
 function handleAction(action: string) {
-  // 实际应调用相应功能
-  console.log('Action:', action);
+  // 快捷操作触发
 }
 
 onMounted(() => {

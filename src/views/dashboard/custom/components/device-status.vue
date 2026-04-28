@@ -4,7 +4,7 @@ import { ElCard, ElDescriptions, ElDescriptionsItem, ElEmpty, ElProgress } from 
 
 defineOptions({ name: 'DeviceStatusCard' });
 
-const props = defineProps<{
+const _props = defineProps<{
   config?: Record<string, any>;
   refreshInterval?: number;
 }>();

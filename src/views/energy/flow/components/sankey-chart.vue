@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<Props>(), {
   height: '500px'
 });
 
-const emit = defineEmits<{
+const _emit = defineEmits<{
   nodeClick: [node: SankeyNode];
 }>();
 

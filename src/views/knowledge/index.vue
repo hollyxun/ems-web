@@ -1,8 +1,8 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { ElButton, ElMessage, ElPopconfirm, ElTag } from 'element-plus';
+import { ElButton, ElPopconfirm, ElTag } from 'element-plus';
 import type { FlatResponseData } from '@sa/axios';
-import { fetchBatchDeleteKnowledge, fetchDeleteKnowledge, fetchKnowledgeList } from '@/service/api/knowledge';
+import { fetchDeleteKnowledge, fetchKnowledgeList } from '@/service/api/knowledge';
 import { defaultTransform, useTableOperate, useUIPaginatedTable } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import KnowledgeSearch from './modules/knowledge-search.vue';
