@@ -133,7 +133,6 @@ declare module "@elegant-router/types" {
     "manage_menu": "/manage/menu";
     "manage_notification-center": "/manage/notification-center";
     "manage_organization": "/manage/organization";
-    "manage_password-change": "/manage/password-change";
     "manage_policy": "/manage/policy";
     "manage_role": "/manage/role";
     "manage_user": "/manage/user";
@@ -317,7 +316,6 @@ declare module "@elegant-router/types" {
     | "manage_menu"
     | "manage_notification-center"
     | "manage_organization"
-    | "manage_password-change"
     | "manage_policy"
     | "manage_role"
     | "manage_user-detail"

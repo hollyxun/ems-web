@@ -12,6 +12,16 @@ import { useRouteStore } from '../route';
 import { useTabStore } from '../tab';
 import { clearAuthStorage, getToken } from './shared';
 
+// WebSocket 连接管理（延迟导入避免循环依赖）
+let permissionWsModule: { connect: () => void; disconnect: () => void } | null = null;
+async function loadPermissionWs() {
+  if (!permissionWsModule) {
+    const { usePermissionWebSocket } = await import('@/hooks/business/use-permission-websocket');
+    permissionWsModule = usePermissionWebSocket();
+  }
+  return permissionWsModule;
+}
+
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const route = useRoute();
   const router = useRouter();
@@ -70,6 +80,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   /** Reset auth store */
   async function resetStore() {
     recordUserId();
+
+    // 断开 WebSocket 连接
+    try {
+      const ws = await loadPermissionWs();
+      ws.disconnect();
+    } catch {
+      // 忽略 WebSocket 断开错误
+    }
 
     clearAuthStorage();
 
@@ -131,7 +149,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
   /**
    * Handle password expired scenario
-   * Redirect to password change page with force mode
+   * Redirect to profile password page with force mode
    */
   function handlePasswordExpired() {
     window.$notification?.warning({
@@ -139,7 +157,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       message: '您的密码已过期，请修改后继续使用系统',
       duration: 5000
     });
-    router.push({ name: 'manage_password-change', query: { force: 'true' } });
+    router.push({ name: 'profile_password', query: { force: 'true' } });
     endLoading();
   }
 
@@ -287,6 +305,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       // 3. fetch button permissions
       await fetchButtonPermissions();
 
+      // 4. 建立 WebSocket 连接
+      try {
+        const ws = await loadPermissionWs();
+        ws.connect();
+      } catch {
+        // 忽略 WebSocket 连接错误
+      }
+
       token.value = loginToken.token;
       return true;
     }
@@ -297,6 +323,14 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (pass) {
       // 4. fetch button permissions
       await fetchButtonPermissions();
+
+      // 5. 建立 WebSocket 连接
+      try {
+        const ws = await loadPermissionWs();
+        ws.connect();
+      } catch {
+        // 忽略 WebSocket 连接错误
+      }
 
       token.value = loginToken.token;
 

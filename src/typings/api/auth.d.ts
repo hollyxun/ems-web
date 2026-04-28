@@ -22,8 +22,6 @@ declare namespace Api {
       email: string;
       enabled: number;
       roles?: Authority[]; // User's roles (multi-role support)
-      departmentId?: number;
-      department?: Department;
       /** Organization ID for data scoping */
       organizationId?: number;
       /** Organization info */
@@ -41,12 +39,6 @@ declare namespace Api {
       defaultRouter?: string;
       dataScope?: string;
       status?: number;
-    }
-
-    interface Department {
-      id: number;
-      name: string;
-      parentId?: number;
     }
 
     interface CaptchaData {

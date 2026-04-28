@@ -29,7 +29,7 @@ declare namespace Api {
       id?: string;
       path: string;
       name: string;
-      component?: string;
+      component: string;
       redirect?: string;
       meta?: RouteMeta;
       children?: BackendRoute[];
@@ -59,6 +59,9 @@ declare namespace Api {
       path: string;
       component?: string;
       parentName?: string;
+      sort?: number;
+      title?: string;
+      icon?: string;
       meta?: Record<string, unknown>;
     }
 
@@ -79,6 +82,10 @@ declare namespace Api {
       path: string;
       component?: string;
       constant?: boolean;
+      parentName?: string;
+      sort?: number;
+      title?: string;
+      icon?: string;
     }
 
     /**

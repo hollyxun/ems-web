@@ -109,7 +109,6 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   manage_menu: () => import("@/views/manage/menu/index.vue"),
   "manage_notification-center": () => import("@/views/manage/notification-center/index.vue"),
   manage_organization: () => import("@/views/manage/organization/index.vue"),
-  "manage_password-change": () => import("@/views/manage/password-change/index.vue"),
   manage_policy: () => import("@/views/manage/policy/index.vue"),
   manage_role: () => import("@/views/manage/role/index.vue"),
   "manage_user-detail": () => import("@/views/manage/user-detail/[id].vue"),

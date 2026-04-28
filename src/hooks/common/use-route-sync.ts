@@ -84,17 +84,17 @@ function flattenRoutes(routes: ElegantConstRoute[]): Api.Route.RouteSyncItem[] {
   const result: Api.Route.RouteSyncItem[] = [];
 
   for (const route of routes) {
-    if (route.meta?.hideInMenu) continue;
+    if (!route.meta?.hideInMenu) {
+      result.push({
+        name: String(route.name),
+        path: route.path,
+        component: route.component,
+        constant: route.meta?.constant ?? false
+      });
 
-    result.push({
-      name: String(route.name),
-      path: route.path,
-      component: route.component,
-      constant: route.meta?.constant ?? false
-    });
-
-    if (route.children && route.children.length > 0) {
-      result.push(...flattenRoutes(route.children));
+      if (route.children && route.children.length > 0) {
+        result.push(...flattenRoutes(route.children));
+      }
     }
   }
 
@@ -144,25 +144,19 @@ async function executeSync(): Promise<boolean> {
     const { generatedRoutes } = await import('@/router/elegant/routes');
     const version = calculateRouteHash(generatedRoutes);
 
-    const cachedVersion = safeLocalStorageGet(ROUTE_VERSION_KEY);
-    if (cachedVersion === version) {
-      hasSynced.value = true;
-      return true;
-    }
-
     const allRoutes = flattenRoutes(generatedRoutes);
     const constantRoutes = allRoutes.filter(r => r.constant);
     const routes = allRoutes.filter(r => !r.constant);
 
     safeLocalStorageSet(ROUTE_CACHE_KEY, JSON.stringify({ version, routes }));
 
-    const { data: response, error } = await fetchSyncRoutes({
+    const { error } = await fetchSyncRoutes({
       version,
       routes,
       constantRoutes
     });
 
-    if (!error && response?.success) {
+    if (!error) {
       safeLocalStorageSet(ROUTE_VERSION_KEY, version);
       hasSynced.value = true;
       return true;

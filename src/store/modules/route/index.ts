@@ -2,14 +2,7 @@ import { computed, nextTick, ref, shallowRef } from 'vue';
 import type { RouteRecordRaw } from 'vue-router';
 import { defineStore } from 'pinia';
 import { useBoolean } from '@sa/hooks';
-import type {
-  CustomRoute,
-  ElegantConstRoute,
-  GeneratedRoute,
-  LastLevelRouteKey,
-  RouteKey,
-  RouteMap
-} from '@elegant-router/types';
+import type { ElegantConstRoute, GeneratedRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
 import { router } from '@/router';
 import {
   fetchGetConstantRoutes,
@@ -35,6 +28,7 @@ import {
   transformMenuToSearchMenus,
   updateLocaleOfGlobalMenus
 } from './shared';
+import { resolveRouteHome, validateBackendRoutes } from './route-contract';
 
 /**
  * 将后端路由格式转换为前端路由格式
@@ -46,39 +40,18 @@ function transformBackendRoutesToElegantRoutes(
   backendRoutes: Api.Route.BackendRoute[],
   isConstant: boolean = false
 ): ElegantConstRoute[] {
-  return backendRoutes.map(route => {
-    // 自动生成 i18nKey：如果 title 看起来像路由名称（非中文），则生成 route.xxx 格式的 i18nKey
-    const generateI18nKey = (title: string, name: string): App.I18n.I18nKey | undefined => {
-      // 如果 title 是中文，说明已经是翻译后的文本，不需要 i18nKey
-      if (title && /[\u4E00-\u9FA5]/.test(title)) {
-        return undefined;
-      }
-      // 否则使用 route.{name} 格式的 i18nKey
-      return `route.${name}` as App.I18n.I18nKey;
-    };
-
-    const i18nKey = route.meta?.i18nKey || generateI18nKey(route.meta?.title || '', route.name);
-
-    const elegantRoute: ElegantConstRoute = {
-      path: route.path,
-      name: route.name as never,
-      component: route.component,
-      redirect: route.redirect,
-      meta: route.meta
-        ? {
-            title: route.meta.title,
-            i18nKey,
-            icon: route.meta.icon,
-            order: route.meta.order,
-            hideInMenu: route.meta.hideInMenu,
-            keepAlive: route.meta.keepAlive,
-            constant: isConstant
-          }
-        : { title: route.name || '', i18nKey: `route.${route.name}` as App.I18n.I18nKey, constant: isConstant },
-      children: route.children ? transformBackendRoutesToElegantRoutes(route.children, isConstant) : undefined
-    };
-    return elegantRoute;
-  });
+  return backendRoutes.map(route => ({
+    path: route.path,
+    name: route.name as never,
+    component: route.component,
+    redirect: route.redirect,
+    meta: {
+      ...route.meta,
+      title: route.meta?.title || route.name,
+      constant: isConstant
+    },
+    children: route.children ? transformBackendRoutesToElegantRoutes(route.children, isConstant) : undefined
+  }));
 }
 
 /**
@@ -96,12 +69,21 @@ function collectRoutesByType(routes: GeneratedRoute[]): CollectedRoutes {
 
   function collect(items: GeneratedRoute[], parentName: string = '') {
     items.forEach(item => {
+      // 从 meta 提取 sort/order、title、icon
+      const meta = item.meta as Record<string, unknown> | undefined;
+      const sort = typeof meta?.order === 'number' ? meta.order : 0;
+      const title = typeof meta?.title === 'string' ? meta.title : (item.name as string);
+      const icon = typeof meta?.icon === 'string' ? meta.icon : '';
+
       const routeItem: Api.Route.FrontendRouteItem = {
         name: item.name,
         path: item.path,
         component: item.component,
         parentName: parentName || undefined,
-        meta: item.meta as Record<string, unknown> | undefined
+        sort,
+        title,
+        icon,
+        meta
       };
 
       // 根据 meta.constant 分类
@@ -144,26 +126,15 @@ function calculateRouteVersion(routes: Api.Route.FrontendRouteItem[]): string {
   return Math.abs(hash).toString(16).padStart(8, '0');
 }
 
-/**
- * 从 localStorage 获取缓存的版本号
- * @returns 缓存的版本号
- */
-function getCachedRouteVersion(): string {
-  return localStorage.getItem('ems_route_version') || '';
-}
-
-/**
- * 缓存版本号到 localStorage
- * @param version 版本号
- */
-function setCachedRouteVersion(version: string): void {
-  localStorage.setItem('ems_route_version', version);
-}
-
 /** Check if debug mode is enabled */
 function isDebugModeEnabled(): boolean {
   const { VITE_DEBUG_MODE } = import.meta.env;
   return VITE_DEBUG_MODE === 'Y' || VITE_DEBUG_MODE === 'true';
+}
+
+interface RouteSyncResult {
+  synced: boolean;
+  skipped: boolean;
 }
 
 export const useRouteStore = defineStore(SetupStoreId.Route, () => {
@@ -326,41 +297,31 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
    * P0-fix: 此函数必须在 initAuthRoute 之前调用
    * 原因：数据库重置后路由表为空，需要先同步才能获取用户路由
    */
-  async function syncRoutesWithBackend(): Promise<void> {
+  async function syncRoutesWithBackend(): Promise<RouteSyncResult> {
     // Debug mode: skip backend sync
     if (isDebugModeEnabled()) {
       console.log('[RouteSync] Debug mode, skip backend sync');
-      return;
+      return { synced: false, skipped: true };
     }
 
     // 仅在动态路由模式下执行同步
     if (authRouteMode.value !== 'dynamic') {
-      return;
+      return { synced: false, skipped: true };
     }
 
     try {
-      // 1. 使用新函数收集路由（包含常量路由和动态路由）
       const { routes, constantRoutes: collectedConstantRoutes } = collectRoutesByType(generatedRoutes);
 
       if (routes.length === 0 && collectedConstantRoutes.length === 0) {
         console.warn('[RouteSync] No routes to sync');
-        return;
+        return { synced: false, skipped: true };
       }
 
-      // 2. 计算版本号（基于两类路由）
       const allRoutes = [...routes, ...collectedConstantRoutes];
       const currentVersion = calculateRouteVersion(allRoutes);
 
-      // 3. 检查本地缓存版本，如果一致则跳过同步
-      const cachedVersion = getCachedRouteVersion();
-      if (cachedVersion === currentVersion) {
-        console.log('[RouteSync] Version match, skip sync');
-        return;
-      }
-
-      // 4. 执行同步（包含常量路由）
       console.log('[RouteSync] Syncing routes...');
-      const { data: syncResult, error: syncError } = await fetchSyncRoutes({
+      const { error: syncError } = await fetchSyncRoutes({
         version: currentVersion,
         routes,
         constantRoutes: collectedConstantRoutes
@@ -368,24 +329,14 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
       if (syncError) {
         console.error('[RouteSync] Sync failed:', syncError);
-        // 同步失败不影响正常使用
-        return;
+        return { synced: false, skipped: false };
       }
 
-      if (syncResult) {
-        // syncResult 直接是 RouteSyncChanges: { added, updated, obsoleted, unchanged }
-        console.log('[RouteSync] Sync completed:', {
-          added: syncResult.added || 0,
-          updated: syncResult.updated || 0,
-          obsoleted: syncResult.obsoleted || 0,
-          unchanged: syncResult.unchanged || 0
-        });
-        // 更新本地缓存版本
-        setCachedRouteVersion(currentVersion);
-      }
+      console.log('[RouteSync] Sync completed');
+      return { synced: true, skipped: false };
     } catch (error) {
-      // 同步失败不影响正常使用，仅记录日志
       console.error('[RouteSync] Unexpected error:', error);
+      return { synced: false, skipped: false };
     }
   }
 
@@ -433,27 +384,41 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   /** Init dynamic auth route */
   async function initDynamicAuthRoute() {
-    // 使用新的基于 Casbin 的授权路由接口
     const { data, error } = await fetchGetUserAuthorizedRoutes();
 
-    if (!error) {
-      const { routes, home } = data;
-
-      // 将后端路由格式转换为前端路由格式
-      const convertedRoutes = transformBackendRoutesToElegantRoutes(routes);
-      addAuthRoutes(convertedRoutes);
-
+    if (error || !data) {
+      addAuthRoutes([]);
       handleConstantAndAuthRoutes();
-
-      setRouteHome(home);
-
-      handleUpdateRootRouteRedirect(home);
-
+      setRouteHome('403');
+      handleUpdateRootRouteRedirect('403');
       setIsInitAuthRoute(true);
-    } else {
-      // if fetch user routes failed, reset store
-      authStore.resetStore();
+      return;
     }
+
+    const { routes, home } = data;
+    const { routes: validRoutes, issues } = validateBackendRoutes(routes || []);
+
+    if (issues.length > 0) {
+      console.error('[RouteSync] Invalid authorized routes:', issues);
+    }
+
+    if (validRoutes.length === 0) {
+      addAuthRoutes([]);
+      handleConstantAndAuthRoutes();
+      setRouteHome('403');
+      handleUpdateRootRouteRedirect('403');
+      setIsInitAuthRoute(true);
+      return;
+    }
+
+    const convertedRoutes = transformBackendRoutesToElegantRoutes(validRoutes);
+    const safeHome = resolveRouteHome(validRoutes, home);
+
+    addAuthRoutes(convertedRoutes);
+    handleConstantAndAuthRoutes();
+    setRouteHome(safeHome);
+    handleUpdateRootRouteRedirect(safeHome);
+    setIsInitAuthRoute(true);
   }
 
   /** handle constant and auth routes */
@@ -503,13 +468,18 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const redirect = getRoutePath(redirectKey);
 
     if (redirect) {
-      const rootRoute: CustomRoute = { ...ROOT_ROUTE, redirect };
+      const rootRoute: RouteRecordRaw = {
+        name: ROOT_ROUTE.name,
+        path: ROOT_ROUTE.path,
+        redirect,
+        meta: ROOT_ROUTE.meta
+      };
 
-      router.removeRoute(rootRoute.name);
+      if (router.hasRoute(ROOT_ROUTE.name)) {
+        router.removeRoute(ROOT_ROUTE.name);
+      }
 
-      const [rootVueRoute] = getAuthVueRoutes([rootRoute]);
-
-      router.addRoute(rootVueRoute);
+      router.addRoute(rootRoute);
     }
   }
 

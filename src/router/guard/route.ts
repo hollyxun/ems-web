@@ -137,25 +137,25 @@ async function initRoute(to: RouteLocationNormalized): Promise<RouteLocationRaw 
   }
 
   if (!routeStore.isInitAuthRoute) {
-    // 性能优化：并行执行路由同步和用户信息初始化
-    // syncRoutesWithBackend 只需要前端路由数据，不依赖用户信息
-    // initAuthRoute 内部会调用 initUserInfo，可以并行准备
     const authStore = useAuthStore();
 
-    // 并行执行：路由同步 + 用户信息预加载（按钮权限延迟）
-    await Promise.all([
+    const [syncResult] = await Promise.all([
       routeStore.syncRoutesWithBackend(),
-      authStore.initUserInfoWithoutButtons() // 不阻塞的版本
+      authStore.initUserInfoWithoutButtons()
     ]);
 
-    // initialize the auth route
+    if (!syncResult.skipped && !syncResult.synced) {
+      const location: RouteLocationRaw = {
+        name: '403'
+      };
+
+      return location;
+    }
+
     await routeStore.initAuthRoute();
 
-    // 延迟加载按钮权限（不阻塞路由初始化）
     authStore.fetchButtonPermissions().catch(() => {});
 
-    // the route is captured by the "not-found" route because the auth route is not initialized
-    // after the auth route is initialized, redirect to the original route
     if (isNotFoundRoute) {
       const rootRoute: RouteKey = 'root';
       const path = to.redirectedFrom?.name === rootRoute ? '/' : to.fullPath;

@@ -1244,17 +1244,6 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'manage_password-change',
-        path: '/manage/password-change',
-        component: 'view.manage_password-change',
-        meta: {
-          title: 'manage_password-change',
-          i18nKey: 'route.manage_password-change',
-          icon: 'ant-design:lock-outlined',
-          order: 8
-        }
-      },
-      {
         name: 'manage_policy',
         path: '/manage/policy',
         component: 'view.manage_policy',

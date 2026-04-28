@@ -30,7 +30,7 @@ export function fetchGetUserAuthorizedRoutes() {
  * 同步前端路由到后端（新架构）
  */
 export function fetchSyncRoutes(data: Api.Route.RouteSyncRequest) {
-  return request<Api.Route.RouteSyncResponse>({
+  return request<null>({
     url: '/api/v1/route/sync',
     method: 'post',
     data
