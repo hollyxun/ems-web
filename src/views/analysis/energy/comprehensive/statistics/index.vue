@@ -418,7 +418,7 @@ async function handleExport() {
       dataTime: queryParams.value.dataTime
     });
     ElMessage.success('导出成功');
-  } catch (error) {
+  } catch {
     ElMessage.error('导出失败');
   }
 }

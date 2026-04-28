@@ -25,87 +25,10 @@ const getDaysInMonth = (month: string) => {
   return date.daysInMonth();
 };
 
-// 表格列定义
-interface TableColumn {
-  prop: string;
-  label: string;
-  width: number;
-  fixed?: 'left';
-  align?: 'center';
-  formatter?: (row: Api.ProcessEnergy.MonthlyList) => string;
-}
-
-const tableColumns = computed<TableColumn[]>(() => {
-  const baseColumns: TableColumn[] = [
-    { prop: 'indexName', label: '指标名称', width: 150, fixed: 'left' },
-    { prop: 'unitId', label: '单位', width: 80 }
-  ];
-
-  const daysInMonth = getDaysInMonth(selectedMonth.value);
-  const dayColumns: TableColumn[] = [];
-  for (let i = 1; i <= daysInMonth; i += 1) {
-    const key = `value${i}` as keyof Api.ProcessEnergy.MonthlyList;
-    dayColumns.push({
-      prop: `value${i}`,
-      label: `${i}日`,
-      width: 70,
-      align: 'center',
-      formatter: (row: Api.ProcessEnergy.MonthlyList) => formatValue(row[key] as number | undefined)
-    });
-  }
-
-  return [...baseColumns, ...dayColumns];
-});
-
 // 格式化数值
 const formatValue = (value: number | undefined) => {
   if (value === undefined || value === null) return '-';
   return value.toFixed(2);
-};
-
-// 加载表格数据
-const loadTableData = async () => {
-  loading.value = true;
-  try {
-    const params: Api.ProcessEnergy.MonthlyQuery = {
-      indexCode: 'default',
-      dataTime: selectedMonth.value,
-      timeType: 'day',
-      energyType: energyType.value || undefined
-    };
-    const { data: res } = await fetchMonthlyProcessEnergyList(params);
-    tableData.value = res || [];
-
-    if (tableData.value.length > 0 && !selectedIndexId.value) {
-      selectedIndexId.value = tableData.value[0].indexId;
-    }
-  } catch {
-    ElMessage.error('获取月工序能耗数据失败');
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 加载图表数据
-const loadChartData = async () => {
-  if (!selectedIndexId.value) return;
-
-  chartLoading.value = true;
-  try {
-    const params: Api.ProcessEnergy.ChartQuery = {
-      indexId: selectedIndexId.value,
-      dataTime: selectedMonth.value,
-      timeType: 'day',
-      energyType: energyType.value || undefined
-    };
-    const { data: res } = await fetchMonthlyProcessEnergyChart(params);
-    chartData.value = res || [];
-    updateChart();
-  } catch {
-    ElMessage.error('获取图表数据失败');
-  } finally {
-    chartLoading.value = false;
-  }
 };
 
 // 更新图表
@@ -164,6 +87,83 @@ const updateChart = () => {
   };
 
   chartInstance.setOption(option);
+};
+
+// 表格列定义
+interface TableColumn {
+  prop: string;
+  label: string;
+  width: number;
+  fixed?: 'left';
+  align?: 'center';
+  formatter?: (row: Api.ProcessEnergy.MonthlyList) => string;
+}
+
+const tableColumns = computed<TableColumn[]>(() => {
+  const baseColumns: TableColumn[] = [
+    { prop: 'indexName', label: '指标名称', width: 150, fixed: 'left' },
+    { prop: 'unitId', label: '单位', width: 80 }
+  ];
+
+  const daysInMonth = getDaysInMonth(selectedMonth.value);
+  const dayColumns: TableColumn[] = [];
+  for (let i = 1; i <= daysInMonth; i += 1) {
+    const key = `value${i}` as keyof Api.ProcessEnergy.MonthlyList;
+    dayColumns.push({
+      prop: `value${i}`,
+      label: `${i}日`,
+      width: 70,
+      align: 'center',
+      formatter: (row: Api.ProcessEnergy.MonthlyList) => formatValue(row[key] as number | undefined)
+    });
+  }
+
+  return [...baseColumns, ...dayColumns];
+});
+
+// 加载表格数据
+const loadTableData = async () => {
+  loading.value = true;
+  try {
+    const params: Api.ProcessEnergy.MonthlyQuery = {
+      indexCode: 'default',
+      dataTime: selectedMonth.value,
+      timeType: 'day',
+      energyType: energyType.value || undefined
+    };
+    const { data: res } = await fetchMonthlyProcessEnergyList(params);
+    tableData.value = res || [];
+
+    if (tableData.value.length > 0 && !selectedIndexId.value) {
+      selectedIndexId.value = tableData.value[0].indexId;
+    }
+  } catch {
+    ElMessage.error('获取月工序能耗数据失败');
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 加载图表数据
+const loadChartData = async () => {
+  if (!selectedIndexId.value) return;
+
+  chartLoading.value = true;
+  try {
+    const params: Api.ProcessEnergy.ChartQuery = {
+      indexId: selectedIndexId.value,
+      dataTime: selectedMonth.value,
+      timeType: 'day',
+      energyType: energyType.value || undefined
+    };
+    const { data: res } = await fetchMonthlyProcessEnergyChart(params);
+    chartData.value = res || [];
+    updateChart();
+  } catch {
+    ElMessage.error('获取图表数据失败');
+  } finally {
+    chartLoading.value = false;
+  }
 };
 
 // 行点击事件

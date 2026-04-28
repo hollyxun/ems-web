@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { ElMessage } from 'element-plus';
 import dayjs from 'dayjs';
 import { useECharts } from '@sa/hooks';
 import { fetchPointFacility, fetchYearKeyEquipmentChart, fetchYearKeyEquipmentList } from '@/service/api/keyequipment';
-import { $t } from '@/locales';
 
 defineOptions({ name: 'KeyEquipmentYear' });
 

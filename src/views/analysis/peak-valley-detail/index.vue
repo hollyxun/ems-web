@@ -65,7 +65,7 @@ const pieChartData = computed(() => {
 });
 
 // 折线图数据
-const lineChartData = computed(() => {
+const _lineChartData = computed(() => {
   if (analysisType.value === 'hour' && hourData.value?.lineChat) {
     return hourData.value.lineChat;
   }

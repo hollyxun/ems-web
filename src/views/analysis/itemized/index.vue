@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import dayjs from 'dayjs';
 import { Icon } from '@iconify/vue';
 import { fetchItemizedEnergyAnalysis } from '@/service/api/itemized-energy-analysis';
@@ -63,7 +63,7 @@ const orgTree = ref([
   }
 ]);
 
-const selectedNode = ref<string>('');
+const _selectedNode = ref<string>('');
 
 // 表格数据
 const tableData = computed(() => analysisData.value?.dataList || []);
@@ -129,16 +129,16 @@ const tableColumns = computed(() => {
   ];
 
   if (queryParams.value.timeType === 'DAY') {
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 24; i += 1) {
       cols.push({ label: `${i}时`, prop: `value${i}` });
     }
   } else if (queryParams.value.timeType === 'MONTH') {
     const days = dayjs(queryParams.value.dataTime).daysInMonth();
-    for (let i = 0; i < days; i++) {
+    for (let i = 0; i < days; i += 1) {
       cols.push({ label: `${i + 1}日`, prop: `value${i}` });
     }
   } else {
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 12; i += 1) {
       cols.push({ label: `${i + 1}月`, prop: `value${i}` });
     }
   }

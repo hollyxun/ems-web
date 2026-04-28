@@ -22,51 +22,6 @@ const chartRef = ref<HTMLElement | null>(null);
 // 月份名称
 const monthNames = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
-// 加载表格数据
-const loadTableData = async () => {
-  loading.value = true;
-  try {
-    const params: Api.ProcessEnergy.YearQuery = {
-      indexCode: 'default',
-      dataTime: selectedYear.value,
-      timeType: 'month',
-      energyType: energyType.value || undefined
-    };
-    const { data: res } = await fetchYearProcessEnergyList(params);
-    tableData.value = res || [];
-
-    if (tableData.value.length > 0 && !selectedIndexId.value) {
-      selectedIndexId.value = tableData.value[0].indexId;
-    }
-  } catch {
-    ElMessage.error('获取年工序能耗数据失败');
-  } finally {
-    loading.value = false;
-  }
-};
-
-// 加载图表数据
-const loadChartData = async () => {
-  if (!selectedIndexId.value) return;
-
-  chartLoading.value = true;
-  try {
-    const params: Api.ProcessEnergy.ChartQuery = {
-      indexId: selectedIndexId.value,
-      dataTime: selectedYear.value,
-      timeType: 'month',
-      energyType: energyType.value || undefined
-    };
-    const { data: res } = await fetchYearProcessEnergyChart(params);
-    chartData.value = res || [];
-    updateChart();
-  } catch {
-    ElMessage.error('获取图表数据失败');
-  } finally {
-    chartLoading.value = false;
-  }
-};
-
 // 更新图表
 const updateChart = () => {
   if (!chartRef.value) return;
@@ -136,6 +91,51 @@ const updateChart = () => {
   };
 
   chartInstance.setOption(option);
+};
+
+// 加载表格数据
+const loadTableData = async () => {
+  loading.value = true;
+  try {
+    const params: Api.ProcessEnergy.YearQuery = {
+      indexCode: 'default',
+      dataTime: selectedYear.value,
+      timeType: 'month',
+      energyType: energyType.value || undefined
+    };
+    const { data: res } = await fetchYearProcessEnergyList(params);
+    tableData.value = res || [];
+
+    if (tableData.value.length > 0 && !selectedIndexId.value) {
+      selectedIndexId.value = tableData.value[0].indexId;
+    }
+  } catch {
+    ElMessage.error('获取年工序能耗数据失败');
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 加载图表数据
+const loadChartData = async () => {
+  if (!selectedIndexId.value) return;
+
+  chartLoading.value = true;
+  try {
+    const params: Api.ProcessEnergy.ChartQuery = {
+      indexId: selectedIndexId.value,
+      dataTime: selectedYear.value,
+      timeType: 'month',
+      energyType: energyType.value || undefined
+    };
+    const { data: res } = await fetchYearProcessEnergyChart(params);
+    chartData.value = res || [];
+    updateChart();
+  } catch {
+    ElMessage.error('获取图表数据失败');
+  } finally {
+    chartLoading.value = false;
+  }
 };
 
 // 行点击事件

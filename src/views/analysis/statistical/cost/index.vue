@@ -4,7 +4,6 @@ import {
   ElCard,
   ElCol,
   ElDatePicker,
-  ElEmpty,
   ElForm,
   ElFormItem,
   ElOption,
@@ -15,7 +14,7 @@ import {
   ElTable,
   ElTableColumn
 } from 'element-plus';
-import { fetchEnergyCostTrendDetail, fetchEnergyCostTrendList } from '@/service/api/statistical';
+import { fetchEnergyCostTrendList } from '@/service/api/statistical';
 
 defineOptions({ name: 'StatisticalCost' });
 

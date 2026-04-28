@@ -35,6 +35,73 @@ const formatValue = (value: unknown) => {
   return '-';
 };
 
+// 更新图表
+const updateChart = () => {
+  if (!chartRef.value) return;
+
+  if (!chartInstance) {
+    chartInstance = echarts.init(chartRef.value);
+  }
+
+  const xData: string[] = [];
+  const yData: number[] = [];
+
+  chartData.value.forEach(item => {
+    xData.push(dayjs(item.dataTime).format('HH:mm'));
+    yData.push(item.value);
+  });
+
+  const option: echarts.EChartsOption = {
+    title: {
+      text: '24小时能耗趋势',
+      left: 'center'
+    },
+    tooltip: {
+      trigger: 'axis',
+      formatter: (params: any) => {
+        const data = params[0];
+        return `${data.name}<br/>能耗: ${data.value?.toFixed(2) || '-'}`;
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: {
+      type: 'category',
+      data: xData,
+      axisLabel: {
+        interval: 2
+      }
+    },
+    yAxis: {
+      type: 'value',
+      name: '能耗值'
+    },
+    series: [
+      {
+        name: '能耗',
+        type: 'line',
+        data: yData,
+        smooth: true,
+        itemStyle: {
+          color: '#409EFF'
+        },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(64, 158, 255, 0.3)' },
+            { offset: 1, color: 'rgba(64, 158, 255, 0.05)' }
+          ])
+        }
+      }
+    ]
+  };
+
+  chartInstance.setOption(option);
+};
+
 // 表格列定义
 const tableColumns = computed<TableColumn[]>(() => {
   const baseColumns: TableColumn[] = [
@@ -105,73 +172,6 @@ const loadChartData = async () => {
   } finally {
     chartLoading.value = false;
   }
-};
-
-// 更新图表
-const updateChart = () => {
-  if (!chartRef.value) return;
-
-  if (!chartInstance) {
-    chartInstance = echarts.init(chartRef.value);
-  }
-
-  const xData: string[] = [];
-  const yData: number[] = [];
-
-  chartData.value.forEach(item => {
-    xData.push(dayjs(item.dataTime).format('HH:mm'));
-    yData.push(item.value);
-  });
-
-  const option: echarts.EChartsOption = {
-    title: {
-      text: '24小时能耗趋势',
-      left: 'center'
-    },
-    tooltip: {
-      trigger: 'axis',
-      formatter: (params: any) => {
-        const data = params[0];
-        return `${data.name}<br/>能耗: ${data.value?.toFixed(2) || '-'}`;
-      }
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: xData,
-      axisLabel: {
-        interval: 2
-      }
-    },
-    yAxis: {
-      type: 'value',
-      name: '能耗值'
-    },
-    series: [
-      {
-        name: '能耗',
-        type: 'line',
-        data: yData,
-        smooth: true,
-        itemStyle: {
-          color: '#409EFF'
-        },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(64, 158, 255, 0.3)' },
-            { offset: 1, color: 'rgba(64, 158, 255, 0.05)' }
-          ])
-        }
-      }
-    ]
-  };
-
-  chartInstance.setOption(option);
 };
 
 // 行点击事件
